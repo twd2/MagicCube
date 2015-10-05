@@ -24,6 +24,19 @@ typedef unsigned int cube_t; //0bMETA DATA ffff bbbb llll rrrr uuuu dddd
 #define ROTATE_CLK(x)   MAKE_CUBE(GET_FRONT(x), GET_BACK(x), GET_DOWN(x), GET_UP(x), GET_LEFT(x), GET_RIGHT(x)) //À≥ ±’Î
 #define ROTATE_CCLK(x)  MAKE_CUBE(GET_FRONT(x), GET_BACK(x), GET_UP(x), GET_DOWN(x), GET_RIGHT(x), GET_LEFT(x)) //ƒÊ ±’Î
 
+#define UL_EDGE 0][2][1
+#define UR_EDGE 2][2][1
+#define UF_EDGE 1][2][2
+#define UB_EDGE 1][2][0
+#define DL_EDGE 0][0][1
+#define DR_EDGE 2][0][1
+#define DF_EDGE 1][0][2
+#define DB_EDGE 1][0][0
+#define LF_EDGE 0][1][2
+#define LB_EDGE 0][1][0
+#define RF_EDGE 2][1][2
+#define RB_EDGE 2][1][0
+
 enum CubeColor
 {
 	COLOR_UNUSED,

@@ -2,7 +2,8 @@
 
 #include <map>
 
-extern map<char, CubeColor> ColorCharMap;
+extern map<char, CubeColor> CharColorMap;
+extern map<CubeColor, char> ColorCharMap;
 
 class Cube
 {
@@ -25,6 +26,7 @@ public:
 	*/
 
 	void Load(string);
+	string Save();
 	void SaveState();
 	void DoMethod(CubeRotateMethod);
 	void R();

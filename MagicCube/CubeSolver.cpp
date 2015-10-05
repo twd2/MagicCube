@@ -4,3 +4,9 @@
 CubeSolver::~CubeSolver()
 {
 }
+
+void CubeSolver::Do(CubeRotateMethod method)
+{
+	cube.DoMethod(method);
+	Step.push_back(method);
+}

@@ -1,14 +1,24 @@
 #include "stdafx.h"
 #include "Cube.h"
 
-map<char, CubeColor> ColorCharMap = {
-		{ '-', COLOR_UNUSED },
-		{ 'W', COLOR_WHITE },
-		{ 'O', COLOR_ORANGE },
-		{ 'B', COLOR_BLUE },
-		{ 'R', COLOR_RED },
-		{ 'G', COLOR_GREEN},
-		{ 'Y', COLOR_YELLOW }
+map<char, CubeColor> CharColorMap = {
+		{'-', COLOR_UNUSED},
+		{'W', COLOR_WHITE },
+		{'O', COLOR_ORANGE},
+		{'B', COLOR_BLUE  },
+		{'R', COLOR_RED   },
+		{'G', COLOR_GREEN },
+		{'Y', COLOR_YELLOW}
+};
+
+map<CubeColor, char> ColorCharMap = {
+		{COLOR_UNUSED, '-'},
+		{COLOR_WHITE , 'W'},
+		{COLOR_ORANGE, 'O'},
+		{COLOR_BLUE  , 'B'},
+		{COLOR_RED   , 'R'},
+		{COLOR_GREEN , 'G'},
+		{COLOR_YELLOW, 'Y'}
 };
 
 Cube::Cube()
@@ -58,15 +68,37 @@ void Cube::Load(string data)
 			for (int x = 0; x < 3; ++x)
 			{
 				subCubes[x][y][z] =
-					MAKE_CUBE(ColorCharMap[data[((z * 3 + y) * 3 + x) * 6 + 0]],
-							  ColorCharMap[data[((z * 3 + y) * 3 + x) * 6 + 1]],
-							  ColorCharMap[data[((z * 3 + y) * 3 + x) * 6 + 2]],
-							  ColorCharMap[data[((z * 3 + y) * 3 + x) * 6 + 3]],
-							  ColorCharMap[data[((z * 3 + y) * 3 + x) * 6 + 4]],
-							  ColorCharMap[data[((z * 3 + y) * 3 + x) * 6 + 5]]);
+					MAKE_CUBE(CharColorMap[data[((z * 3 + y) * 3 + x) * 6 + 0]],
+							  CharColorMap[data[((z * 3 + y) * 3 + x) * 6 + 1]],
+							  CharColorMap[data[((z * 3 + y) * 3 + x) * 6 + 2]],
+							  CharColorMap[data[((z * 3 + y) * 3 + x) * 6 + 3]],
+							  CharColorMap[data[((z * 3 + y) * 3 + x) * 6 + 4]],
+							  CharColorMap[data[((z * 3 + y) * 3 + x) * 6 + 5]]);
 			}
 		}
 	}
+}
+
+string Cube::Save()
+{
+	string data;
+	for (int z = 0; z < 3; ++z)
+	{
+		for (int y = 0; y < 3; ++y)
+		{
+			for (int x = 0; x < 3; ++x)
+			{
+				cube_t subcube = subCubes[x][y][z];
+				data += ColorCharMap[GET_FRONT(subcube)];
+				data += ColorCharMap[GET_BACK(subcube)];
+				data += ColorCharMap[GET_LEFT(subcube)];
+				data += ColorCharMap[GET_RIGHT(subcube)];
+				data += ColorCharMap[GET_UP(subcube)];
+				data += ColorCharMap[GET_DOWN(subcube)];
+			}
+		}
+	}
+	return data;
 }
 
 void Cube::SaveState()

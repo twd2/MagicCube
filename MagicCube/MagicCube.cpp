@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 	cube.Load("-WG--O-R---B-R-G-Y-YO----O-----G-W---BO-W--B--W--B-OY-"
 		      "--Y--B-----W---R-W--B------------G----Y-R-----Y----OB-"
 			  "O-Y--GG----YR--G-WR-G---R-----O--W--W-B-R-G---O-B--RY-");
+
 	CubeSolver *solver = (CubeSolver*)new AlgorithmSolver(cube);
 	solver->Solve();
 	delete solver;

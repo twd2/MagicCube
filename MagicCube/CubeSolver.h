@@ -16,4 +16,6 @@ public:
 	~CubeSolver();
 
 	virtual void Solve() = 0;
+
+	void Do(CubeRotateMethod);
 };
