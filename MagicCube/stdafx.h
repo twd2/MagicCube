@@ -5,10 +5,17 @@
 
 #pragma once
 
+#ifdef _WIN32
 #include "targetver.h"
+#endif
+
+#ifdef linux
+#endif
+
+#ifdef _UNIX
+#endif
 
 #include <stdio.h>
-#include <tchar.h>
 #include <cmath>
 #include <ctime>
 
@@ -24,6 +31,8 @@ using namespace std;
 #define GLFW_INCLUDE_GLU
 #include <GLFW/glfw3.h>
 
-#include "Cube.h"
+#include "Config.h"
+
+#define min(a,b) (((a)<(b))?(a):(b))
 
 // TODO:  在此处引用程序需要的其他头文件

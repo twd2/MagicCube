@@ -35,3 +35,14 @@ enum cube_color
 	COLOR_BLUE,
 	COLOR_INVALID = 0xF
 };
+
+enum cube_surface
+{
+	NONE,
+	FRONT,
+	BACK,
+	LEFT,
+	RIGHT,
+	UP,
+	DOWN
+};
