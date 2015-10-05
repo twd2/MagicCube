@@ -317,3 +317,92 @@ void Cube::RotateCClk()
 	subCubes[2][2][1] = ROTATE_CCLK(oldSubCubes[2][0][1]);
 	B();
 }
+
+bool Cube::CheckL()
+{
+	cube_color centre = GET_LEFT(subCubes[0][1][1]);
+	return GET_LEFT(subCubes[0][0][0]) == centre &&
+		   GET_LEFT(subCubes[0][0][1]) == centre &&
+		   GET_LEFT(subCubes[0][0][2]) == centre &&
+		   GET_LEFT(subCubes[0][1][0]) == centre &&
+		   GET_LEFT(subCubes[0][1][1]) == centre &&
+		   GET_LEFT(subCubes[0][1][2]) == centre &&
+		   GET_LEFT(subCubes[0][2][0]) == centre &&
+		   GET_LEFT(subCubes[0][2][1]) == centre &&
+		   GET_LEFT(subCubes[0][2][2]) == centre;
+}
+
+bool Cube::CheckR()
+{
+	cube_color centre = GET_RIGHT(subCubes[2][1][1]);
+	return GET_RIGHT(subCubes[2][0][0]) == centre &&
+		   GET_RIGHT(subCubes[2][0][1]) == centre &&
+		   GET_RIGHT(subCubes[2][0][2]) == centre &&
+		   GET_RIGHT(subCubes[2][1][0]) == centre &&
+		   GET_RIGHT(subCubes[2][1][1]) == centre &&
+		   GET_RIGHT(subCubes[2][1][2]) == centre &&
+		   GET_RIGHT(subCubes[2][2][0]) == centre &&
+		   GET_RIGHT(subCubes[2][2][1]) == centre &&
+		   GET_RIGHT(subCubes[2][2][2]) == centre;
+}
+
+bool  Cube::CheckU()
+{
+	cube_color centre = GET_UP(subCubes[1][2][1]);
+	return GET_UP(subCubes[0][2][0]) == centre &&
+		   GET_UP(subCubes[1][2][0]) == centre &&
+		   GET_UP(subCubes[2][2][0]) == centre &&
+		   GET_UP(subCubes[0][2][1]) == centre &&
+		   GET_UP(subCubes[1][2][1]) == centre &&
+		   GET_UP(subCubes[2][2][1]) == centre &&
+		   GET_UP(subCubes[0][2][2]) == centre &&
+		   GET_UP(subCubes[1][2][2]) == centre &&
+		   GET_UP(subCubes[2][2][2]) == centre;
+}
+
+bool  Cube::CheckD()
+{
+	cube_color centre = GET_DOWN(subCubes[1][0][1]);
+	return GET_DOWN(subCubes[0][0][0]) == centre &&
+		   GET_DOWN(subCubes[1][0][0]) == centre &&
+		   GET_DOWN(subCubes[2][0][0]) == centre &&
+		   GET_DOWN(subCubes[0][0][1]) == centre &&
+		   GET_DOWN(subCubes[1][0][1]) == centre &&
+		   GET_DOWN(subCubes[2][0][1]) == centre &&
+		   GET_DOWN(subCubes[0][0][2]) == centre &&
+		   GET_DOWN(subCubes[1][0][2]) == centre &&
+		   GET_DOWN(subCubes[2][0][2]) == centre;
+}
+
+bool  Cube::CheckF()
+{
+	cube_color centre = GET_FRONT(subCubes[1][1][2]);
+	return GET_FRONT(subCubes[0][0][2]) == centre &&
+		   GET_FRONT(subCubes[1][0][2]) == centre &&
+		   GET_FRONT(subCubes[2][0][2]) == centre &&
+		   GET_FRONT(subCubes[0][1][2]) == centre &&
+		   GET_FRONT(subCubes[1][1][2]) == centre &&
+		   GET_FRONT(subCubes[2][1][2]) == centre &&
+		   GET_FRONT(subCubes[0][2][2]) == centre &&
+		   GET_FRONT(subCubes[1][2][2]) == centre &&
+		   GET_FRONT(subCubes[2][2][2]) == centre;
+}
+
+bool Cube::CheckB()
+{
+	cube_color centre = GET_BACK(subCubes[1][1][0]);
+	return GET_BACK(subCubes[0][0][0]) == centre &&
+		   GET_BACK(subCubes[1][0][0]) == centre &&
+		   GET_BACK(subCubes[2][0][0]) == centre &&
+		   GET_BACK(subCubes[0][1][0]) == centre &&
+		   GET_BACK(subCubes[1][1][0]) == centre &&
+		   GET_BACK(subCubes[2][1][0]) == centre &&
+		   GET_BACK(subCubes[0][2][0]) == centre &&
+		   GET_BACK(subCubes[1][2][0]) == centre &&
+		   GET_BACK(subCubes[2][2][0]) == centre;
+}
+
+bool Cube::Check()
+{
+	return CheckU() && CheckD() && CheckL() && CheckR() && CheckF() && CheckB();
+}

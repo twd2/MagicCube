@@ -1,12 +1,12 @@
 
 typedef unsigned int cube_t; //0bMETA DATA ffff bbbb llll rrrr uuuu dddd
 
-#define GET_FRONT(x) (((x)&0xF00000)>>20)
-#define GET_BACK(x)  (((x)&0x0F0000)>>16)
-#define GET_LEFT(x)  (((x)&0x00F000)>>12)
-#define GET_RIGHT(x) (((x)&0x000F00)>>8)
-#define GET_UP(x)    (((x)&0x0000F0)>>4)
-#define GET_DOWN(x)  (((x)&0x00000F)>>0)
+#define GET_FRONT(x) ((cube_color)(((x)&0xF00000)>>20))
+#define GET_BACK(x)  ((cube_color)(((x)&0x0F0000)>>16))
+#define GET_LEFT(x)  ((cube_color)(((x)&0x00F000)>>12))
+#define GET_RIGHT(x) ((cube_color)(((x)&0x000F00)>>8))
+#define GET_UP(x)    ((cube_color)(((x)&0x0000F0)>>4))
+#define GET_DOWN(x)  ((cube_color)(((x)&0x00000F)>>0))
 
 #define SET_FRONT(x) (((x)&0xF)<<20)
 #define SET_BACK(x)  (((x)&0xF)<<16)

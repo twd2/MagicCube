@@ -113,6 +113,10 @@ void execCommand(string s)
 	{
 		startRotate(WHOLEZ, true);
 	}
+	else if (s == "CHECK")
+	{
+		printf("U%d D%d L%d R%d F%d B%d: %d", cube.CheckU(), cube.CheckD(), cube.CheckL(), cube.CheckR(), cube.CheckF(), cube.CheckB(), cube.Check());
+	}
 }
 
 string commandBuffer = "";

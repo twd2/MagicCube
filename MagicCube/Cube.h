@@ -38,6 +38,13 @@ public:
 	void RotateDown();
 	void RotateClk();
 	void RotateCClk();
+	bool CheckL();
+	bool CheckR();
+	bool CheckU();
+	bool CheckD();
+	bool CheckF();
+	bool CheckB();
+	bool Check();
 
 private:
 	cube_t oldSubCubes[3][3][3];
