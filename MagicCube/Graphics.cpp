@@ -39,7 +39,7 @@ void initGL()
 	}
 }
 
-void setColor(cube_color color)
+void setColor(CubeColor color)
 {
 	switch (color)
 	{
@@ -66,5 +66,21 @@ void setColor(cube_color color)
 		break;
 	default:
 		break;
+	}
+}
+
+void updateFPS()
+{
+	static double lastTime = glfwGetTime();
+	static int lastFPS = 0;
+	double currTime = glfwGetTime();
+	++lastFPS;
+	if (currTime - lastTime >= 1.0)
+	{
+		char str[256];
+		sprintf_s(str, "Magic Cube (FPS: %d)", lastFPS);
+		glfwSetWindowTitle(window, str);
+		lastTime = glfwGetTime();
+		lastFPS = 0;
 	}
 }

@@ -7,4 +7,5 @@ extern GLuint vertexArrayId;
 
 void initVertexArray();
 void initGL();
-void setColor(cube_color);
+void setColor(CubeColor);
+void updateFPS();

@@ -11,3 +11,4 @@ void mouseButtonCallback(GLFWwindow*, int, int, int);
 void mouseMove();
 void execCommand(string);
 void keyboardCallback(GLFWwindow*, int, int, int, int);
+void keyboardScan();

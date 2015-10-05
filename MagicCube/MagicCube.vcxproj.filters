@@ -66,6 +66,15 @@
     <ClInclude Include="Config.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CubeSolver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomSolver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AlgorithmSolver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -90,6 +99,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Rendering.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeSolver.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomSolver.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AlgorithmSolver.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

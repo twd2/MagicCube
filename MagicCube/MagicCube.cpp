@@ -6,39 +6,31 @@
 
 Cube cube;
 
-void updateFPS()
+int main(int argc, char *argv[])
 {
-	static double lastTime = glfwGetTime();
-	static int lastFPS = 0;
-	double currTime = glfwGetTime();
-	++lastFPS;
-	if (currTime - lastTime >= 1.0)
-	{
-		char str[256];
-		sprintf_s(str, "Magic Cube (FPS: %d)", lastFPS);
-		glfwSetWindowTitle(window, str);
-		lastTime = glfwGetTime();
-		lastFPS = 0;
-	}
-}
+	cube.Load("-WG--O-R---B-R-G-Y-YO----O-----G-W---BO-W--B--W--B-OY-"
+		      "--Y--B-----W---R-W--B------------G----Y-R-----Y----OB-"
+			  "O-Y--GG----YR--G-WR-G---R-----O--W--W-B-R-G---O-B--RY-");
+	CubeSolver *solver = (CubeSolver*)new AlgorithmSolver(cube);
+	solver->Solve();
+	delete solver;
 
-int main(int argc, char* argv[])
-{
-	/* Initialize the library */
+	//Initialize the library
 	if (!glfwInit())
-		return -1;
+		throw "glfwInit";
 
+	//MSAA
 	glfwWindowHint(GLFW_SAMPLES, 9);
 
-	/* Create a windowed mode window and its OpenGL context */
+	//Create a windowed mode window and its OpenGL context
 	window = glfwCreateWindow(WIDTH, HEIGHT, "Magic Cube", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
-		return -1;
+		throw "glfwCreateWindow";
 	}
 
-	/* Make the window's context current */
+	//Make the window's context current
 	glfwMakeContextCurrent(window);
 
 	glfwSetMouseButtonCallback(window, mouseButtonCallback);
@@ -49,20 +41,20 @@ int main(int argc, char* argv[])
 	initAxisVertexBuffer();
 	initCubeVertexBuffer();
 
-	/* Loop until the user closes the window */
+	//Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
 	{
 		nextAngle();
 
-		/* Render here */
 		render();
 
-		/* Swap front and back buffers */
+		//Swap front and back buffers
 		glfwSwapBuffers(window);
 
-		/* Poll for and process events */
+		//Poll for and process events
 		glfwPollEvents();
 
+		keyboardScan();
 		mouseMove();
 		updateFPS();
 	}

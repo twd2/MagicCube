@@ -3,7 +3,7 @@
 
 double rotateAngle = 0.0;
 double finishAngle = 90.0;
-cube_rotate_method rotateMethod = NONE;
+CubeRotateMethod rotateMethod = NONE;
 
 double easingDelta(double currentAngle)
 {
@@ -162,7 +162,7 @@ void finishCurrentRotate()
 	rotateFinishCallback();
 }
 
-void startRotate(cube_rotate_method method, bool inverse)
+void startRotate(CubeRotateMethod method, bool inverse)
 {
 	finishCurrentRotate();
 	rotateMethod = method;

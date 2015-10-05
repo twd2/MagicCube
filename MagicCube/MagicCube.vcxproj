@@ -150,8 +150,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AlgorithmSolver.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Cube.h" />
+    <ClInclude Include="CubeSolver.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="include\GLFW\glfw3.h" />
     <ClInclude Include="include\GLFW\glfw3native.h" />
@@ -160,6 +162,7 @@
     <ClInclude Include="include\GL\wglew.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="MagicCube.h" />
+    <ClInclude Include="RandomSolver.h" />
     <ClInclude Include="Rendering.h" />
     <ClInclude Include="RotationAnimation.h" />
     <ClInclude Include="stdafx.h" />
@@ -168,10 +171,13 @@
     <ClInclude Include="Vertices.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AlgorithmSolver.cpp" />
     <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="CubeSolver.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="MagicCube.cpp" />
+    <ClCompile Include="RandomSolver.cpp" />
     <ClCompile Include="Rendering.cpp" />
     <ClCompile Include="RotationAnimation.cpp" />
     <ClCompile Include="stdafx.cpp">

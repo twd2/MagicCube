@@ -49,22 +49,22 @@ void renderSubCube(GLfloat x, GLfloat y, GLfloat z, cube_t colorInfo)
 	glPushMatrix();
 	glTranslatef(1.1f * x, 1.1f * y, 1.1f * z);
 
-	setColor((cube_color)GET_FRONT(colorInfo));
+	setColor((CubeColor)GET_FRONT(colorInfo));
 	glDrawArrays(GL_TRIANGLES, 0, 2 * 3);
 
-	setColor((cube_color)GET_BACK(colorInfo));
+	setColor((CubeColor)GET_BACK(colorInfo));
 	glDrawArrays(GL_TRIANGLES, 2 * 3, 2 * 3);
 
-	setColor((cube_color)GET_LEFT(colorInfo));
+	setColor((CubeColor)GET_LEFT(colorInfo));
 	glDrawArrays(GL_TRIANGLES, 2 * 2 * 3, 2 * 3);
 
-	setColor((cube_color)GET_RIGHT(colorInfo));
+	setColor((CubeColor)GET_RIGHT(colorInfo));
 	glDrawArrays(GL_TRIANGLES, 3 * 2 * 3, 2 * 3);
 
-	setColor((cube_color)GET_UP(colorInfo));
+	setColor((CubeColor)GET_UP(colorInfo));
 	glDrawArrays(GL_TRIANGLES, 4 * 2 * 3, 2 * 3);
 
-	setColor((cube_color)GET_DOWN(colorInfo));
+	setColor((CubeColor)GET_DOWN(colorInfo));
 	glDrawArrays(GL_TRIANGLES, 5 * 2 * 3, 2 * 3);
 
 	glDisableVertexAttribArray(0);
@@ -105,7 +105,7 @@ inline void renderCubeRange(Cube &cube, int x0, int x1, int y0, int y1, int z0, 
 	}
 }
 
-void renderCube(Cube &cube, float angle, cube_rotate_method method)
+void renderCube(Cube &cube, float angle, CubeRotateMethod method)
 {
 	renderSubCube(1, 1, 1, cube.subCubes[1][1][1]); //never rotate
 

@@ -4,10 +4,10 @@
 #include "Cube.h"
 
 extern double rotateAngle, finishAngle;
-extern cube_rotate_method rotateMethod;
+extern CubeRotateMethod rotateMethod;
 
 double easingDelta(double);
 void rotateFinishCallback();
 void nextAngle();
 void finishCurrentRotate();
-void startRotate(cube_rotate_method, bool);
+void startRotate(CubeRotateMethod, bool);

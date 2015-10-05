@@ -1,12 +1,12 @@
 
 typedef unsigned int cube_t; //0bMETA DATA ffff bbbb llll rrrr uuuu dddd
 
-#define GET_FRONT(x) ((cube_color)(((x)&0xF00000)>>20))
-#define GET_BACK(x)  ((cube_color)(((x)&0x0F0000)>>16))
-#define GET_LEFT(x)  ((cube_color)(((x)&0x00F000)>>12))
-#define GET_RIGHT(x) ((cube_color)(((x)&0x000F00)>>8))
-#define GET_UP(x)    ((cube_color)(((x)&0x0000F0)>>4))
-#define GET_DOWN(x)  ((cube_color)(((x)&0x00000F)>>0))
+#define GET_FRONT(x) ((CubeColor)(((x)&0xF00000)>>20))
+#define GET_BACK(x)  ((CubeColor)(((x)&0x0F0000)>>16))
+#define GET_LEFT(x)  ((CubeColor)(((x)&0x00F000)>>12))
+#define GET_RIGHT(x) ((CubeColor)(((x)&0x000F00)>>8))
+#define GET_UP(x)    ((CubeColor)(((x)&0x0000F0)>>4))
+#define GET_DOWN(x)  ((CubeColor)(((x)&0x00000F)>>0))
 
 #define SET_FRONT(x) (((x)&0xF)<<20)
 #define SET_BACK(x)  (((x)&0xF)<<16)
@@ -24,7 +24,7 @@ typedef unsigned int cube_t; //0bMETA DATA ffff bbbb llll rrrr uuuu dddd
 #define ROTATE_CLK(x)   MAKE_CUBE(GET_FRONT(x), GET_BACK(x), GET_DOWN(x), GET_UP(x), GET_LEFT(x), GET_RIGHT(x)) //Ë³Ê±Õë
 #define ROTATE_CCLK(x)  MAKE_CUBE(GET_FRONT(x), GET_BACK(x), GET_UP(x), GET_DOWN(x), GET_RIGHT(x), GET_LEFT(x)) //ÄæÊ±Õë
 
-enum cube_color
+enum CubeColor
 {
 	COLOR_UNUSED,
 	COLOR_WHITE,
@@ -36,7 +36,7 @@ enum cube_color
 	COLOR_INVALID = 0xF
 };
 
-enum cube_rotate_method
+enum CubeRotateMethod
 {
 	NONE,
 	FRONT,
@@ -45,7 +45,21 @@ enum cube_rotate_method
 	RIGHT,
 	UP,
 	DOWN,
+
+	//i is for solver
+	FRONTi,
+	BACKi,
+	LEFTi,
+	RIGHTi,
+	UPi,
+	DOWNi,
+
 	WHOLEX, //up>0, down<0
 	WHOLEY, //left>0, right<0
-	WHOLEZ  //clk>0, cclk<0
+	WHOLEZ,  //clk>0, cclk<0
+
+	//i is for solver
+	WHOLEXi, //up>0, down<0
+	WHOLEYi, //left>0, right<0
+	WHOLEZi  //clk>0, cclk<0
 };

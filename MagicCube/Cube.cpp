@@ -1,6 +1,16 @@
 #include "stdafx.h"
 #include "Cube.h"
 
+map<char, CubeColor> ColorCharMap = {
+		{ '-', COLOR_UNUSED },
+		{ 'W', COLOR_WHITE },
+		{ 'O', COLOR_ORANGE },
+		{ 'B', COLOR_BLUE },
+		{ 'R', COLOR_RED },
+		{ 'G', COLOR_GREEN},
+		{ 'Y', COLOR_YELLOW }
+};
+
 Cube::Cube()
 {
 	subCubes[0][0][0] = 0x063002;
@@ -39,6 +49,26 @@ Cube::~Cube()
 {
 }
 
+void Cube::Load(string data)
+{
+	for (int z = 0; z < 3; ++z)
+	{
+		for (int y = 0; y < 3; ++y)
+		{
+			for (int x = 0; x < 3; ++x)
+			{
+				subCubes[x][y][z] =
+					MAKE_CUBE(ColorCharMap[data[((z * 3 + y) * 3 + x) * 6 + 0]],
+							  ColorCharMap[data[((z * 3 + y) * 3 + x) * 6 + 1]],
+							  ColorCharMap[data[((z * 3 + y) * 3 + x) * 6 + 2]],
+							  ColorCharMap[data[((z * 3 + y) * 3 + x) * 6 + 3]],
+							  ColorCharMap[data[((z * 3 + y) * 3 + x) * 6 + 4]],
+							  ColorCharMap[data[((z * 3 + y) * 3 + x) * 6 + 5]]);
+			}
+		}
+	}
+}
+
 void Cube::SaveState()
 {
 	for (int x = 0; x < 3; ++x)
@@ -50,6 +80,71 @@ void Cube::SaveState()
 				oldSubCubes[x][y][z] = subCubes[x][y][z];
 			}
 		}
+	}
+}
+
+void Cube::DoMethod(CubeRotateMethod method)
+{
+	switch (method)
+	{
+	case NONE:
+		break;
+	case FRONT:
+		F();
+		break;
+	case BACK:
+		B();
+		break;
+	case LEFT:
+		L();
+		break;
+	case RIGHT:
+		R();
+		break;
+	case UP:
+		U();
+		break;
+	case DOWN:
+		D();
+		break;
+	case FRONTi:
+		Fi();
+		break;
+	case BACKi:
+		Bi();
+		break;
+	case LEFTi:
+		Li();
+		break;
+	case RIGHTi:
+		Ri();
+		break;
+	case UPi:
+		Ui();
+		break;
+	case DOWNi:
+		Di();
+		break;
+	case WHOLEX:
+		RotateUp();
+		break;
+	case WHOLEY:
+		RotateLeft();
+		break;
+	case WHOLEZ:
+		RotateClk();
+		break;
+	case WHOLEXi:
+		RotateDown();
+		break;
+	case WHOLEYi:
+		RotateRight();
+		break;
+	case WHOLEZi:
+		RotateCClk();
+		break;
+	default:
+		break;
 	}
 }
 
@@ -319,7 +414,7 @@ void Cube::RotateCClk()
 
 bool Cube::CheckL()
 {
-	cube_color centre = GET_LEFT(subCubes[0][1][1]);
+	CubeColor centre = GET_LEFT(subCubes[0][1][1]);
 	return GET_LEFT(subCubes[0][0][0]) == centre &&
 		   GET_LEFT(subCubes[0][0][1]) == centre &&
 		   GET_LEFT(subCubes[0][0][2]) == centre &&
@@ -333,7 +428,7 @@ bool Cube::CheckL()
 
 bool Cube::CheckR()
 {
-	cube_color centre = GET_RIGHT(subCubes[2][1][1]);
+	CubeColor centre = GET_RIGHT(subCubes[2][1][1]);
 	return GET_RIGHT(subCubes[2][0][0]) == centre &&
 		   GET_RIGHT(subCubes[2][0][1]) == centre &&
 		   GET_RIGHT(subCubes[2][0][2]) == centre &&
@@ -347,7 +442,7 @@ bool Cube::CheckR()
 
 bool  Cube::CheckU()
 {
-	cube_color centre = GET_UP(subCubes[1][2][1]);
+	CubeColor centre = GET_UP(subCubes[1][2][1]);
 	return GET_UP(subCubes[0][2][0]) == centre &&
 		   GET_UP(subCubes[1][2][0]) == centre &&
 		   GET_UP(subCubes[2][2][0]) == centre &&
@@ -361,7 +456,7 @@ bool  Cube::CheckU()
 
 bool  Cube::CheckD()
 {
-	cube_color centre = GET_DOWN(subCubes[1][0][1]);
+	CubeColor centre = GET_DOWN(subCubes[1][0][1]);
 	return GET_DOWN(subCubes[0][0][0]) == centre &&
 		   GET_DOWN(subCubes[1][0][0]) == centre &&
 		   GET_DOWN(subCubes[2][0][0]) == centre &&
@@ -375,7 +470,7 @@ bool  Cube::CheckD()
 
 bool  Cube::CheckF()
 {
-	cube_color centre = GET_FRONT(subCubes[1][1][2]);
+	CubeColor centre = GET_FRONT(subCubes[1][1][2]);
 	return GET_FRONT(subCubes[0][0][2]) == centre &&
 		   GET_FRONT(subCubes[1][0][2]) == centre &&
 		   GET_FRONT(subCubes[2][0][2]) == centre &&
@@ -389,7 +484,7 @@ bool  Cube::CheckF()
 
 bool Cube::CheckB()
 {
-	cube_color centre = GET_BACK(subCubes[1][1][0]);
+	CubeColor centre = GET_BACK(subCubes[1][1][0]);
 	return GET_BACK(subCubes[0][0][0]) == centre &&
 		   GET_BACK(subCubes[1][0][0]) == centre &&
 		   GET_BACK(subCubes[2][0][0]) == centre &&

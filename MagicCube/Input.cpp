@@ -129,23 +129,7 @@ void keyboardCallback(GLFWwindow *window, int key, int scancode, int action, int
 {
 	if (action == GLFW_PRESS || action == GLFW_REPEAT)
 	{
-		if (key == GLFW_KEY_LEFT)
-		{
-			viewRotationAngleY -= 1.0f;
-		}
-		else if (key == GLFW_KEY_RIGHT)
-		{
-			viewRotationAngleY += 1.0f;
-		}
-		else if (key == GLFW_KEY_UP)
-		{
-			viewRotationAngleX -= 1.0f;
-		}
-		else if (key == GLFW_KEY_DOWN)
-		{
-			viewRotationAngleX += 1.0f;
-		}
-		else if (key >= GLFW_KEY_SPACE && key <= GLFW_KEY_GRAVE_ACCENT)
+		if (key >= GLFW_KEY_SPACE && key <= GLFW_KEY_GRAVE_ACCENT)
 		{
 			commandBuffer += (char)key;
 			printf("%c", key);
@@ -166,5 +150,25 @@ void keyboardCallback(GLFWwindow *window, int key, int scancode, int action, int
 			printf("\nDone.\n");
 			commandBuffer = "";
 		}
+	}
+}
+
+void keyboardScan()
+{
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	{
+		viewRotationAngleY -= 0.5f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+	{
+		viewRotationAngleY += 0.5f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	{
+		viewRotationAngleX -= 0.5f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	{
+		viewRotationAngleX += 0.5f;
 	}
 }

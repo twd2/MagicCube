@@ -4,9 +4,12 @@
 
 #include "Input.h"
 #include "Cube.h"
+#include "CubeSolver.h"
+#include "AlgorithmSolver.h"
 #include "RotationAnimation.h"
 #include "Vertices.h"
 #include "Graphics.h"
 #include "Rendering.h"
+
 
 extern Cube cube;

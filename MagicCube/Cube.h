@@ -1,4 +1,9 @@
 #pragma once
+
+#include <map>
+
+extern map<char, CubeColor> ColorCharMap;
+
 class Cube
 {
 public:
@@ -19,7 +24,9 @@ public:
 	z 
 	*/
 
+	void Load(string);
 	void SaveState();
+	void DoMethod(CubeRotateMethod);
 	void R();
 	void Ri();
 	void L();
