@@ -45,8 +45,8 @@ int main(int argc, char* argv[])
 
 	initGL();
 	initVertexArray();
-	initAxisBuffer();
-	initCubeBuffer();
+	initAxisVertexBuffer();
+	initCubeVertexBuffer();
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))

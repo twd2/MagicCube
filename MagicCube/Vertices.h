@@ -2,5 +2,5 @@
 
 extern GLuint axisVertexBuffer, cubeVertexBuffer;
 
-void initAxisBuffer();
-void initCubeBuffer();
+void initAxisVertexBuffer();
+void initCubeVertexBuffer();

@@ -72,14 +72,14 @@ const GLfloat cubeVertexBufferData[] = {
 	0.0f, 0.0f, 1.0f
 };
 
-void initAxisBuffer()
+void initAxisVertexBuffer()
 {
 	glGenBuffers(1, &axisVertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, axisVertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(axisVertexBufferData), axisVertexBufferData, GL_STATIC_DRAW);
 }
 
-void initCubeBuffer()
+void initCubeVertexBuffer()
 {
 	glGenBuffers(1, &cubeVertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, cubeVertexBuffer);
