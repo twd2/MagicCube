@@ -5,12 +5,6 @@ GLfloat viewRotationAngleX, viewRotationAngleY;
 
 void renderAxis()
 {
-	glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
-
-	glBegin(GL_POINTS);
-	glVertex2f(0.0f, 0.0f);
-	glEnd();
-
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, axisVertexBuffer);
 	glVertexAttribPointer(
@@ -20,12 +14,17 @@ void renderAxis()
 		GL_FALSE,           // normalized?
 		0,                  // stride
 		(void*)0            // array buffer offset
-		);
+	);
 
+	//x
 	glColor4f(1.0f, 0.0f, 0.0f, 0.5f);
 	glDrawArrays(GL_LINES, 0, 3 * 2);
+
+	//y
 	glColor4f(0.0f, 1.0f, 0.0f, 0.5f);
 	glDrawArrays(GL_LINES, 3 * 2, 3 * 2);
+
+	//z
 	glColor4f(0.0f, 0.0f, 1.0f, 0.5f);
 	glDrawArrays(GL_LINES, 6 * 2, 3 * 2);
 
@@ -52,16 +51,22 @@ void renderSubCube(GLfloat x, GLfloat y, GLfloat z, cube_t colorInfo)
 
 	setColor((cube_color)GET_FRONT(colorInfo));
 	glDrawArrays(GL_TRIANGLES, 0, 2 * 3);
+
 	setColor((cube_color)GET_BACK(colorInfo));
 	glDrawArrays(GL_TRIANGLES, 2 * 3, 2 * 3);
+
 	setColor((cube_color)GET_LEFT(colorInfo));
 	glDrawArrays(GL_TRIANGLES, 2 * 2 * 3, 2 * 3);
+
 	setColor((cube_color)GET_RIGHT(colorInfo));
 	glDrawArrays(GL_TRIANGLES, 3 * 2 * 3, 2 * 3);
+
 	setColor((cube_color)GET_UP(colorInfo));
 	glDrawArrays(GL_TRIANGLES, 4 * 2 * 3, 2 * 3);
+
 	setColor((cube_color)GET_DOWN(colorInfo));
 	glDrawArrays(GL_TRIANGLES, 5 * 2 * 3, 2 * 3);
+
 	glDisableVertexAttribArray(0);
 
 	glPopMatrix();
@@ -72,7 +77,7 @@ void renderSubCube(GLfloat x, GLfloat y, GLfloat z, cube_t colorInfo)
 void renderCube(Cube &cube)
 {
 	glPushMatrix();
-	glTranslatef(-1.65f, -1.65f, -1.65f);
+	glTranslatef(-1.6f, -1.6f, -1.6f);
 	for (int x = 0; x <= 2; ++x)
 	{
 		for (int y = 0; y <= 2; ++y)
@@ -102,7 +107,7 @@ inline void renderCubeRange(Cube &cube, int x0, int x1, int y0, int y1, int z0, 
 
 void renderCube(Cube &cube, float angle, cube_surface surface)
 {
-	renderSubCube(1, 1, 1, cube.subCubes[1][1][1]); //这个永远不会转动
+	renderSubCube(1, 1, 1, cube.subCubes[1][1][1]); //never rotate
 
 	switch (surface)
 	{
@@ -157,7 +162,6 @@ void renderCube(Cube &cube, float angle, cube_surface surface)
 void render()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	//glClearColor(0.5 + 0.5*sin(clock() / 1000.0), 0.5 + 0.5*sin(clock() / 1000.0 + PI / 3.0), 0.5 + 0.5*sin(clock() / 1000.0 + 2.0 * PI / 3.0), 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glFlush();
 
@@ -165,10 +169,10 @@ void render()
 	glTranslatef(0.0f, 0.0f, -10.0f);
 
 	glPushMatrix();
-	glRotatef(viewRotationAngleX, 1.0f, 0.0f, 0.0f); //1.0f, -1.0f, 0.0f);
+	glRotatef(viewRotationAngleX, 1.0f, 0.0f, 0.0f);
 
 	glPushMatrix();
-	glRotatef(viewRotationAngleY, 0.0f, 1.0f, 0.0f); //1.0f, -1.0f, 0.0f);
+	glRotatef(viewRotationAngleY, 0.0f, 1.0f, 0.0f);
 
 	glPushMatrix();
 	glScalef(3, 3, 3);

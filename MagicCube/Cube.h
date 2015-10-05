@@ -32,5 +32,11 @@ public:
 	void Fi();
 	void U();
 	void Ui();
+	void RotateLeft();
+	void RotateRight();
+	void RotateUp();
+	void RotateDown();
+	void RotateClk();
+	void RotateCClk();
 };
 

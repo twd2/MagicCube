@@ -221,3 +221,99 @@ void Cube::Ui()
 	subCubes[1][2][2] = ROTATE_RIGHT(oldSubCubes[0][2][1]);
 	subCubes[2][2][2] = ROTATE_RIGHT(oldSubCubes[0][2][2]);
 }
+
+void Cube::RotateLeft()
+{
+	U();
+	SaveState();
+	subCubes[0][1][0] = ROTATE_LEFT(oldSubCubes[0][1][2]);
+	subCubes[1][1][0] = ROTATE_LEFT(oldSubCubes[0][1][1]);
+	subCubes[2][1][0] = ROTATE_LEFT(oldSubCubes[0][1][0]);
+	subCubes[0][1][1] = ROTATE_LEFT(oldSubCubes[1][1][2]);
+	subCubes[1][1][1] = ROTATE_LEFT(oldSubCubes[1][1][1]);
+	subCubes[2][1][1] = ROTATE_LEFT(oldSubCubes[1][1][0]);
+	subCubes[0][1][2] = ROTATE_LEFT(oldSubCubes[2][1][2]);
+	subCubes[1][1][2] = ROTATE_LEFT(oldSubCubes[2][1][1]);
+	subCubes[2][1][2] = ROTATE_LEFT(oldSubCubes[2][1][0]);
+	Di();
+}
+
+void Cube::RotateRight()
+{
+	Ui();
+	SaveState();
+	subCubes[0][1][0] = ROTATE_RIGHT(oldSubCubes[2][1][0]);
+	subCubes[1][1][0] = ROTATE_RIGHT(oldSubCubes[2][1][1]);
+	subCubes[2][1][0] = ROTATE_RIGHT(oldSubCubes[2][1][2]);
+	subCubes[0][1][1] = ROTATE_RIGHT(oldSubCubes[1][1][0]);
+	subCubes[1][1][1] = ROTATE_RIGHT(oldSubCubes[1][1][1]);
+	subCubes[2][1][1] = ROTATE_RIGHT(oldSubCubes[1][1][2]);
+	subCubes[0][1][2] = ROTATE_RIGHT(oldSubCubes[0][1][0]);
+	subCubes[1][1][2] = ROTATE_RIGHT(oldSubCubes[0][1][1]);
+	subCubes[2][1][2] = ROTATE_RIGHT(oldSubCubes[0][1][2]);
+	D();
+}
+
+void Cube::RotateUp()
+{
+	Li();
+	SaveState();
+	subCubes[1][0][0] = ROTATE_UP(oldSubCubes[1][2][0]);
+	subCubes[1][0][1] = ROTATE_UP(oldSubCubes[1][1][0]);
+	subCubes[1][0][2] = ROTATE_UP(oldSubCubes[1][0][0]);
+	subCubes[1][1][0] = ROTATE_UP(oldSubCubes[1][2][1]);
+	subCubes[1][1][1] = ROTATE_UP(oldSubCubes[1][1][1]);
+	subCubes[1][1][2] = ROTATE_UP(oldSubCubes[1][0][1]);
+	subCubes[1][2][0] = ROTATE_UP(oldSubCubes[1][2][2]);
+	subCubes[1][2][1] = ROTATE_UP(oldSubCubes[1][1][2]);
+	subCubes[1][2][2] = ROTATE_UP(oldSubCubes[1][0][2]);
+	R();
+}
+
+void Cube::RotateDown()
+{
+	L();
+	SaveState();
+	subCubes[1][0][0] = ROTATE_DOWN(oldSubCubes[1][0][2]);
+	subCubes[1][0][1] = ROTATE_DOWN(oldSubCubes[1][1][2]);
+	subCubes[1][0][2] = ROTATE_DOWN(oldSubCubes[1][2][2]);
+	subCubes[1][1][0] = ROTATE_DOWN(oldSubCubes[1][0][1]);
+	subCubes[1][1][1] = ROTATE_DOWN(oldSubCubes[1][1][1]);
+	subCubes[1][1][2] = ROTATE_DOWN(oldSubCubes[1][2][1]);
+	subCubes[1][2][0] = ROTATE_DOWN(oldSubCubes[1][0][0]);
+	subCubes[1][2][1] = ROTATE_DOWN(oldSubCubes[1][1][0]);
+	subCubes[1][2][2] = ROTATE_DOWN(oldSubCubes[1][2][0]);
+	Ri();
+}
+
+void Cube::RotateClk()
+{
+	F();
+	SaveState();
+	subCubes[0][0][1] = ROTATE_CLK(oldSubCubes[2][0][1]);
+	subCubes[1][0][1] = ROTATE_CLK(oldSubCubes[2][1][1]);
+	subCubes[2][0][1] = ROTATE_CLK(oldSubCubes[2][2][1]);
+	subCubes[0][1][1] = ROTATE_CLK(oldSubCubes[1][0][1]);
+	subCubes[1][1][1] = ROTATE_CLK(oldSubCubes[1][1][1]);
+	subCubes[2][1][1] = ROTATE_CLK(oldSubCubes[1][2][1]);
+	subCubes[0][2][1] = ROTATE_CLK(oldSubCubes[0][0][1]);
+	subCubes[1][2][1] = ROTATE_CLK(oldSubCubes[0][1][1]);
+	subCubes[2][2][1] = ROTATE_CLK(oldSubCubes[0][2][1]);
+	Bi();
+}
+
+void Cube::RotateCClk()
+{
+	Fi();
+	SaveState();
+	subCubes[0][0][1] = ROTATE_CCLK(oldSubCubes[0][2][1]);
+	subCubes[1][0][1] = ROTATE_CCLK(oldSubCubes[0][1][1]);
+	subCubes[2][0][1] = ROTATE_CCLK(oldSubCubes[0][0][1]);
+	subCubes[0][1][1] = ROTATE_CCLK(oldSubCubes[1][2][1]);
+	subCubes[1][1][1] = ROTATE_CCLK(oldSubCubes[1][1][1]);
+	subCubes[2][1][1] = ROTATE_CCLK(oldSubCubes[1][0][1]);
+	subCubes[0][2][1] = ROTATE_CCLK(oldSubCubes[2][2][1]);
+	subCubes[1][2][1] = ROTATE_CCLK(oldSubCubes[2][1][1]);
+	subCubes[2][2][1] = ROTATE_CCLK(oldSubCubes[2][0][1]);
+	F();
+}
