@@ -115,7 +115,11 @@ void execCommand(string s)
 	}
 	else if (s == "CHECK")
 	{
-		printf("U%d D%d L%d R%d F%d B%d: %d", cube.CheckU(), cube.CheckD(), cube.CheckL(), cube.CheckR(), cube.CheckF(), cube.CheckB(), cube.Check());
+		printf("U%d D%d L%d R%d F%d B%d: %d\n", cube.CheckU(), cube.CheckD(), cube.CheckL(), cube.CheckR(), cube.CheckF(), cube.CheckB(), cube.Check());
+	}
+	else if (s == "ABOUT")
+	{
+		printf("Wandai :)\n");
 	}
 }
 
@@ -157,6 +161,7 @@ void keyboardCallback(GLFWwindow *window, int key, int scancode, int action, int
 		}
 		else if (key == GLFW_KEY_ENTER)
 		{
+			printf("\n");
 			execCommand(commandBuffer);
 			printf("\nDone.\n");
 			commandBuffer = "";

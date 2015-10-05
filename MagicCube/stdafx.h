@@ -15,15 +15,13 @@
 #ifdef _UNIX
 #endif
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <cmath>
 #include <ctime>
-
-#include "types.h"
-
+#include <cstring>
 #include <string>
 #include <iostream>
-
 using namespace std;
 
 #include <GL\glew.h>
@@ -31,6 +29,7 @@ using namespace std;
 #define GLFW_INCLUDE_GLU
 #include <GLFW/glfw3.h>
 
+#include "types.h"
 #include "Config.h"
 
 #define min(a,b) (((a)<(b))?(a):(b))

@@ -14,7 +14,9 @@ void updateFPS()
 	++lastFPS;
 	if (currTime - lastTime >= 1.0)
 	{
-		printf("FPS: %d\n", lastFPS);
+		char str[256];
+		sprintf_s(str, "Magic Cube (FPS: %d)", lastFPS);
+		glfwSetWindowTitle(window, str);
 		lastTime = glfwGetTime();
 		lastFPS = 0;
 	}

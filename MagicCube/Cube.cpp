@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Cube.h"
 
-
 Cube::Cube()
 {
 	subCubes[0][0][0] = 0x063002;
