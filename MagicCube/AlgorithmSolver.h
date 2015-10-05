@@ -11,6 +11,14 @@ public:
 	~AlgorithmSolver();
 
 	void Solve();
+
+	void GetUp(CubeColor);
+	void GetDown(CubeColor);
+	void GetLeft(CubeColor);
+	void GetRight(CubeColor);
+	void GetFront(CubeColor);
+	void GetBack(CubeColor);
+
 	void Stage1(); //pdf stage2: solve the white cross
 	void Stage2(); //pdf stage3: solve the white corners
 	void Stage3(); //pdf stage4: solve the middle layer

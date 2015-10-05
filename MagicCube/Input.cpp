@@ -121,6 +121,21 @@ void execCommand(string s)
 	{
 		printf("Wandai :)\n");
 	}
+	else if (s == "")
+	{
+		for (int i = 0; i < rand() % 1000 + 1; ++i)
+		{
+			CubeRotateMethod method = (CubeRotateMethod)((rand() % 12) + 1);
+			cube.DoMethod(method);
+		}
+		/*cube.Load("-WG--O-R---B-R-G-Y-YO----O-----G-W---BO-W--B--W--B-OY-"
+		"--Y--B-----W---R-W--B------------G----Y-R-----Y----OB-"
+		"O-Y--GG----YR--G-WR-G---R-----O--W--W-B-R-G---O-B--RY-");*/
+
+		CubeSolver *solver = (CubeSolver*)new AlgorithmSolver(cube);
+		solver->Solve();
+		delete solver;
+	}
 }
 
 string commandBuffer = "";

@@ -53,6 +53,98 @@ typedef unsigned int cube_t; //0bMETA DATA ffff bbbb llll rrrr uuuu dddd
 #define BRU_CORNER 2][2][0 //back right up corner
 #define BRD_CORNER 2][0][0 //back right down corner
 
+#define IsColorMatch1(cube, color1) \
+(((GET_FRONT(cube) == color1) +\
+(GET_BACK(cube) == color1) +\
+(GET_LEFT(cube) == color1) +\
+(GET_RIGHT(cube) == color1) +\
+(GET_UP(cube) == color1) +\
+(GET_DOWN(cube) == color1)) == 1)
+
+#define IsColorMatch2(cube, color1, color2) \
+(((GET_FRONT(cube) == color1) +\
+(GET_BACK(cube) == color1) +\
+(GET_LEFT(cube) == color1) +\
+(GET_RIGHT(cube) == color1) +\
+(GET_UP(cube) == color1) +\
+(GET_DOWN(cube) == color1) +\
+(GET_FRONT(cube) == color2) +\
+(GET_BACK(cube) == color2) +\
+(GET_LEFT(cube) == color2) +\
+(GET_RIGHT(cube) == color2) +\
+(GET_UP(cube) == color2) +\
+(GET_DOWN(cube) == color2)) == 2)
+
+#define IsColorMatch3(cube, color1, color2, color3) \
+(((GET_FRONT(cube) == color1) +\
+(GET_BACK(cube) == color1) +\
+(GET_LEFT(cube) == color1) +\
+(GET_RIGHT(cube) == color1) +\
+(GET_UP(cube) == color1) +\
+(GET_DOWN(cube) == color1) +\
+(GET_FRONT(cube) == color2) +\
+(GET_BACK(cube) == color2) +\
+(GET_LEFT(cube) == color2) +\
+(GET_RIGHT(cube) == color2) +\
+(GET_UP(cube) == color2) +\
+(GET_DOWN(cube) == color2) +\
+(GET_FRONT(cube) == color3) +\
+(GET_BACK(cube) == color3) +\
+(GET_LEFT(cube) == color3) +\
+(GET_RIGHT(cube) == color3) +\
+(GET_UP(cube) == color3) +\
+(GET_DOWN(cube) == color3)) == 3)
+
+#define FIND_EDGE(subCubes, color1, color2, stmtFL, stmtFR, stmtFU, stmtFD, stmtBL, stmtBR, stmtBU, stmtBD, stmtUL, stmtUR, stmtDL, stmtDR) \
+if (IsColorMatch2(subCubes[FL_EDGE], color1, color2)) \
+{ \
+	stmtFL; \
+}\
+else if (IsColorMatch2(subCubes[FR_EDGE], color1, color2))\
+{\
+	stmtFR; \
+}\
+else if (IsColorMatch2(subCubes[FU_EDGE], color1, color2))\
+{\
+	stmtFU; \
+}\
+else if (IsColorMatch2(subCubes[FD_EDGE], color1, color2))\
+{\
+	stmtFD; \
+}\
+else if (IsColorMatch2(subCubes[BL_EDGE], color1, color2))\
+{\
+	stmtBL; \
+}\
+else if (IsColorMatch2(subCubes[BR_EDGE], color1, color2))\
+{\
+	stmtBR; \
+}\
+else if (IsColorMatch2(subCubes[BU_EDGE], color1, color2))\
+{\
+	stmtBU; \
+}\
+else if (IsColorMatch2(subCubes[BD_EDGE], color1, color2))\
+{\
+	stmtBD; \
+}\
+else if (IsColorMatch2(subCubes[UL_EDGE], color1, color2))\
+{\
+	stmtUL; \
+}\
+else if (IsColorMatch2(subCubes[UR_EDGE], color1, color2))\
+{\
+	stmtUR; \
+}\
+else if (IsColorMatch2(subCubes[DL_EDGE], color1, color2))\
+{\
+	stmtDL; \
+}\
+else if (IsColorMatch2(subCubes[DR_EDGE], color1, color2))\
+{\
+	stmtDR; \
+}
+
 enum CubeColor
 {
 	COLOR_UNUSED,

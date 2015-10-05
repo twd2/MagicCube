@@ -29,9 +29,10 @@ void initGL()
 	glViewport(0, 0, WIDTH, HEIGHT);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0f, (float)(WIDTH) / (float)(HEIGHT), 0.5f, -1000.0f);
+	gluPerspective(45.0f, (float)(WIDTH) / (float)(HEIGHT), 0.1f, 1000.0f);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	gluLookAt(0.0f, 0.0f, 0.1f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
 	if (glewInit() != GLEW_OK)
 	{
