@@ -171,6 +171,66 @@ void renderCube(Cube &cube, float angle, CubeRotateMethod method)
 		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);
 		glPopMatrix();
 		break;
+	case FRONTi:
+		glPushMatrix();
+		glRotatef(angle, 0.0, 0.0, 1.0);
+		renderCubeRange(cube, 0, 2, 0, 2, 2, 2);
+		glPopMatrix();
+		renderCubeRange(cube, 0, 2, 0, 2, 0, 1);
+		break;
+	case BACKi:
+		glPushMatrix();
+		glRotatef(angle, 0.0, 0.0, -1.0);
+		renderCubeRange(cube, 0, 2, 0, 2, 0, 0);
+		glPopMatrix();
+		renderCubeRange(cube, 0, 2, 0, 2, 1, 2);
+		break;
+	case LEFTi:
+		glPushMatrix();
+		glRotatef(angle, -1.0, 0.0, 0.0);
+		renderCubeRange(cube, 0, 0, 0, 2, 0, 2);
+		glPopMatrix();
+		renderCubeRange(cube, 1, 2, 0, 2, 0, 2);
+		break;
+	case RIGHTi:
+		glPushMatrix();
+		glRotatef(angle, 1.0, 0.0, 0.0);
+		renderCubeRange(cube, 2, 2, 0, 2, 0, 2);
+		glPopMatrix();
+		renderCubeRange(cube, 0, 1, 0, 2, 0, 2);
+		break;
+	case UPi:
+		glPushMatrix();
+		glRotatef(angle, 0.0, 1.0, 0.0);
+		renderCubeRange(cube, 0, 2, 2, 2, 0, 2);
+		glPopMatrix();
+		renderCubeRange(cube, 0, 2, 0, 1, 0, 2);
+		break;
+	case DOWNi:
+		glPushMatrix();
+		glRotatef(angle, 0.0, -1.0, 0.0);
+		renderCubeRange(cube, 0, 2, 0, 0, 0, 2);
+		glPopMatrix();
+		renderCubeRange(cube, 0, 2, 1, 2, 0, 2);
+		break;
+	case WHOLEXi:
+		glPushMatrix();
+		glRotatef(angle, 1.0, 0.0, 0.0);
+		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);
+		glPopMatrix();
+		break;
+	case WHOLEYi:
+		glPushMatrix();
+		glRotatef(angle, 0.0, 1.0, 0.0);
+		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);
+		glPopMatrix();
+		break;
+	case WHOLEZi:
+		glPushMatrix();
+		glRotatef(angle, 0.0, 0.0, 1.0);
+		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);
+		glPopMatrix();
+		break;
 	default:
 		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);
 		break;

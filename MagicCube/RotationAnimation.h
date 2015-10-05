@@ -10,4 +10,4 @@ double easingDelta(double);
 void rotateFinishCallback();
 void nextAngle();
 void finishCurrentRotate();
-void startRotate(CubeRotateMethod, bool);
+void startRotate(CubeRotateMethod);

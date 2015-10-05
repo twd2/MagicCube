@@ -20,101 +20,63 @@ double easingDelta(double currentAngle)
 
 void rotateFinishCallback()
 {
-	bool inverse = rotateAngle < 0.0;
-
 	switch (rotateMethod)
 	{
 	case NONE:
 		break;
 	case FRONT:
-		if (inverse)
-		{
-			cube.Fi();
-		}
-		else
-		{
-			cube.F();
-		}
+		cube.F();
 		break;
 	case BACK:
-		if (inverse)
-		{
-			cube.Bi();
-		}
-		else
-		{
-			cube.B();
-		}
+		cube.B();
 		break;
 	case LEFT:
-		if (inverse)
-		{
-			cube.Li();
-		}
-		else
-		{
-			cube.L();
-		}
+		cube.L();
 		break;
 	case RIGHT:
-		if (inverse)
-		{
-			cube.Ri();
-		}
-		else
-		{
-			cube.R();
-		}
+		cube.R();
 		break;
 	case UP:
-		if (inverse)
-		{
-			cube.Ui();
-		}
-		else
-		{
-			cube.U();
-		}
+		cube.U();
 		break;
 	case DOWN:
-		if (inverse)
-		{
-			cube.Di();
-		}
-		else
-		{
-			cube.D();
-		}
+		cube.D();
 		break;
 	case WHOLEX:
-		if (inverse)
-		{
-			cube.RotateDown();
-		}
-		else
-		{
-			cube.RotateUp();
-		}
+		cube.RotateUp();
 		break;
 	case WHOLEY:
-		if (inverse)
-		{
-			cube.RotateRight();
-		}
-		else
-		{
-			cube.RotateLeft();
-		}
+		cube.RotateLeft();
 		break;
 	case WHOLEZ:
-		if (inverse)
-		{
-			cube.RotateCClk();
-		}
-		else
-		{
-			cube.RotateClk();
-		}
+		cube.RotateClk();
+		break;
+	case FRONTi:
+		cube.Fi();
+		break;
+	case BACKi:
+		cube.Bi();
+		break;
+	case LEFTi:
+		cube.Li();
+		break;
+	case RIGHTi:
+		cube.Ri();
+		break;
+	case UPi:
+		cube.Ui();
+		break;
+	case DOWNi:
+		cube.Di();
+		break;
+	case WHOLEXi:
+		cube.RotateDown();
+		break;
+	case WHOLEYi:
+		cube.RotateRight();
+		break;
+	case WHOLEZi:
+		cube.RotateCClk();
 		break;
 	default:
 		break;
@@ -132,15 +94,8 @@ void nextAngle()
 	if (rotateMethod != NONE)
 	{
 		double delta = easingDelta(rotateAngle) * (currTime - lastTime);
-		if (rotateAngle < 0.0)
-		{
-			rotateAngle -= delta;
-		}
-		else
-		{
-			rotateAngle += delta;
-		}
-		if (abs(rotateAngle) >= finishAngle)
+		rotateAngle += delta;
+		if (rotateAngle >= finishAngle)
 		{
 			rotateFinishCallback();
 		}
@@ -151,23 +106,12 @@ void nextAngle()
 
 void finishCurrentRotate()
 {
-	if (rotateAngle < 0.0)
-	{
-		rotateAngle = -finishAngle;
-	}
-	else
-	{
-		rotateAngle = finishAngle;
-	}
+	rotateAngle = finishAngle;
 	rotateFinishCallback();
 }
 
-void startRotate(CubeRotateMethod method, bool inverse)
+void startRotate(CubeRotateMethod method)
 {
 	finishCurrentRotate();
 	rotateMethod = method;
-	if (inverse)
-	{
-		rotateAngle = -0.01;
-	}
 }

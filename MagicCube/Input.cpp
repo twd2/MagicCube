@@ -43,75 +43,75 @@ void execCommand(string s)
 {
 	if (s == "R")
 	{
-		startRotate(RIGHT, false);
+		startRotate(RIGHT);
 	}
 	else if (s == "RI")
 	{
-		startRotate(RIGHT, true);
+		startRotate(RIGHTi);
 	}
 	else if (s == "L")
 	{
-		startRotate(LEFT, false);
+		startRotate(LEFT);
 	}
 	else if (s == "LI")
 	{
-		startRotate(LEFT, true);
+		startRotate(LEFTi);
 	}
 	else if (s == "B")
 	{
-		startRotate(BACK, false);
+		startRotate(BACK);
 	}
 	else if (s == "BI")
 	{
-		startRotate(BACK, true);
+		startRotate(BACKi);
 	}
 	else if (s == "D")
 	{
-		startRotate(DOWN, false);
+		startRotate(DOWN);
 	}
 	else if (s == "DI")
 	{
-		startRotate(DOWN, true);
+		startRotate(DOWNi);
 	}
 	else if (s == "F")
 	{
-		startRotate(FRONT, false);
+		startRotate(FRONT);
 	}
 	else if (s == "FI")
 	{
-		startRotate(FRONT, true);
+		startRotate(FRONTi);
 	}
 	else if (s == "U")
 	{
-		startRotate(UP, false);
+		startRotate(UP);
 	}
 	else if (s == "UI")
 	{
-		startRotate(UP, true);
+		startRotate(UPi);
 	}
 	else if (s == "X")
 	{
-		startRotate(WHOLEX, false);
+		startRotate(WHOLEX);
 	}
 	else if (s == "Y")
 	{
-		startRotate(WHOLEY, false);
+		startRotate(WHOLEY);
 	}
 	else if (s == "Z")
 	{
-		startRotate(WHOLEZ, false);
+		startRotate(WHOLEZ);
 	}
 	else if (s == "XI")
 	{
-		startRotate(WHOLEX, true);
+		startRotate(WHOLEXi);
 	}
 	else if (s == "YI")
 	{
-		startRotate(WHOLEY, true);
+		startRotate(WHOLEYi);
 	}
 	else if (s == "ZI")
 	{
-		startRotate(WHOLEZ, true);
+		startRotate(WHOLEZi);
 	}
 	else if (s == "CHECK")
 	{

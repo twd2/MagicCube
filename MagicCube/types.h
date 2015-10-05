@@ -36,6 +36,7 @@ enum CubeColor
 	COLOR_INVALID = 0xF
 };
 
+//i means inverse, +9 -> i
 enum CubeRotateMethod
 {
 	NONE,
@@ -45,21 +46,16 @@ enum CubeRotateMethod
 	RIGHT,
 	UP,
 	DOWN,
-
-	//i is for solver
+	WHOLEX,  //whole up
+	WHOLEY,  //whole left
+	WHOLEZ,  //whole clk
 	FRONTi,
 	BACKi,
 	LEFTi,
 	RIGHTi,
 	UPi,
 	DOWNi,
-
-	WHOLEX, //up>0, down<0
-	WHOLEY, //left>0, right<0
-	WHOLEZ,  //clk>0, cclk<0
-
-	//i is for solver
-	WHOLEXi, //up>0, down<0
-	WHOLEYi, //left>0, right<0
-	WHOLEZi  //clk>0, cclk<0
+	WHOLEXi, //whole down
+	WHOLEYi, //whole right
+	WHOLEZi  //whole cclk
 };
