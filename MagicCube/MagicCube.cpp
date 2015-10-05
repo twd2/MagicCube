@@ -22,7 +22,6 @@ void updateFPS()
 
 int main(int argc, char* argv[])
 {
-
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;

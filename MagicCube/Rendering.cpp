@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Rendering.h"
 
-GLfloat viewRotationAngleX, viewRotationAngleY;
+GLfloat viewRotationAngleX = 45.0, viewRotationAngleY = -45.0;
 
 void renderAxis()
 {
@@ -105,11 +105,11 @@ inline void renderCubeRange(Cube &cube, int x0, int x1, int y0, int y1, int z0, 
 	}
 }
 
-void renderCube(Cube &cube, float angle, cube_surface surface)
+void renderCube(Cube &cube, float angle, cube_rotate_method method)
 {
 	renderSubCube(1, 1, 1, cube.subCubes[1][1][1]); //never rotate
 
-	switch (surface)
+	switch (method)
 	{
 	case FRONT:
 		glPushMatrix();
@@ -153,6 +153,24 @@ void renderCube(Cube &cube, float angle, cube_surface surface)
 		glPopMatrix();
 		renderCubeRange(cube, 0, 2, 1, 2, 0, 2);
 		break;
+	case WHOLEX:
+		glPushMatrix();
+		glRotatef(angle, -1.0, 0.0, 0.0);
+		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);
+		glPopMatrix();
+		break;
+	case WHOLEY:
+		glPushMatrix();
+		glRotatef(angle, 0.0, -1.0, 0.0);
+		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);
+		glPopMatrix();
+		break;
+	case WHOLEZ:
+		glPushMatrix();
+		glRotatef(angle, 0.0, 0.0, -1.0);
+		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);
+		glPopMatrix();
+		break;
 	default:
 		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);
 		break;
@@ -181,7 +199,7 @@ void render()
 
 	glPopMatrix();
 
-	renderCube(cube, (GLfloat)rotateAngle, rotateSurface);
+	renderCube(cube, (GLfloat)rotateAngle, rotateMethod);
 
 	glPopMatrix();
 	glPopMatrix();

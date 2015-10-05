@@ -2,7 +2,8 @@
 #include "RotationAnimation.h"
 
 double rotateAngle = 0.0;
-cube_surface rotateSurface = NONE;
+double finishAngle = 90.0;
+cube_rotate_method rotateMethod = NONE;
 
 double easingDelta(double currentAngle)
 {
@@ -21,7 +22,7 @@ void rotateFinishCallback()
 {
 	bool inverse = rotateAngle < 0.0;
 
-	switch (rotateSurface)
+	switch (rotateMethod)
 	{
 	case NONE:
 		break;
@@ -85,12 +86,42 @@ void rotateFinishCallback()
 			cube.D();
 		}
 		break;
+	case WHOLEX:
+		if (inverse)
+		{
+			cube.RotateDown();
+		}
+		else
+		{
+			cube.RotateUp();
+		}
+		break;
+	case WHOLEY:
+		if (inverse)
+		{
+			cube.RotateRight();
+		}
+		else
+		{
+			cube.RotateLeft();
+		}
+		break;
+	case WHOLEZ:
+		if (inverse)
+		{
+			cube.RotateCClk();
+		}
+		else
+		{
+			cube.RotateClk();
+		}
+		break;
 	default:
 		break;
 	}
 
 	rotateAngle = 0.0;
-	rotateSurface = NONE;
+	rotateMethod = NONE;
 }
 
 void nextAngle()
@@ -98,7 +129,7 @@ void nextAngle()
 	static double lastTime = glfwGetTime();
 	double currTime = glfwGetTime();
 
-	if (rotateSurface != NONE)
+	if (rotateMethod != NONE)
 	{
 		double delta = easingDelta(rotateAngle) * (currTime - lastTime);
 		if (rotateAngle < 0.0)
@@ -109,7 +140,7 @@ void nextAngle()
 		{
 			rotateAngle += delta;
 		}
-		if (abs(rotateAngle) >= 90.0)
+		if (abs(rotateAngle) >= finishAngle)
 		{
 			rotateFinishCallback();
 		}
@@ -122,19 +153,19 @@ void finishCurrentRotate()
 {
 	if (rotateAngle < 0.0)
 	{
-		rotateAngle = -90.0;
+		rotateAngle = -finishAngle;
 	}
 	else
 	{
-		rotateAngle = 90.0;
+		rotateAngle = finishAngle;
 	}
 	rotateFinishCallback();
 }
 
-void startRotate(cube_surface surface, bool inverse)
+void startRotate(cube_rotate_method method, bool inverse)
 {
 	finishCurrentRotate();
-	rotateSurface = surface;
+	rotateMethod = method;
 	if (inverse)
 	{
 		rotateAngle = -0.01;

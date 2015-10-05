@@ -36,7 +36,7 @@ enum cube_color
 	COLOR_INVALID = 0xF
 };
 
-enum cube_surface
+enum cube_rotate_method
 {
 	NONE,
 	FRONT,
@@ -44,5 +44,8 @@ enum cube_surface
 	LEFT,
 	RIGHT,
 	UP,
-	DOWN
+	DOWN,
+	WHOLEX, //up>0, down<0
+	WHOLEY, //left>0, right<0
+	WHOLEZ  //clk>0, cclk<0
 };

@@ -89,6 +89,30 @@ void execCommand(string s)
 	{
 		startRotate(UP, true);
 	}
+	else if (s == "X")
+	{
+		startRotate(WHOLEX, false);
+	}
+	else if (s == "Y")
+	{
+		startRotate(WHOLEY, false);
+	}
+	else if (s == "Z")
+	{
+		startRotate(WHOLEZ, false);
+	}
+	else if (s == "XI")
+	{
+		startRotate(WHOLEX, true);
+	}
+	else if (s == "YI")
+	{
+		startRotate(WHOLEY, true);
+	}
+	else if (s == "ZI")
+	{
+		startRotate(WHOLEZ, true);
+	}
 }
 
 string commandBuffer = "";

@@ -315,5 +315,5 @@ void Cube::RotateCClk()
 	subCubes[0][2][1] = ROTATE_CCLK(oldSubCubes[2][2][1]);
 	subCubes[1][2][1] = ROTATE_CCLK(oldSubCubes[2][1][1]);
 	subCubes[2][2][1] = ROTATE_CCLK(oldSubCubes[2][0][1]);
-	F();
+	B();
 }

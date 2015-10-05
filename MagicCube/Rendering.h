@@ -12,5 +12,5 @@ void renderAxis();
 void renderSubCube(GLfloat, GLfloat, GLfloat, cube_t);
 void renderCube(Cube&);
 inline void renderCubeRange(Cube&, int, int, int, int, int, int);
-void renderCube(Cube&, float, cube_surface);
+void renderCube(Cube&, float, cube_rotate_method);
 void render();

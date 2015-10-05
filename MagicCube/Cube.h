@@ -5,7 +5,7 @@ public:
 	Cube();
 	~Cube();
 
-	cube_t subCubes[3][3][3], oldSubCubes[3][3][3];
+	cube_t subCubes[3][3][3];
 	//              x  y  z
 	/*
 	    y
@@ -38,5 +38,8 @@ public:
 	void RotateDown();
 	void RotateClk();
 	void RotateCClk();
+
+private:
+	cube_t oldSubCubes[3][3][3];
 };
 
