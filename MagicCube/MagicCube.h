@@ -1,15 +1,15 @@
 #pragma once
 
-#define PI 3.14159265358979
-
-#include "Input.h"
 #include "Cube.h"
 #include "CubeSolver.h"
 #include "AlgorithmSolver.h"
+
+#ifdef USE_GL
+#include "Input.h"
 #include "RotationAnimation.h"
 #include "Vertices.h"
 #include "Graphics.h"
 #include "Rendering.h"
-
+#endif
 
 extern Cube cube;

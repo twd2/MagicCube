@@ -1,5 +1,6 @@
 #pragma once
 
+#include <assert.h>
 #include "CubeSolver.h"
 
 class AlgorithmSolver :
@@ -26,5 +27,8 @@ public:
 	void Stage5(); //pdf stage5: solve the top layer: get all the yellow on top
 	void Stage6(); //pdf stage6: position the yellow corners correctly
 	void Stage7(); //pdf stage6: position yellow edges correctly
+
+private:
+	bool CheckStage3();
 };
 

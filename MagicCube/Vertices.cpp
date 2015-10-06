@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Vertices.h"
 
+#ifdef USE_GL
+
 GLuint axisVertexBuffer, cubeVertexBuffer;
 
 const GLfloat axisVertexBufferData[] = {
@@ -85,3 +87,5 @@ void initCubeVertexBuffer()
 	glBindBuffer(GL_ARRAY_BUFFER, cubeVertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertexBufferData), cubeVertexBufferData, GL_STATIC_DRAW);
 }
+
+#endif

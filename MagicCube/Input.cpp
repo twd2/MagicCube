@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Input.h"
 
+#ifdef USE_GL
+
 double lastX = 0.0, lastY = 0.0;
 bool mouseDown = false;
 
@@ -123,18 +125,28 @@ void execCommand(string s)
 	}
 	else if (s == "")
 	{
-		for (int i = 0; i < rand() % 1000 + 1; ++i)
+		//for (;;)
 		{
-			CubeRotateMethod method = (CubeRotateMethod)((rand() % 12) + 1);
-			cube.DoMethod(method);
-		}
-		/*cube.Load("-WG--O-R---B-R-G-Y-YO----O-----G-W---BO-W--B--W--B-OY-"
-		"--Y--B-----W---R-W--B------------G----Y-R-----Y----OB-"
-		"O-Y--GG----YR--G-WR-G---R-----O--W--W-B-R-G---O-B--RY-");*/
+			printf("OK\n");
+			cube = Cube();
+			for (int i = 0; i < rand() % 1000 + 1; ++i)
+			{
+				CubeRotateMethod method = (CubeRotateMethod)((rand() % 12) + 1);
+				cube.DoMethod(method);
+			}
 
-		CubeSolver *solver = (CubeSolver*)new AlgorithmSolver(cube);
-		solver->Solve();
-		delete solver;
+			CubeSolver *solver = (CubeSolver*)new AlgorithmSolver(cube);
+			try
+			{
+				solver->Solve();
+			}
+			catch (...)
+			{
+				printf("%s\n", cube.Save().c_str());
+			}
+
+			delete solver;
+		}
 	}
 }
 
@@ -187,3 +199,5 @@ void keyboardScan()
 		viewRotationAngleX += 0.5f;
 	}
 }
+
+#endif

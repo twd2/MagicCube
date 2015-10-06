@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Rendering.h"
 
+#ifdef USE_GL
+
 GLfloat viewRotationAngleX = 45.0, viewRotationAngleY = -45.0;
 
 void renderAxis()
@@ -267,3 +269,5 @@ void render()
 
 	glFlush();
 }
+
+#endif

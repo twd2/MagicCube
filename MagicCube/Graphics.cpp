@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Graphics.h"
 
+#ifdef USE_GL
+
 GLFWwindow *window;
 GLuint vertexArrayId;
 
@@ -85,3 +87,5 @@ void updateFPS()
 		lastFPS = 0;
 	}
 }
+
+#endif

@@ -160,9 +160,9 @@ void AlgorithmSolver::MoveToFront(CubeColor color)
 	}
 	else if (GET_BACK(cube.subCubes[B_CENTRE]) == color)
 	{
-		Do(WHOLEX);
-		Do(WHOLEX);
-		//can also WHOLEY * 2
+		Do(WHOLEY);
+		Do(WHOLEY);
+		//can also WHOLEX * 2
 	}
 }
 
@@ -382,9 +382,170 @@ void AlgorithmSolver::Stage2()
 	}
 }
 
+bool AlgorithmSolver::CheckStage3()
+{
+	CubeColor leftCentre = GET_LEFT(cube.subCubes[0][1][1]);
+	bool checkLeft = GET_LEFT(cube.subCubes[0][0][0]) == leftCentre &&
+					 GET_LEFT(cube.subCubes[0][0][1]) == leftCentre &&
+					 GET_LEFT(cube.subCubes[0][0][2]) == leftCentre &&
+					 GET_LEFT(cube.subCubes[0][1][0]) == leftCentre &&
+					 GET_LEFT(cube.subCubes[0][1][1]) == leftCentre &&
+					 GET_LEFT(cube.subCubes[0][1][2]) == leftCentre;
+
+	CubeColor rightCentre = GET_RIGHT(cube.subCubes[2][1][1]);
+	bool checkRight = GET_RIGHT(cube.subCubes[2][0][0]) == rightCentre &&
+					  GET_RIGHT(cube.subCubes[2][0][1]) == rightCentre &&
+					  GET_RIGHT(cube.subCubes[2][0][2]) == rightCentre &&
+					  GET_RIGHT(cube.subCubes[2][1][0]) == rightCentre &&
+					  GET_RIGHT(cube.subCubes[2][1][1]) == rightCentre &&
+					  GET_RIGHT(cube.subCubes[2][1][2]) == rightCentre;
+
+	CubeColor frontCentre = GET_FRONT(cube.subCubes[1][1][2]);
+	bool checkFront = GET_FRONT(cube.subCubes[0][0][2]) == frontCentre &&
+					  GET_FRONT(cube.subCubes[1][0][2]) == frontCentre &&
+					  GET_FRONT(cube.subCubes[2][0][2]) == frontCentre &&
+					  GET_FRONT(cube.subCubes[0][1][2]) == frontCentre &&
+					  GET_FRONT(cube.subCubes[1][1][2]) == frontCentre &&
+					  GET_FRONT(cube.subCubes[2][1][2]) == frontCentre;
+
+	CubeColor backCentre = GET_BACK(cube.subCubes[1][1][0]);
+	bool checkBack = GET_BACK(cube.subCubes[0][0][0]) == backCentre &&
+					 GET_BACK(cube.subCubes[1][0][0]) == backCentre &&
+					 GET_BACK(cube.subCubes[2][0][0]) == backCentre &&
+					 GET_BACK(cube.subCubes[0][1][0]) == backCentre &&
+					 GET_BACK(cube.subCubes[1][1][0]) == backCentre &&
+					 GET_BACK(cube.subCubes[2][1][0]) == backCentre;
+
+	return cube.CheckD() && checkLeft && checkRight && checkFront && checkBack;
+}
+
 void AlgorithmSolver::Stage3()
 {
+	MoveToUp(COLOR_YELLOW);
 
+	map<CubeColor, CubeColor> leftColor = {
+			{ COLOR_RED, COLOR_BLUE },
+			{ COLOR_BLUE, COLOR_ORANGE },
+			{ COLOR_ORANGE, COLOR_GREEN },
+			{ COLOR_GREEN, COLOR_RED }
+	};
+
+	map<CubeColor, CubeColor> rightColor = {
+			{ COLOR_BLUE, COLOR_RED },
+			{ COLOR_ORANGE, COLOR_BLUE },
+			{ COLOR_GREEN, COLOR_ORANGE },
+			{ COLOR_RED, COLOR_GREEN}
+	};
+
+	while (!CheckStage3())
+	{
+		vector<CubeColor> colors = { COLOR_RED, COLOR_GREEN, COLOR_ORANGE, COLOR_BLUE };
+
+		CubeColor foundColor = COLOR_INVALID;
+		for each (auto color in colors)
+		{
+			MoveToFront(color);
+			if (GET_FRONT(cube.subCubes[FU_EDGE]) == color && GET_UP(cube.subCubes[FU_EDGE]) != COLOR_YELLOW)
+			{
+				//nope, found vertical row of color
+				foundColor = color;
+			}
+			else if (GET_RIGHT(cube.subCubes[UR_EDGE]) == color && GET_UP(cube.subCubes[UR_EDGE]) != COLOR_YELLOW)
+			{
+				Do(UP);
+				foundColor = color;
+			}
+			else if (GET_BACK(cube.subCubes[BU_EDGE]) == color && GET_UP(cube.subCubes[BU_EDGE]) != COLOR_YELLOW)
+			{
+				Do(UP);
+				Do(UP);
+				foundColor = color;
+			}
+			else if (GET_LEFT(cube.subCubes[UL_EDGE]) == color && GET_UP(cube.subCubes[UL_EDGE]) != COLOR_YELLOW)
+			{
+				Do(UPi);
+				foundColor = color;
+			}
+			else
+			{
+				//sad :(
+			}
+
+			if (foundColor != COLOR_INVALID)
+			{
+				break;
+			}
+		}
+
+		if (foundColor == COLOR_INVALID)
+		{
+			//truly SAD
+			for each (auto color in colors)
+			{
+				MoveToFront(color);
+				if ((GET_FRONT(cube.subCubes[FL_EDGE]) != color || GET_LEFT(cube.subCubes[FL_EDGE]) != leftColor[color]) &&
+					GET_FRONT(cube.subCubes[FL_EDGE]) != COLOR_YELLOW && GET_LEFT(cube.subCubes[FL_EDGE]) != COLOR_YELLOW)
+				{
+					Do(FRONT);
+					Do(UP);
+					Do(FRONTi);
+					Do(UPi);
+					Do(LEFTi);
+					Do(UPi);
+					Do(LEFT);
+					Do(UP);
+					break;
+				}
+				if (GET_FRONT(cube.subCubes[FR_EDGE]) != color || GET_RIGHT(cube.subCubes[FR_EDGE]) != rightColor[color] &&
+					GET_FRONT(cube.subCubes[FR_EDGE]) != COLOR_YELLOW && GET_RIGHT(cube.subCubes[FR_EDGE]) != COLOR_YELLOW)
+				{
+					Do(FRONTi);
+					Do(UPi);
+					Do(FRONT);
+					Do(UP);
+					Do(RIGHT);
+					Do(UP);
+					Do(RIGHTi);
+					Do(UPi);
+					break;
+				}
+			}
+		}
+		else
+		{
+			//move found edge to correct position
+			if (GET_UP(cube.subCubes[FU_EDGE]) == leftColor[foundColor])
+			{
+				//2)
+				Do(UPi);
+				Do(LEFTi);
+				Do(UP);
+				Do(LEFT);
+				Do(UP);
+				Do(FRONT);
+				Do(UPi);
+				Do(FRONTi);
+			}
+			else if (GET_UP(cube.subCubes[FU_EDGE]) == rightColor[foundColor])
+			{
+				//1)
+				Do(UP);
+				Do(RIGHT);
+				Do(UPi);
+				Do(RIGHTi);
+				Do(UPi);
+				Do(FRONTi);
+				Do(UP);
+				Do(FRONT);
+			}
+			else
+			{
+				//assert false
+				throw SolverError();
+			}
+		}
+	}
+	
 }
 
 void AlgorithmSolver::Stage4()

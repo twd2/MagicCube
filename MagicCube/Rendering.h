@@ -6,6 +6,8 @@
 #include "RotationAnimation.h"
 #include "Cube.h"
 
+#ifdef USE_GL
+
 extern GLfloat viewRotationAngleX, viewRotationAngleY;
 
 void renderAxis();
@@ -14,3 +16,5 @@ void renderCube(Cube&);
 inline void renderCubeRange(Cube&, int, int, int, int, int, int);
 void renderCube(Cube&, float, CubeRotateMethod);
 void render();
+
+#endif

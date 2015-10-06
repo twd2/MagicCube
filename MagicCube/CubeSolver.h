@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Cube.h"
+#include "SolverError.h"
 
 class CubeSolver
 {

@@ -15,14 +15,23 @@ int main(int argc, char *argv[])
 	//	CubeRotateMethod method = (CubeRotateMethod)((rand() % 12) + 1);
 	//	cube.DoMethod(method);
 	//}
-	cube.Load("-WG--O-R---B-R-G-Y-YO----O-----G-W---BO-W--B--W--B-OY-"
+	/*cube.Load("-WG--O-R---B-R-G-Y-YO----O-----G-W---BO-W--B--W--B-OY-"
 		      "--Y--B-----W---R-W--B------------G----Y-R-----Y----OB-"
-			  "O-Y--GG----YR--G-WR-G---R-----O--W--W-B-R-G---O-B--RY-");
-
+			  "O-Y--GG----YR--G-WR-G---R-----O--W--W-B-R-G---O-B--RY-");*/
+	//cube.Load("-GO--W-G---W-G-R-W-OG----G-----O-B---RG-Y--G--Y--B-OY---O--W-----W---R-W--O------------R----Y-R-----Y----BY-B-O--WB----WB--R-WB-R---B-----G--R--O-G-Y-Y---O-B--RY-");
+	cube.Load("-BR--W-B---W-B-O-W-BR----B-----B-O---GY-R--Y--G--O-GY---R--W-----W---O-W--R------------O----B-Y-----Y----RY-G-R--WG----WG--O-WG-R---G-----G--O--Y-B-O-Y---O-R--YB-");
 	CubeSolver *solver = (CubeSolver*)new AlgorithmSolver(cube);
-	solver->Solve();
+	/*try
+	{*/
+		solver->Solve();
+	/*}
+	catch (...)
+	{
+
+	}*/
 	delete solver;
 
+#ifdef USE_GL
 	//Initialize the library
 	if (!glfwInit())
 		throw "glfwInit";
@@ -68,6 +77,9 @@ int main(int argc, char *argv[])
 	}
 
 	glfwTerminate();
+#else
+
+#endif
 	return 0;
 }
 

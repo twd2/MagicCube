@@ -25,13 +25,17 @@
 #include <map>
 using namespace std;
 
+#include "Config.h"
+
+#ifdef USE_GL
 #include <GL\glew.h>
 
 #define GLFW_INCLUDE_GLU
 #include <GLFW/glfw3.h>
+#endif
 
 #include "types.h"
-#include "Config.h"
+
 
 #define min(a,b) (((a)<(b))?(a):(b))
 

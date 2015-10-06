@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "RotationAnimation.h"
 
+#ifdef USE_GL
+
 double rotateAngle = 0.0;
 double finishAngle = 90.0;
 CubeRotateMethod rotateMethod = NONE;
@@ -115,3 +117,5 @@ void startRotate(CubeRotateMethod method)
 	finishCurrentRotate();
 	rotateMethod = method;
 }
+
+#endif

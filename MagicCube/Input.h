@@ -4,6 +4,8 @@
 #include "Graphics.h"
 #include "Rendering.h"
 
+#ifdef USE_GL
+
 extern double lastX, lastY, lastAngleX, lastAngleY;
 extern bool mouseDown;
 
@@ -12,3 +14,5 @@ void mouseMove();
 void execCommand(string);
 void keyboardCallback(GLFWwindow*, int, int, int, int);
 void keyboardScan();
+
+#endif
