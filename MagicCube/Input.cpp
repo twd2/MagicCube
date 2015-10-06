@@ -123,11 +123,16 @@ void execCommand(string s)
 	{
 		printf("Wandai :)\n");
 	}
+	else if (s == "SOLVE")
+	{
+		CubeSolver *solver = (CubeSolver*)new AlgorithmSolver(cube);
+		solver->Solve();
+		delete solver;
+	}
 	else if (s == "")
 	{
-		//for (;;)
+		for (;;)
 		{
-			//printf("OK\n");
 			cube = Cube();
 			for (int i = 0; i < rand() % 1000 + 1; ++i)
 			{
@@ -146,6 +151,10 @@ void execCommand(string s)
 			}
 
 			delete solver;
+			if (!cube.Check())
+			{
+				printf("FAIL¡¡%s\n", cube.Save().c_str());
+			}
 		}
 	}
 }

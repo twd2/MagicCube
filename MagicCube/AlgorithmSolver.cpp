@@ -836,10 +836,104 @@ void AlgorithmSolver::Stage6()
 		//assert false
 		throw SolverError();
 	}
+}
 
+void AlgorithmSolver::CheckStage7EFGH(bool *E, bool *F, bool *G, bool*H)
+{
+	*E = (GET_LEFT(cube.subCubes[UL_EDGE]) == GET_LEFT(cube.subCubes[L_CENTRE]));
+
+	*F = (GET_BACK(cube.subCubes[BU_EDGE]) == GET_BACK(cube.subCubes[B_CENTRE]));
+
+	*G = (GET_RIGHT(cube.subCubes[UR_EDGE]) == GET_RIGHT(cube.subCubes[R_CENTRE]));
+
+	*H = (GET_FRONT(cube.subCubes[FU_EDGE]) == GET_FRONT(cube.subCubes[F_CENTRE]));
 }
 
 void AlgorithmSolver::Stage7()
 {
+	bool E, F, G, H;
+	CheckStage7EFGH(&E, &F, &G, &H);
 
+	while (E + F + G + H != 4)
+	{
+		if (E + F + G + H == 0)
+		{
+			Do(FRONT);
+			Do(FRONT);
+			Do(UP);
+			Do(LEFT);
+			Do(RIGHTi);
+			Do(FRONT);
+			Do(FRONT);
+			Do(LEFTi);
+			Do(RIGHT);
+			Do(UP);
+			Do(FRONT);
+			Do(FRONT);
+
+			/*
+			or
+			Do(FRONT);
+			Do(FRONT);
+			Do(UPi);
+			Do(LEFT);
+			Do(RIGHTi);
+			Do(FRONT);
+			Do(FRONT);
+			Do(LEFTi);
+			Do(RIGHT);
+			Do(UPi);
+			Do(FRONT);
+			Do(FRONT);
+			*/
+			CheckStage7EFGH(&E, &F, &G, &H);
+		}
+
+		if (E + F + G + H == 1)
+		{
+			CheckStage7EFGH(&E, &F, &G, &H);
+			while (!F)
+			{
+				Do(WHOLEY);
+				CheckStage7EFGH(&E, &F, &G, &H);
+			}
+
+			if (GET_FRONT(cube.subCubes[FU_EDGE]) == GET_LEFT(cube.subCubes[L_CENTRE]))
+			{
+				Do(FRONT);
+				Do(FRONT);
+				Do(UP);
+				Do(LEFT);
+				Do(RIGHTi);
+				Do(FRONT);
+				Do(FRONT);
+				Do(LEFTi);
+				Do(RIGHT);
+				Do(UP);
+				Do(FRONT);
+				Do(FRONT);
+			}
+			else if (GET_FRONT(cube.subCubes[FU_EDGE]) == GET_RIGHT(cube.subCubes[R_CENTRE]))
+			{
+				Do(FRONT);
+				Do(FRONT);
+				Do(UPi);
+				Do(LEFT);
+				Do(RIGHTi);
+				Do(FRONT);
+				Do(FRONT);
+				Do(LEFTi);
+				Do(RIGHT);
+				Do(UPi);
+				Do(FRONT);
+				Do(FRONT);
+			}
+			else
+			{
+				//assert false
+				throw SolverError();
+			}
+		}
+		CheckStage7EFGH(&E, &F, &G, &H);
+	}
 }
