@@ -63,9 +63,9 @@ int main(int argc, char *argv[])
 	glfwSetKeyCallback(window, keyboardCallback);
 
 	initGL();
-	initVertexArray();
-
+	
 #ifndef NO_VERTICES_BUFFER
+	initVertexArray();
 	initAxisVertexBuffer();
 	initCubeVertexBuffer();
 #endif

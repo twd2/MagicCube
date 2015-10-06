@@ -5,9 +5,13 @@
 #ifdef USE_GL
 
 extern GLFWwindow *window;
-extern GLuint vertexArrayId;
 
+
+#ifndef NO_VERTICES_BUFFER
+extern GLuint vertexArrayId;
 void initVertexArray();
+#endif
+
 void initGL();
 void setColor(CubeColor);
 void updateFPS();

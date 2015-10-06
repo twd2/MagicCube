@@ -13,5 +13,7 @@ public:
 
 private:
 	static void Copy(vector<CubeRotateMethod>&, vector<CubeRotateMethod>&);
+	static bool ReduceContinuous(vector<CubeRotateMethod>&);
+	static bool ReduceI(vector<CubeRotateMethod>&);
 };
 

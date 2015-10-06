@@ -4,6 +4,9 @@
 #ifdef USE_GL
 
 GLFWwindow *window;
+
+#ifndef NO_VERTICES_BUFFER
+
 GLuint vertexArrayId;
 
 void initVertexArray()
@@ -11,6 +14,8 @@ void initVertexArray()
 	glGenVertexArrays(1, &vertexArrayId);
 	glBindVertexArray(vertexArrayId);
 }
+
+#endif
 
 void initGL()
 {
