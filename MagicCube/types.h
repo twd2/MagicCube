@@ -145,6 +145,40 @@ else if (IsColorMatch2(subCubes[DR_EDGE], color1, color2))\
 	stmtDR; \
 }
 
+#define FIND_CORNER(subCubes, color1, color2, color3, stmtFLU, stmtFLD, stmtFRU, stmtFRD, stmtBLU, stmtBLD, stmtBRU, stmtBRD) \
+if (IsColorMatch3(subCubes[FLU_CORNER], color1, color2, color3)) \
+{ \
+	stmtFLU; \
+}\
+else if (IsColorMatch3(subCubes[FLD_CORNER], color1, color2, color3))\
+{\
+	stmtFLD; \
+}\
+else if (IsColorMatch3(subCubes[FRU_CORNER], color1, color2, color3))\
+{\
+	stmtFRU; \
+}\
+else if (IsColorMatch3(subCubes[FRD_CORNER], color1, color2, color3))\
+{\
+	stmtFRD; \
+}\
+else if (IsColorMatch3(subCubes[BLU_CORNER], color1, color2, color3))\
+{\
+	stmtBLU; \
+}\
+else if (IsColorMatch3(subCubes[BLD_CORNER], color1, color2, color3))\
+{\
+	stmtBLD; \
+}\
+else if (IsColorMatch3(subCubes[BRU_CORNER], color1, color2, color3))\
+{\
+	stmtBRU; \
+}\
+else if (IsColorMatch3(subCubes[BRD_CORNER], color1, color2, color3))\
+{\
+	stmtBRD; \
+}
+
 enum CubeColor
 {
 	COLOR_UNUSED,

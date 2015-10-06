@@ -205,6 +205,7 @@ void AlgorithmSolver::Stage1()
 	MoveToRight(COLOR_BLUE);
 
 	auto colors = { COLOR_BLUE, COLOR_ORANGE, COLOR_GREEN, COLOR_RED };
+	CubeColor lastColor = *(colors.end() - 1);
 	bool isFirst = true;
 
 	for each (CubeColor color in colors)
@@ -303,7 +304,7 @@ void AlgorithmSolver::Stage1()
 		}
 
 		//is not last, rotate to next color
-		if (color != *(colors.end() - 1))
+		if (color != lastColor)
 		{
 			Do(WHOLEY);
 		}
@@ -314,6 +315,71 @@ void AlgorithmSolver::Stage1()
 void AlgorithmSolver::Stage2()
 {
 
+	vector<vector<CubeColor> > colors = { { COLOR_GREEN, COLOR_RED }, { COLOR_RED, COLOR_BLUE }, { COLOR_BLUE, COLOR_ORANGE }, { COLOR_ORANGE, COLOR_GREEN } };
+	auto lastColor = *(colors.end()-1);
+
+	for each (auto color in colors)
+	{
+		//find white/????/???? corner and put it FRD
+		FIND_CORNER(cube.subCubes, COLOR_WHITE, color[0], color[1],
+		{
+			//FLU
+			Do(LEFT); // -> FLD
+			Do(DOWN); // -> FRD
+			Do(LEFTi); //restore left
+		},
+		{
+			//FLD
+			Do(DOWN); // -> FRD
+		},
+		{
+			//FRU
+			Do(RIGHTi); // -> FRD
+			Do(DOWNi); // -> FLD to save
+			Do(RIGHT); //restore right
+			Do(DOWN); // -> FRD
+		},
+		{
+			//FRD
+			//nope
+		},
+		{
+			//BLU
+			Do(LEFTi); // -> BLD
+			Do(DOWN); // -> FLD
+			Do(DOWN); // -> FRD
+			Do(LEFT); //restore left
+		},
+		{
+			//BLD
+			Do(DOWN); // -> FLD
+			Do(DOWN); // -> FRD
+		},
+		{
+			//BRU
+			Do(BACKi); // -> BRD
+			Do(DOWNi); // -> FRD
+			Do(BACK); //restore back
+		},
+		{
+			//BRD
+			Do(DOWNi); // -> FRD
+		});
+		do
+		{
+			Do(RIGHTi);
+			Do(DOWNi);
+			Do(RIGHT);
+			Do(DOWN);
+		} while (!(GET_UP(cube.subCubes[FRU_CORNER]) == COLOR_WHITE &&
+			GET_FRONT(cube.subCubes[FRU_CORNER]) == color[0] &&
+			GET_RIGHT(cube.subCubes[FRU_CORNER]) == color[1]));
+
+		if (color != lastColor)
+		{
+			Do(WHOLEY); //rotate to next color
+		}
+	}
 }
 
 void AlgorithmSolver::Stage3()
