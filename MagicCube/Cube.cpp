@@ -119,61 +119,61 @@ void Cube::DoMethod(CubeRotateMethod method)
 {
 	switch (method)
 	{
-	case NONE:
+	case ROTATE_NONE:
 		break;
-	case FRONT:
+	case ROTATE_FRONT:
 		F();
 		break;
-	case BACK:
+	case ROTATE_BACK:
 		B();
 		break;
-	case LEFT:
+	case ROTATE_LEFT:
 		L();
 		break;
-	case RIGHT:
+	case ROTATE_RIGHT:
 		R();
 		break;
-	case UP:
+	case ROTATE_UP:
 		U();
 		break;
-	case DOWN:
+	case ROTATE_DOWN:
 		D();
 		break;
-	case FRONTi:
+	case ROTATE_FRONTi:
 		Fi();
 		break;
-	case BACKi:
+	case ROTATE_BACKi:
 		Bi();
 		break;
-	case LEFTi:
+	case ROTATE_LEFTi:
 		Li();
 		break;
-	case RIGHTi:
+	case ROTATE_RIGHTi:
 		Ri();
 		break;
-	case UPi:
+	case ROTATE_UPi:
 		Ui();
 		break;
-	case DOWNi:
+	case ROTATE_DOWNi:
 		Di();
 		break;
-	case WHOLEX:
+	case ROTATE_WHOLEX:
 		RotateUp();
 		break;
-	case WHOLEY:
+	case ROTATE_WHOLEY:
 		RotateLeft();
 		break;
-	case WHOLEZ:
-		RotateClk();
+	case ROTATE_WHOLEZ:
+		RotateClockwise();
 		break;
-	case WHOLEXi:
+	case ROTATE_WHOLEXi:
 		RotateDown();
 		break;
-	case WHOLEYi:
+	case ROTATE_WHOLEYi:
 		RotateRight();
 		break;
-	case WHOLEZi:
-		RotateCClk();
+	case ROTATE_WHOLEZi:
+		RotateCounterClockwise();
 		break;
 	default:
 		break;
@@ -412,7 +412,7 @@ void Cube::RotateDown()
 	Ri();
 }
 
-void Cube::RotateClk()
+void Cube::RotateClockwise()
 {
 	F();
 	SaveState();
@@ -428,7 +428,7 @@ void Cube::RotateClk()
 	Bi();
 }
 
-void Cube::RotateCClk()
+void Cube::RotateCounterClockwise()
 {
 	Fi();
 	SaveState();

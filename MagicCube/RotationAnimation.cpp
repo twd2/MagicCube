@@ -3,89 +3,100 @@
 
 #ifdef USE_GL
 
+bool playing = false;
+vector<CubeRotateMethod> *stepsToPlay;
+int playIndex = 0;
+
 double rotateAngle = 0.0;
 double finishAngle = 90.0;
-CubeRotateMethod rotateMethod = NONE;
+CubeRotateMethod rotateMethod = ROTATE_NONE;
+
+const double speed = 2.0;
 
 double easingDelta(double currentAngle)
 {
 	currentAngle = abs(currentAngle);
 	if (currentAngle == 0.0)
 	{
-		return 180.0;
+		return speed * 180.0;
 	}
 	else
 	{
-		return min(180.0, 8100.0 / currentAngle);
+		return speed * min(180.0, 8100.0 / currentAngle);
 	}
 }
 
 void rotateFinishCallback()
 {
+	if (rotateMethod == ROTATE_NONE)
+		return;
+
 	switch (rotateMethod)
 	{
-	case NONE:
+	case ROTATE_NONE:
 		break;
-	case FRONT:
+	case ROTATE_FRONT:
 		cube.F();
 		break;
-	case BACK:
+	case ROTATE_BACK:
 		cube.B();
 		break;
-	case LEFT:
+	case ROTATE_LEFT:
 		cube.L();
 		break;
-	case RIGHT:
+	case ROTATE_RIGHT:
 		cube.R();
 		break;
-	case UP:
+	case ROTATE_UP:
 		cube.U();
 		break;
-	case DOWN:
+	case ROTATE_DOWN:
 		cube.D();
 		break;
-	case WHOLEX:
+	case ROTATE_WHOLEX:
 		cube.RotateUp();
 		break;
-	case WHOLEY:
+	case ROTATE_WHOLEY:
 		cube.RotateLeft();
 		break;
-	case WHOLEZ:
-		cube.RotateClk();
+	case ROTATE_WHOLEZ:
+		cube.RotateClockwise();
 		break;
-	case FRONTi:
+	case ROTATE_FRONTi:
 		cube.Fi();
 		break;
-	case BACKi:
+	case ROTATE_BACKi:
 		cube.Bi();
 		break;
-	case LEFTi:
+	case ROTATE_LEFTi:
 		cube.Li();
 		break;
-	case RIGHTi:
+	case ROTATE_RIGHTi:
 		cube.Ri();
 		break;
-	case UPi:
+	case ROTATE_UPi:
 		cube.Ui();
 		break;
-	case DOWNi:
+	case ROTATE_DOWNi:
 		cube.Di();
 		break;
-	case WHOLEXi:
+	case ROTATE_WHOLEXi:
 		cube.RotateDown();
 		break;
-	case WHOLEYi:
+	case ROTATE_WHOLEYi:
 		cube.RotateRight();
 		break;
-	case WHOLEZi:
-		cube.RotateCClk();
+	case ROTATE_WHOLEZi:
+		cube.RotateCounterClockwise();
 		break;
 	default:
 		break;
 	}
 
 	rotateAngle = 0.0;
-	rotateMethod = NONE;
+	rotateMethod = ROTATE_NONE;
+
+	playNext();
 }
 
 void nextAngle()
@@ -93,7 +104,7 @@ void nextAngle()
 	static double lastTime = glfwGetTime();
 	double currTime = glfwGetTime();
 
-	if (rotateMethod != NONE)
+	if (rotateMethod != ROTATE_NONE)
 	{
 		double delta = easingDelta(rotateAngle) * (currTime - lastTime);
 		rotateAngle += delta;
@@ -114,8 +125,39 @@ void finishCurrentRotate()
 
 void startRotate(CubeRotateMethod method)
 {
-	finishCurrentRotate();
+	if (rotateMethod != ROTATE_NONE)
+		finishCurrentRotate();
 	rotateMethod = method;
 }
 
+void play(vector<CubeRotateMethod> &steps)
+{
+	stepsToPlay = &steps;
+	playIndex = 0;
+	playing = true;
+	startRotate((*stepsToPlay)[0]);
+}
+
+void playNext()
+{
+	if (playing)
+	{
+		++playIndex;
+		if (playIndex < stepsToPlay->size())
+		{
+			startRotate((*stepsToPlay)[playIndex]);
+		}
+		else
+		{
+			stopPlay();
+		}
+	}
+}
+
+void stopPlay()
+{
+	playing = false;
+	playIndex = 0;
+
+}
 #endif

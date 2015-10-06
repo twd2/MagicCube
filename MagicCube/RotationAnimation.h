@@ -5,6 +5,10 @@
 
 #ifdef USE_GL
 
+extern bool playing;
+extern vector<CubeRotateMethod> *stepsToPlay;
+extern int playIndex;
+
 extern double rotateAngle, finishAngle;
 extern CubeRotateMethod rotateMethod;
 
@@ -13,5 +17,8 @@ void rotateFinishCallback();
 void nextAngle();
 void finishCurrentRotate();
 void startRotate(CubeRotateMethod);
+void play(vector<CubeRotateMethod>&);
+void playNext();
+void stopPlay();
 
 #endif

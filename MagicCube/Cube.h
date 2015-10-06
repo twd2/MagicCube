@@ -45,8 +45,8 @@ public:
 	void RotateRight();
 	void RotateUp();
 	void RotateDown();
-	void RotateClk();
-	void RotateCClk();
+	void RotateClockwise();
+	void RotateCounterClockwise();
 	bool CheckL();
 	bool CheckR();
 	bool CheckU();

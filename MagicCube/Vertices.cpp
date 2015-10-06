@@ -3,8 +3,6 @@
 
 #ifdef USE_GL
 
-GLuint axisVertexBuffer, cubeVertexBuffer;
-
 const GLfloat axisVertexBufferData[] = {
 	//x
 	-1.0f, 0.0f, 0.0f,
@@ -74,6 +72,10 @@ const GLfloat cubeVertexBufferData[] = {
 	0.0f, 0.0f, 1.0f
 };
 
+#ifndef NO_VERTICES_BUFFER
+
+GLuint axisVertexBuffer, cubeVertexBuffer;
+
 void initAxisVertexBuffer()
 {
 	glGenBuffers(1, &axisVertexBuffer);
@@ -87,5 +89,7 @@ void initCubeVertexBuffer()
 	glBindBuffer(GL_ARRAY_BUFFER, cubeVertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertexBufferData), cubeVertexBufferData, GL_STATIC_DRAW);
 }
+
+#endif
 
 #endif

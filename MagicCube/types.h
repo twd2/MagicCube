@@ -1,3 +1,4 @@
+#pragma once
 
 typedef unsigned int cube_t; //0bMETA DATA ffff bbbb llll rrrr uuuu dddd
 
@@ -194,23 +195,23 @@ enum CubeColor
 //i means inverse, +9 -> i
 enum CubeRotateMethod
 {
-	NONE,
-	FRONT,
-	BACK,
-	LEFT,
-	RIGHT,
-	UP,
-	DOWN,
-	WHOLEX,  //whole up
-	WHOLEY,  //whole left
-	WHOLEZ,  //whole clockwise
-	FRONTi,
-	BACKi,
-	LEFTi,
-	RIGHTi,
-	UPi,
-	DOWNi,
-	WHOLEXi, //whole down
-	WHOLEYi, //whole right
-	WHOLEZi  //whole counter-clockwise
+	ROTATE_NONE,
+	ROTATE_FRONT,
+	ROTATE_BACK,
+	ROTATE_LEFT,
+	ROTATE_RIGHT,
+	ROTATE_UP,
+	ROTATE_DOWN,
+	ROTATE_WHOLEX,  //whole up
+	ROTATE_WHOLEY,  //whole left
+	ROTATE_WHOLEZ,  //whole clockwise
+	ROTATE_FRONTi,
+	ROTATE_BACKi,
+	ROTATE_LEFTi,
+	ROTATE_RIGHTi,
+	ROTATE_UPi,
+	ROTATE_DOWNi,
+	ROTATE_WHOLEXi, //whole down
+	ROTATE_WHOLEYi, //whole right
+	ROTATE_WHOLEZi  //whole counter-clockwise
 };

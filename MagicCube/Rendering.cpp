@@ -7,6 +7,7 @@ GLfloat viewRotationAngleX = 45.0, viewRotationAngleY = -45.0;
 
 void renderAxis()
 {
+#ifndef NO_VERTICES_BUFFER
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, axisVertexBuffer);
 	glVertexAttribPointer(
@@ -31,12 +32,51 @@ void renderAxis()
 	glDrawArrays(GL_LINES, 6 * 2, 3 * 2);
 
 	glDisableVertexAttribArray(0);
+#else
+	//x
+	glColor4f(1.0f, 0.0f, 0.0f, 0.5f);
+	glBegin(GL_LINES);
+	for (int i = 0; i < 6; ++i)
+	{
+		glVertex3f(axisVertexBufferData[i * 3 + 0],
+			axisVertexBufferData[i * 3 + 1],
+			axisVertexBufferData[i * 3 + 2]);
+	}
+	glEnd();
+
+	//y
+	glColor4f(0.0f, 1.0f, 0.0f, 0.5f);
+	glBegin(GL_LINES);
+	for (int i = 6; i < 12; ++i)
+	{
+		glVertex3f(axisVertexBufferData[i * 3 + 0],
+			axisVertexBufferData[i * 3 + 1],
+			axisVertexBufferData[i * 3 + 2]);
+	}
+	glEnd();
+
+	//z
+	glColor4f(0.0f, 0.0f, 1.0f, 0.5f);
+	glBegin(GL_LINES);
+	for (int i = 12; i < 18; ++i)
+	{
+		glVertex3f(axisVertexBufferData[i * 3 + 0],
+			axisVertexBufferData[i * 3 + 1],
+			axisVertexBufferData[i * 3 + 2]);
+	}
+	glEnd();
+#endif
 }
 
 void renderSubCube(GLfloat x, GLfloat y, GLfloat z, cube_t colorInfo)
 {
 	glPushMatrix();
 	glTranslatef(-1.6f, -1.6f, -1.6f);
+
+	glPushMatrix();
+	glTranslatef(1.1f * x, 1.1f * y, 1.1f * z);
+
+#ifndef NO_VERTICES_BUFFER
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, cubeVertexBuffer);
 	glVertexAttribPointer(
@@ -47,10 +87,7 @@ void renderSubCube(GLfloat x, GLfloat y, GLfloat z, cube_t colorInfo)
 		0,                  // stride
 		(void*)0            // array buffer offset
 	);
-
-	glPushMatrix();
-	glTranslatef(1.1f * x, 1.1f * y, 1.1f * z);
-
+	
 	setColor((CubeColor)GET_FRONT(colorInfo));
 	glDrawArrays(GL_TRIANGLES, 0, 2 * 3);
 
@@ -70,6 +107,67 @@ void renderSubCube(GLfloat x, GLfloat y, GLfloat z, cube_t colorInfo)
 	glDrawArrays(GL_TRIANGLES, 5 * 2 * 3, 2 * 3);
 
 	glDisableVertexAttribArray(0);
+#else
+	setColor((CubeColor)GET_FRONT(colorInfo));
+	glBegin(GL_TRIANGLES);
+	for (int i = 0; i < 6; ++i)
+	{
+		glVertex3f(cubeVertexBufferData[i * 3 + 0],
+			cubeVertexBufferData[i * 3 + 1],
+			cubeVertexBufferData[i * 3 + 2]);
+	}
+	glEnd();
+
+	setColor((CubeColor)GET_BACK(colorInfo));
+	glBegin(GL_TRIANGLES);
+	for (int i = 6; i < 12; ++i)
+	{
+		glVertex3f(cubeVertexBufferData[i * 3 + 0],
+			cubeVertexBufferData[i * 3 + 1],
+			cubeVertexBufferData[i * 3 + 2]);
+	}
+	glEnd();
+
+	setColor((CubeColor)GET_LEFT(colorInfo));
+	glBegin(GL_TRIANGLES);
+	for (int i = 12; i < 18; ++i)
+	{
+		glVertex3f(cubeVertexBufferData[i * 3 + 0],
+			cubeVertexBufferData[i * 3 + 1],
+			cubeVertexBufferData[i * 3 + 2]);
+	}
+	glEnd();
+
+	setColor((CubeColor)GET_RIGHT(colorInfo));
+	glBegin(GL_TRIANGLES);
+	for (int i = 18; i < 24; ++i)
+	{
+		glVertex3f(cubeVertexBufferData[i * 3 + 0],
+			cubeVertexBufferData[i * 3 + 1],
+			cubeVertexBufferData[i * 3 + 2]);
+	}
+	glEnd();
+
+	setColor((CubeColor)GET_UP(colorInfo));
+	glBegin(GL_TRIANGLES);
+	for (int i = 24; i < 30; ++i)
+	{
+		glVertex3f(cubeVertexBufferData[i * 3 + 0],
+			cubeVertexBufferData[i * 3 + 1],
+			cubeVertexBufferData[i * 3 + 2]);
+	}
+	glEnd();
+
+	setColor((CubeColor)GET_DOWN(colorInfo));
+	glBegin(GL_TRIANGLES);
+	for (int i = 30; i < 36; ++i)
+	{
+		glVertex3f(cubeVertexBufferData[i * 3 + 0],
+			cubeVertexBufferData[i * 3 + 1],
+			cubeVertexBufferData[i * 3 + 2]);
+	}
+	glEnd();
+#endif
 
 	glPopMatrix();
 
@@ -113,121 +211,121 @@ void renderCube(Cube &cube, float angle, CubeRotateMethod method)
 
 	switch (method)
 	{
-	case FRONT:
+	case ROTATE_FRONT:
 		glPushMatrix();
 		glRotatef(angle, 0.0, 0.0, -1.0);
 		renderCubeRange(cube, 0, 2, 0, 2, 2, 2);
 		glPopMatrix();
 		renderCubeRange(cube, 0, 2, 0, 2, 0, 1);
 		break;
-	case BACK:
+	case ROTATE_BACK:
 		glPushMatrix();
 		glRotatef(angle, 0.0, 0.0, 1.0);
 		renderCubeRange(cube, 0, 2, 0, 2, 0, 0);
 		glPopMatrix();
 		renderCubeRange(cube, 0, 2, 0, 2, 1, 2);
 		break;
-	case LEFT:
+	case ROTATE_LEFT:
 		glPushMatrix();
 		glRotatef(angle, 1.0, 0.0, 0.0);
 		renderCubeRange(cube, 0, 0, 0, 2, 0, 2);
 		glPopMatrix();
 		renderCubeRange(cube, 1, 2, 0, 2, 0, 2);
 		break;
-	case RIGHT:
+	case ROTATE_RIGHT:
 		glPushMatrix();
 		glRotatef(angle, -1.0, 0.0, 0.0);
 		renderCubeRange(cube, 2, 2, 0, 2, 0, 2);
 		glPopMatrix();
 		renderCubeRange(cube, 0, 1, 0, 2, 0, 2);
 		break;
-	case UP:
+	case ROTATE_UP:
 		glPushMatrix();
 		glRotatef(angle, 0.0, -1.0, 0.0);
 		renderCubeRange(cube, 0, 2, 2, 2, 0, 2);
 		glPopMatrix();
 		renderCubeRange(cube, 0, 2, 0, 1, 0, 2);
 		break;
-	case DOWN:
+	case ROTATE_DOWN:
 		glPushMatrix();
 		glRotatef(angle, 0.0, 1.0, 0.0);
 		renderCubeRange(cube, 0, 2, 0, 0, 0, 2);
 		glPopMatrix();
 		renderCubeRange(cube, 0, 2, 1, 2, 0, 2);
 		break;
-	case WHOLEX:
+	case ROTATE_WHOLEX:
 		glPushMatrix();
 		glRotatef(angle, -1.0, 0.0, 0.0);
 		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);
 		glPopMatrix();
 		break;
-	case WHOLEY:
+	case ROTATE_WHOLEY:
 		glPushMatrix();
 		glRotatef(angle, 0.0, -1.0, 0.0);
 		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);
 		glPopMatrix();
 		break;
-	case WHOLEZ:
+	case ROTATE_WHOLEZ:
 		glPushMatrix();
 		glRotatef(angle, 0.0, 0.0, -1.0);
 		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);
 		glPopMatrix();
 		break;
-	case FRONTi:
+	case ROTATE_FRONTi:
 		glPushMatrix();
 		glRotatef(angle, 0.0, 0.0, 1.0);
 		renderCubeRange(cube, 0, 2, 0, 2, 2, 2);
 		glPopMatrix();
 		renderCubeRange(cube, 0, 2, 0, 2, 0, 1);
 		break;
-	case BACKi:
+	case ROTATE_BACKi:
 		glPushMatrix();
 		glRotatef(angle, 0.0, 0.0, -1.0);
 		renderCubeRange(cube, 0, 2, 0, 2, 0, 0);
 		glPopMatrix();
 		renderCubeRange(cube, 0, 2, 0, 2, 1, 2);
 		break;
-	case LEFTi:
+	case ROTATE_LEFTi:
 		glPushMatrix();
 		glRotatef(angle, -1.0, 0.0, 0.0);
 		renderCubeRange(cube, 0, 0, 0, 2, 0, 2);
 		glPopMatrix();
 		renderCubeRange(cube, 1, 2, 0, 2, 0, 2);
 		break;
-	case RIGHTi:
+	case ROTATE_RIGHTi:
 		glPushMatrix();
 		glRotatef(angle, 1.0, 0.0, 0.0);
 		renderCubeRange(cube, 2, 2, 0, 2, 0, 2);
 		glPopMatrix();
 		renderCubeRange(cube, 0, 1, 0, 2, 0, 2);
 		break;
-	case UPi:
+	case ROTATE_UPi:
 		glPushMatrix();
 		glRotatef(angle, 0.0, 1.0, 0.0);
 		renderCubeRange(cube, 0, 2, 2, 2, 0, 2);
 		glPopMatrix();
 		renderCubeRange(cube, 0, 2, 0, 1, 0, 2);
 		break;
-	case DOWNi:
+	case ROTATE_DOWNi:
 		glPushMatrix();
 		glRotatef(angle, 0.0, -1.0, 0.0);
 		renderCubeRange(cube, 0, 2, 0, 0, 0, 2);
 		glPopMatrix();
 		renderCubeRange(cube, 0, 2, 1, 2, 0, 2);
 		break;
-	case WHOLEXi:
+	case ROTATE_WHOLEXi:
 		glPushMatrix();
 		glRotatef(angle, 1.0, 0.0, 0.0);
 		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);
 		glPopMatrix();
 		break;
-	case WHOLEYi:
+	case ROTATE_WHOLEYi:
 		glPushMatrix();
 		glRotatef(angle, 0.0, 1.0, 0.0);
 		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);
 		glPopMatrix();
 		break;
-	case WHOLEZi:
+	case ROTATE_WHOLEZi:
 		glPushMatrix();
 		glRotatef(angle, 0.0, 0.0, 1.0);
 		renderCubeRange(cube, 0, 2, 0, 2, 0, 2);

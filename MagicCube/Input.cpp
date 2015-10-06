@@ -45,75 +45,75 @@ void execCommand(string s)
 {
 	if (s == "R")
 	{
-		startRotate(RIGHT);
+		startRotate(ROTATE_RIGHT);
 	}
 	else if (s == "RI")
 	{
-		startRotate(RIGHTi);
+		startRotate(ROTATE_RIGHTi);
 	}
 	else if (s == "L")
 	{
-		startRotate(LEFT);
+		startRotate(ROTATE_LEFT);
 	}
 	else if (s == "LI")
 	{
-		startRotate(LEFTi);
+		startRotate(ROTATE_LEFTi);
 	}
 	else if (s == "B")
 	{
-		startRotate(BACK);
+		startRotate(ROTATE_BACK);
 	}
 	else if (s == "BI")
 	{
-		startRotate(BACKi);
+		startRotate(ROTATE_BACKi);
 	}
 	else if (s == "D")
 	{
-		startRotate(DOWN);
+		startRotate(ROTATE_DOWN);
 	}
 	else if (s == "DI")
 	{
-		startRotate(DOWNi);
+		startRotate(ROTATE_DOWNi);
 	}
 	else if (s == "F")
 	{
-		startRotate(FRONT);
+		startRotate(ROTATE_FRONT);
 	}
 	else if (s == "FI")
 	{
-		startRotate(FRONTi);
+		startRotate(ROTATE_FRONTi);
 	}
 	else if (s == "U")
 	{
-		startRotate(UP);
+		startRotate(ROTATE_UP);
 	}
 	else if (s == "UI")
 	{
-		startRotate(UPi);
+		startRotate(ROTATE_UPi);
 	}
 	else if (s == "X")
 	{
-		startRotate(WHOLEX);
+		startRotate(ROTATE_WHOLEX);
 	}
 	else if (s == "Y")
 	{
-		startRotate(WHOLEY);
+		startRotate(ROTATE_WHOLEY);
 	}
 	else if (s == "Z")
 	{
-		startRotate(WHOLEZ);
+		startRotate(ROTATE_WHOLEZ);
 	}
 	else if (s == "XI")
 	{
-		startRotate(WHOLEXi);
+		startRotate(ROTATE_WHOLEXi);
 	}
 	else if (s == "YI")
 	{
-		startRotate(WHOLEYi);
+		startRotate(ROTATE_WHOLEYi);
 	}
 	else if (s == "ZI")
 	{
-		startRotate(WHOLEZi);
+		startRotate(ROTATE_WHOLEZi);
 	}
 	else if (s == "CHECK")
 	{
@@ -129,10 +129,16 @@ void execCommand(string s)
 		solver->Solve();
 		delete solver;
 	}
-	else if (s == "")
+	else if (s == "TEST")
 	{
+		unsigned long long count = 0;
 		for (;;)
 		{
+			++count;
+			if (count % 10000 == 0)
+			{
+				printf("%ld\n", count);
+			}
 			cube = Cube();
 			for (int i = 0; i < rand() % 1000 + 1; ++i)
 			{
@@ -145,12 +151,12 @@ void execCommand(string s)
 			{
 				solver->Solve();
 			}
-			catch (...)
+			catch (SolverError err)
 			{
-				printf("%s\n", cube.Save().c_str());
+				printf("ERROR%s %s\n", err.why.c_str(), cube.Save().c_str());
 			}
-
 			delete solver;
+
 			if (!cube.Check())
 			{
 				printf("FAIL¡¡%s\n", cube.Save().c_str());

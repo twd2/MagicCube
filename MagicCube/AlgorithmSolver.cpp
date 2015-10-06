@@ -24,25 +24,25 @@ void AlgorithmSolver::MoveToUp(CubeColor color)
 	}
 	else if (GET_DOWN(cube.subCubes[D_CENTRE]) == color)
 	{
-		Do(WHOLEX);
-		Do(WHOLEX);
-		//can also do WHOLEZ * 2
+		Do(ROTATE_WHOLEX);
+		Do(ROTATE_WHOLEX);
+		//can also do ROTATE_WHOLEZ * 2
 	}
 	else if (GET_LEFT(cube.subCubes[L_CENTRE]) == color)
 	{
-		Do(WHOLEZ);
+		Do(ROTATE_WHOLEZ);
 	}
 	else if (GET_RIGHT(cube.subCubes[R_CENTRE]) == color)
 	{
-		Do(WHOLEZi);
+		Do(ROTATE_WHOLEZi);
 	}
 	else if (GET_FRONT(cube.subCubes[F_CENTRE]) == color)
 	{
-		Do(WHOLEX);
+		Do(ROTATE_WHOLEX);
 	}
 	else if (GET_BACK(cube.subCubes[B_CENTRE]) == color)
 	{
-		Do(WHOLEXi);
+		Do(ROTATE_WHOLEXi);
 	}
 }
 
@@ -50,9 +50,9 @@ void AlgorithmSolver::MoveToDown(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
-		Do(WHOLEX);
-		Do(WHOLEX);
-		//can also do WHOLEZ * 2
+		Do(ROTATE_WHOLEX);
+		Do(ROTATE_WHOLEX);
+		//can also do ROTATE_WHOLEZ * 2
 	}
 	else if (GET_DOWN(cube.subCubes[D_CENTRE]) == color)
 	{
@@ -60,19 +60,19 @@ void AlgorithmSolver::MoveToDown(CubeColor color)
 	}
 	else if (GET_LEFT(cube.subCubes[L_CENTRE]) == color)
 	{
-		Do(WHOLEZi);
+		Do(ROTATE_WHOLEZi);
 	}
 	else if (GET_RIGHT(cube.subCubes[R_CENTRE]) == color)
 	{
-		Do(WHOLEZ);
+		Do(ROTATE_WHOLEZ);
 	}
 	else if (GET_FRONT(cube.subCubes[F_CENTRE]) == color)
 	{
-		Do(WHOLEXi);
+		Do(ROTATE_WHOLEXi);
 	}
 	else if (GET_BACK(cube.subCubes[B_CENTRE]) == color)
 	{
-		Do(WHOLEX);
+		Do(ROTATE_WHOLEX);
 	}
 }
 
@@ -80,11 +80,11 @@ void AlgorithmSolver::MoveToLeft(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
-		Do(WHOLEZi);
+		Do(ROTATE_WHOLEZi);
 	}
 	else if (GET_DOWN(cube.subCubes[D_CENTRE]) == color)
 	{
-		Do(WHOLEZ);
+		Do(ROTATE_WHOLEZ);
 	}
 	else if (GET_LEFT(cube.subCubes[L_CENTRE]) == color)
 	{
@@ -92,17 +92,17 @@ void AlgorithmSolver::MoveToLeft(CubeColor color)
 	}
 	else if (GET_RIGHT(cube.subCubes[R_CENTRE]) == color)
 	{
-		Do(WHOLEY);
-		Do(WHOLEY);
-		//can also WHOLEZ * 2
+		Do(ROTATE_WHOLEY);
+		Do(ROTATE_WHOLEY);
+		//can also ROTATE_WHOLEZ * 2
 	}
 	else if (GET_FRONT(cube.subCubes[F_CENTRE]) == color)
 	{
-		Do(WHOLEY);
+		Do(ROTATE_WHOLEY);
 	}
 	else if (GET_BACK(cube.subCubes[B_CENTRE]) == color)
 	{
-		Do(WHOLEYi);
+		Do(ROTATE_WHOLEYi);
 	}
 }
 
@@ -110,17 +110,17 @@ void AlgorithmSolver::MoveToRight(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
-		Do(WHOLEZ);
+		Do(ROTATE_WHOLEZ);
 	}
 	else if (GET_DOWN(cube.subCubes[D_CENTRE]) == color)
 	{
-		Do(WHOLEZi);
+		Do(ROTATE_WHOLEZi);
 	}
 	else if (GET_LEFT(cube.subCubes[L_CENTRE]) == color)
 	{
-		Do(WHOLEY);
-		Do(WHOLEY);
-		//can also WHOLEZ * 2
+		Do(ROTATE_WHOLEY);
+		Do(ROTATE_WHOLEY);
+		//can also ROTATE_WHOLEZ * 2
 	}
 	else if (GET_RIGHT(cube.subCubes[R_CENTRE]) == color)
 	{
@@ -128,11 +128,11 @@ void AlgorithmSolver::MoveToRight(CubeColor color)
 	}
 	else if (GET_FRONT(cube.subCubes[F_CENTRE]) == color)
 	{
-		Do(WHOLEYi);
+		Do(ROTATE_WHOLEYi);
 	}
 	else if (GET_BACK(cube.subCubes[B_CENTRE]) == color)
 	{
-		Do(WHOLEY);
+		Do(ROTATE_WHOLEY);
 	}
 }
 
@@ -140,19 +140,19 @@ void AlgorithmSolver::MoveToFront(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
-		Do(WHOLEXi);
+		Do(ROTATE_WHOLEXi);
 	}
 	else if (GET_DOWN(cube.subCubes[D_CENTRE]) == color)
 	{
-		Do(WHOLEX);
+		Do(ROTATE_WHOLEX);
 	}
 	else if (GET_LEFT(cube.subCubes[L_CENTRE]) == color)
 	{
-		Do(WHOLEYi);
+		Do(ROTATE_WHOLEYi);
 	}
 	else if (GET_RIGHT(cube.subCubes[R_CENTRE]) == color)
 	{
-		Do(WHOLEY);
+		Do(ROTATE_WHOLEY);
 	}
 	else if (GET_FRONT(cube.subCubes[F_CENTRE]) == color)
 	{
@@ -160,9 +160,9 @@ void AlgorithmSolver::MoveToFront(CubeColor color)
 	}
 	else if (GET_BACK(cube.subCubes[B_CENTRE]) == color)
 	{
-		Do(WHOLEY);
-		Do(WHOLEY);
-		//can also WHOLEX * 2
+		Do(ROTATE_WHOLEY);
+		Do(ROTATE_WHOLEY);
+		//can also ROTATE_WHOLEX * 2
 	}
 }
 
@@ -170,25 +170,25 @@ void AlgorithmSolver::MoveToBack(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
-		Do(WHOLEX);
+		Do(ROTATE_WHOLEX);
 	}
 	else if (GET_DOWN(cube.subCubes[D_CENTRE]) == color)
 	{
-		Do(WHOLEXi);
+		Do(ROTATE_WHOLEXi);
 	}
 	else if (GET_LEFT(cube.subCubes[L_CENTRE]) == color)
 	{
-		Do(WHOLEY);
+		Do(ROTATE_WHOLEY);
 	}
 	else if (GET_RIGHT(cube.subCubes[R_CENTRE]) == color)
 	{
-		Do(WHOLEYi);
+		Do(ROTATE_WHOLEYi);
 	}
 	else if (GET_FRONT(cube.subCubes[F_CENTRE]) == color)
 	{
-		Do(WHOLEX);
-		Do(WHOLEX);
-		//can also WHOLEY * 2
+		Do(ROTATE_WHOLEX);
+		Do(ROTATE_WHOLEX);
+		//can also ROTATE_WHOLEY * 2
 	}
 	else if (GET_BACK(cube.subCubes[B_CENTRE]) == color)
 	{
@@ -214,76 +214,76 @@ void AlgorithmSolver::Stage1()
 		FIND_EDGE(cube.subCubes, color, COLOR_WHITE,
 		{
 			//FL
-			Do(FRONTi); // -> FD
-			Do(DOWN); // -> DR
+			Do(ROTATE_FRONTi); // -> FD
+			Do(ROTATE_DOWN); // -> DR
 			if (!isFirst) //is not first, need to restore
 			{
-				Do(FRONT);
+				Do(ROTATE_FRONT);
 			}
 		},
 		{
 			//FR
-			Do(RIGHTi); // -> DR
+			Do(ROTATE_RIGHTi); // -> DR
 		},
 		{
 			//FU
-			Do(FRONT); // -> FR
-			Do(RIGHTi); // -> DR
+			Do(ROTATE_FRONT); // -> FR
+			Do(ROTATE_RIGHTi); // -> DR
 			if (!isFirst) //is not first, need to restore
 			{
-				Do(FRONTi);
+				Do(ROTATE_FRONTi);
 			}
 		},
 		{
 			//FD
-			Do(DOWN); // -> DR
+			Do(ROTATE_DOWN); // -> DR
 		},
 		{
 			//BL
-			Do(BACK); // -> BD
-			Do(DOWNi); // -> DR
+			Do(ROTATE_BACK); // -> BD
+			Do(ROTATE_DOWNi); // -> DR
 			if (!isFirst) //is not first, need to restore
 			{
-				Do(BACKi);
+				Do(ROTATE_BACKi);
 			}
 		},
 		{
 			//BR
-			Do(RIGHT); // -> DR
+			Do(ROTATE_RIGHT); // -> DR
 		},
 		{
 			//BU
-			Do(BACKi); // -> BR
-			Do(RIGHT); // -> DR
+			Do(ROTATE_BACKi); // -> BR
+			Do(ROTATE_RIGHT); // -> DR
 			if (!isFirst) //is not first, need to restore
 			{
-				Do(BACK);
+				Do(ROTATE_BACK);
 			}
 		},
 		{
 			//BD
-			Do(DOWNi); // -> DR
+			Do(ROTATE_DOWNi); // -> DR
 		},
 		{
 			//UL
-			Do(LEFT); // -> FL
-			Do(FRONTi); // -> FD
-			Do(DOWN); // -> DR
+			Do(ROTATE_LEFT); // -> FL
+			Do(ROTATE_FRONTi); // -> FD
+			Do(ROTATE_DOWN); // -> DR
 			if (!isFirst) //is not first, need to restore
 			{
-				Do(FRONT);
-				Do(LEFTi);
+				Do(ROTATE_FRONT);
+				Do(ROTATE_LEFTi);
 			}
 		},
 		{
 			//UR
-			Do(RIGHT); // -> BR
-			Do(RIGHT); // -> DR
+			Do(ROTATE_RIGHT); // -> BR
+			Do(ROTATE_RIGHT); // -> DR
 		},
 		{
 			//DL
-			Do(DOWN); // -> BR
-			Do(DOWN); // -> DR
+			Do(ROTATE_DOWN); // -> BR
+			Do(ROTATE_DOWN); // -> DR
 		},
 		{
 			//DR
@@ -291,22 +291,22 @@ void AlgorithmSolver::Stage1()
 		});
 
 		// -> UR
-		Do(RIGHT); // -> FR
-		Do(RIGHT); // -> UR
+		Do(ROTATE_RIGHT); // -> FR
+		Do(ROTATE_RIGHT); // -> UR
 
 		if (GET_RIGHT(cube.subCubes[UR_EDGE]) == COLOR_WHITE)
 		{
 			//state2
-			Do(RIGHTi);
-			Do(UP);
-			Do(FRONTi);
-			Do(UPi);
+			Do(ROTATE_RIGHTi);
+			Do(ROTATE_UP);
+			Do(ROTATE_FRONTi);
+			Do(ROTATE_UPi);
 		}
 
 		//is not last, rotate to next color
 		if (color != lastColor)
 		{
-			Do(WHOLEY);
+			Do(ROTATE_WHOLEY);
 		}
 		isFirst = false;
 	}
@@ -324,20 +324,20 @@ void AlgorithmSolver::Stage2()
 		FIND_CORNER(cube.subCubes, COLOR_WHITE, color[0], color[1],
 		{
 			//FLU
-			Do(LEFT); // -> FLD
-			Do(DOWN); // -> FRD
-			Do(LEFTi); //restore left
+			Do(ROTATE_LEFT); // -> FLD
+			Do(ROTATE_DOWN); // -> FRD
+			Do(ROTATE_LEFTi); //restore left
 		},
 		{
 			//FLD
-			Do(DOWN); // -> FRD
+			Do(ROTATE_DOWN); // -> FRD
 		},
 		{
 			//FRU
-			Do(RIGHTi); // -> FRD
-			Do(DOWNi); // -> FLD to save
-			Do(RIGHT); //restore right
-			Do(DOWN); // -> FRD
+			Do(ROTATE_RIGHTi); // -> FRD
+			Do(ROTATE_DOWNi); // -> FLD to save
+			Do(ROTATE_RIGHT); //restore right
+			Do(ROTATE_DOWN); // -> FRD
 		},
 		{
 			//FRD
@@ -345,39 +345,39 @@ void AlgorithmSolver::Stage2()
 		},
 		{
 			//BLU
-			Do(LEFTi); // -> BLD
-			Do(DOWN); // -> FLD
-			Do(DOWN); // -> FRD
-			Do(LEFT); //restore left
+			Do(ROTATE_LEFTi); // -> BLD
+			Do(ROTATE_DOWN); // -> FLD
+			Do(ROTATE_DOWN); // -> FRD
+			Do(ROTATE_LEFT); //restore left
 		},
 		{
 			//BLD
-			Do(DOWN); // -> FLD
-			Do(DOWN); // -> FRD
+			Do(ROTATE_DOWN); // -> FLD
+			Do(ROTATE_DOWN); // -> FRD
 		},
 		{
 			//BRU
-			Do(BACKi); // -> BRD
-			Do(DOWNi); // -> FRD
-			Do(BACK); //restore back
+			Do(ROTATE_BACKi); // -> BRD
+			Do(ROTATE_DOWNi); // -> FRD
+			Do(ROTATE_BACK); //restore back
 		},
 		{
 			//BRD
-			Do(DOWNi); // -> FRD
+			Do(ROTATE_DOWNi); // -> FRD
 		});
 		do
 		{
-			Do(RIGHTi);
-			Do(DOWNi);
-			Do(RIGHT);
-			Do(DOWN);
+			Do(ROTATE_RIGHTi);
+			Do(ROTATE_DOWNi);
+			Do(ROTATE_RIGHT);
+			Do(ROTATE_DOWN);
 		} while (!(GET_UP(cube.subCubes[FRU_CORNER]) == COLOR_WHITE &&
 			GET_FRONT(cube.subCubes[FRU_CORNER]) == color[0] &&
 			GET_RIGHT(cube.subCubes[FRU_CORNER]) == color[1]));
 
 		if (color != lastColor)
 		{
-			Do(WHOLEY); //rotate to next color
+			Do(ROTATE_WHOLEY); //rotate to next color
 		}
 	}
 }
@@ -452,18 +452,18 @@ void AlgorithmSolver::Stage3()
 			}
 			else if (GET_RIGHT(cube.subCubes[UR_EDGE]) == color && GET_UP(cube.subCubes[UR_EDGE]) != COLOR_YELLOW)
 			{
-				Do(UP);
+				Do(ROTATE_UP);
 				foundColor = color;
 			}
 			else if (GET_BACK(cube.subCubes[BU_EDGE]) == color && GET_UP(cube.subCubes[BU_EDGE]) != COLOR_YELLOW)
 			{
-				Do(UP);
-				Do(UP);
+				Do(ROTATE_UP);
+				Do(ROTATE_UP);
 				foundColor = color;
 			}
 			else if (GET_LEFT(cube.subCubes[UL_EDGE]) == color && GET_UP(cube.subCubes[UL_EDGE]) != COLOR_YELLOW)
 			{
-				Do(UPi);
+				Do(ROTATE_UPi);
 				foundColor = color;
 			}
 			else
@@ -486,27 +486,27 @@ void AlgorithmSolver::Stage3()
 				if ((GET_FRONT(cube.subCubes[FL_EDGE]) != color || GET_LEFT(cube.subCubes[FL_EDGE]) != leftColor[color]) &&
 					GET_FRONT(cube.subCubes[FL_EDGE]) != COLOR_YELLOW && GET_LEFT(cube.subCubes[FL_EDGE]) != COLOR_YELLOW)
 				{
-					Do(FRONT);
-					Do(UP);
-					Do(FRONTi);
-					Do(UPi);
-					Do(LEFTi);
-					Do(UPi);
-					Do(LEFT);
-					Do(UP);
+					Do(ROTATE_FRONT);
+					Do(ROTATE_UP);
+					Do(ROTATE_FRONTi);
+					Do(ROTATE_UPi);
+					Do(ROTATE_LEFTi);
+					Do(ROTATE_UPi);
+					Do(ROTATE_LEFT);
+					Do(ROTATE_UP);
 					break;
 				}
 				if (GET_FRONT(cube.subCubes[FR_EDGE]) != color || GET_RIGHT(cube.subCubes[FR_EDGE]) != rightColor[color] &&
 					GET_FRONT(cube.subCubes[FR_EDGE]) != COLOR_YELLOW && GET_RIGHT(cube.subCubes[FR_EDGE]) != COLOR_YELLOW)
 				{
-					Do(FRONTi);
-					Do(UPi);
-					Do(FRONT);
-					Do(UP);
-					Do(RIGHT);
-					Do(UP);
-					Do(RIGHTi);
-					Do(UPi);
+					Do(ROTATE_FRONTi);
+					Do(ROTATE_UPi);
+					Do(ROTATE_FRONT);
+					Do(ROTATE_UP);
+					Do(ROTATE_RIGHT);
+					Do(ROTATE_UP);
+					Do(ROTATE_RIGHTi);
+					Do(ROTATE_UPi);
 					break;
 				}
 			}
@@ -517,31 +517,31 @@ void AlgorithmSolver::Stage3()
 			if (GET_UP(cube.subCubes[FU_EDGE]) == leftColor[foundColor])
 			{
 				//2)
-				Do(UPi);
-				Do(LEFTi);
-				Do(UP);
-				Do(LEFT);
-				Do(UP);
-				Do(FRONT);
-				Do(UPi);
-				Do(FRONTi);
+				Do(ROTATE_UPi);
+				Do(ROTATE_LEFTi);
+				Do(ROTATE_UP);
+				Do(ROTATE_LEFT);
+				Do(ROTATE_UP);
+				Do(ROTATE_FRONT);
+				Do(ROTATE_UPi);
+				Do(ROTATE_FRONTi);
 			}
 			else if (GET_UP(cube.subCubes[FU_EDGE]) == rightColor[foundColor])
 			{
 				//1)
-				Do(UP);
-				Do(RIGHT);
-				Do(UPi);
-				Do(RIGHTi);
-				Do(UPi);
-				Do(FRONTi);
-				Do(UP);
-				Do(FRONT);
+				Do(ROTATE_UP);
+				Do(ROTATE_RIGHT);
+				Do(ROTATE_UPi);
+				Do(ROTATE_RIGHTi);
+				Do(ROTATE_UPi);
+				Do(ROTATE_FRONTi);
+				Do(ROTATE_UP);
+				Do(ROTATE_FRONT);
 			}
 			else
 			{
 				//assert false
-				throw SolverError();
+				throw SolverError("L544");
 			}
 		}
 	}
@@ -589,17 +589,17 @@ void AlgorithmSolver::Stage4()
 		//state4
 		if (CheckStage4State4i())
 		{
-			Do(WHOLEY);
+			Do(ROTATE_WHOLEY);
 			//assert CheckStage4State4 == true
 		}
 		if (CheckStage4State4())
 		{
-			Do(FRONT);
-			Do(RIGHT);
-			Do(UP);
-			Do(RIGHTi);
-			Do(UPi);
-			Do(FRONTi);
+			Do(ROTATE_FRONT);
+			Do(ROTATE_RIGHT);
+			Do(ROTATE_UP);
+			Do(ROTATE_RIGHTi);
+			Do(ROTATE_UPi);
+			Do(ROTATE_FRONTi);
 			continue;
 		}
 
@@ -609,29 +609,29 @@ void AlgorithmSolver::Stage4()
 		{
 			if (CheckStage4State3())
 			{
-				Do(FRONT);
-				Do(UP);
-				Do(RIGHT);
-				Do(UPi);
-				Do(RIGHTi);
-				Do(FRONTi);
+				Do(ROTATE_FRONT);
+				Do(ROTATE_UP);
+				Do(ROTATE_RIGHT);
+				Do(ROTATE_UPi);
+				Do(ROTATE_RIGHTi);
+				Do(ROTATE_FRONTi);
 				state3 = true;
 				break;
 			}
 			if (i < 3)
 			{
-				Do(WHOLEY);
+				Do(ROTATE_WHOLEY);
 			}
 		}
 		if (state3) continue;
 
 		//state2: .
-		Do(FRONT);
-		Do(UP);
-		Do(RIGHT);
-		Do(UPi);
-		Do(RIGHTi);
-		Do(FRONTi);
+		Do(ROTATE_FRONT);
+		Do(ROTATE_UP);
+		Do(ROTATE_RIGHT);
+		Do(ROTATE_UPi);
+		Do(ROTATE_RIGHTi);
+		Do(ROTATE_FRONTi);
 	}
 	//must be state1
 }
@@ -654,16 +654,16 @@ void AlgorithmSolver::Stage5()
 			}
 			else if (GET_RIGHT(cube.subCubes[FRU_CORNER]) == COLOR_YELLOW)
 			{
-				Do(WHOLEY); // -> FLU
+				Do(ROTATE_WHOLEY); // -> FLU
 			}
 			else if (GET_BACK(cube.subCubes[BRU_CORNER]) == COLOR_YELLOW)
 			{
-				Do(WHOLEY); // -> FRU
-				Do(WHOLEY); // -> FLU
+				Do(ROTATE_WHOLEY); // -> FRU
+				Do(ROTATE_WHOLEY); // -> FLU
 			}
 			else if (GET_LEFT(cube.subCubes[BLU_CORNER]) == COLOR_YELLOW)
 			{
-				Do(WHOLEYi); // -> FLU
+				Do(ROTATE_WHOLEYi); // -> FLU
 			}
 			else
 			{
@@ -673,14 +673,14 @@ void AlgorithmSolver::Stage5()
 		}
 		if (correctCount == 2)
 		{
-			Do(RIGHT);
-			Do(UP);
-			Do(RIGHTi);
-			Do(UP);
-			Do(RIGHT);
-			Do(UP);
-			Do(UP);
-			Do(RIGHTi);
+			Do(ROTATE_RIGHT);
+			Do(ROTATE_UP);
+			Do(ROTATE_RIGHTi);
+			Do(ROTATE_UP);
+			Do(ROTATE_RIGHT);
+			Do(ROTATE_UP);
+			Do(ROTATE_UP);
+			Do(ROTATE_RIGHTi);
 			continue;
 		}
 		if (correctCount == 1)
@@ -691,30 +691,30 @@ void AlgorithmSolver::Stage5()
 			}
 			else if (GET_UP(cube.subCubes[FRU_CORNER]) == COLOR_YELLOW)
 			{
-				Do(WHOLEY); // -> FLU
+				Do(ROTATE_WHOLEY); // -> FLU
 			}
 			else if (GET_UP(cube.subCubes[BRU_CORNER]) == COLOR_YELLOW)
 			{
-				Do(WHOLEY); // -> FRU
-				Do(WHOLEY); // -> FLU
+				Do(ROTATE_WHOLEY); // -> FRU
+				Do(ROTATE_WHOLEY); // -> FLU
 			}
 			else if (GET_UP(cube.subCubes[BLU_CORNER]) == COLOR_YELLOW)
 			{
-				Do(WHOLEYi); // -> FLU
+				Do(ROTATE_WHOLEYi); // -> FLU
 			}
 			else
 			{
 				//assert false
-				throw SolverError();
+				throw SolverError("L708");
 			}
-			Do(RIGHT);
-			Do(UP);
-			Do(RIGHTi);
-			Do(UP);
-			Do(RIGHT);
-			Do(UP);
-			Do(UP);
-			Do(RIGHTi);
+			Do(ROTATE_RIGHT);
+			Do(ROTATE_UP);
+			Do(ROTATE_RIGHTi);
+			Do(ROTATE_UP);
+			Do(ROTATE_RIGHT);
+			Do(ROTATE_UP);
+			Do(ROTATE_UP);
+			Do(ROTATE_RIGHTi);
 			continue;
 		}
 		if (correctCount == 0)
@@ -725,30 +725,30 @@ void AlgorithmSolver::Stage5()
 			}
 			else if (GET_FRONT(cube.subCubes[FRU_CORNER]) == COLOR_YELLOW)
 			{
-				Do(WHOLEY); // -> FLU
+				Do(ROTATE_WHOLEY); // -> FLU
 			}
 			else if (GET_RIGHT(cube.subCubes[BRU_CORNER]) == COLOR_YELLOW)
 			{
-				Do(WHOLEY); // -> FRU
-				Do(WHOLEY); // -> FLU
+				Do(ROTATE_WHOLEY); // -> FRU
+				Do(ROTATE_WHOLEY); // -> FLU
 			}
 			else if (GET_BACK(cube.subCubes[BLU_CORNER]) == COLOR_YELLOW)
 			{
-				Do(WHOLEYi); // -> FLU
+				Do(ROTATE_WHOLEYi); // -> FLU
 			}
 			else
 			{
 				//assert false
-				throw SolverError();
+				throw SolverError("L742");
 			}
-			Do(RIGHT);
-			Do(UP);
-			Do(RIGHTi);
-			Do(UP);
-			Do(RIGHT);
-			Do(UP);
-			Do(UP);
-			Do(RIGHTi);
+			Do(ROTATE_RIGHT);
+			Do(ROTATE_UP);
+			Do(ROTATE_RIGHTi);
+			Do(ROTATE_UP);
+			Do(ROTATE_RIGHT);
+			Do(ROTATE_UP);
+			Do(ROTATE_UP);
+			Do(ROTATE_RIGHTi);
 			continue;
 		}
 	}
@@ -776,65 +776,65 @@ void AlgorithmSolver::Stage6()
 
 	while (A + B + C + D < 2)
 	{
-		Do(UP);
+		Do(ROTATE_UP);
 		CheckStage6ABCD(&A, &B, &C, &D);
 	}
 
 	while (!((A&&B) || (A&&D) || (B&&C)))
 	{
-		Do(WHOLEY);
+		Do(ROTATE_WHOLEY);
 		CheckStage6ABCD(&A, &B, &C, &D);
 	}
 
 	if ((A&&D) || (B&&C))
 	{
-		Do(RIGHTi);
-		Do(FRONT);
-		Do(RIGHTi);
-		Do(BACK);
-		Do(BACK);
-		Do(RIGHT);
-		Do(FRONTi);
-		Do(RIGHTi);
-		Do(BACK);
-		Do(BACK);
-		Do(RIGHT);
-		Do(RIGHT);
-		Do(UPi);
+		Do(ROTATE_RIGHTi);
+		Do(ROTATE_FRONT);
+		Do(ROTATE_RIGHTi);
+		Do(ROTATE_BACK);
+		Do(ROTATE_BACK);
+		Do(ROTATE_RIGHT);
+		Do(ROTATE_FRONTi);
+		Do(ROTATE_RIGHTi);
+		Do(ROTATE_BACK);
+		Do(ROTATE_BACK);
+		Do(ROTATE_RIGHT);
+		Do(ROTATE_RIGHT);
+		Do(ROTATE_UPi);
 
 		CheckStage6ABCD(&A, &B, &C, &D);
 		while (A + B + C + D < 2)
 		{
-			Do(UP);
+			Do(ROTATE_UP);
 			CheckStage6ABCD(&A, &B, &C, &D);
 		}
 		while (!(A&&B))
 		{
-			Do(WHOLEY);
+			Do(ROTATE_WHOLEY);
 			CheckStage6ABCD(&A, &B, &C, &D);
 		}
 	}
 
 	if (A&&B)
 	{
-		Do(RIGHTi);
-		Do(FRONT);
-		Do(RIGHTi);
-		Do(BACK);
-		Do(BACK);
-		Do(RIGHT);
-		Do(FRONTi);
-		Do(RIGHTi);
-		Do(BACK);
-		Do(BACK);
-		Do(RIGHT);
-		Do(RIGHT);
-		Do(UPi);
+		Do(ROTATE_RIGHTi);
+		Do(ROTATE_FRONT);
+		Do(ROTATE_RIGHTi);
+		Do(ROTATE_BACK);
+		Do(ROTATE_BACK);
+		Do(ROTATE_RIGHT);
+		Do(ROTATE_FRONTi);
+		Do(ROTATE_RIGHTi);
+		Do(ROTATE_BACK);
+		Do(ROTATE_BACK);
+		Do(ROTATE_RIGHT);
+		Do(ROTATE_RIGHT);
+		Do(ROTATE_UPi);
 	}
 	else
 	{
 		//assert false
-		throw SolverError();
+		throw SolverError("L837");
 	}
 }
 
@@ -858,33 +858,33 @@ void AlgorithmSolver::Stage7()
 	{
 		if (E + F + G + H == 0)
 		{
-			Do(FRONT);
-			Do(FRONT);
-			Do(UP);
-			Do(LEFT);
-			Do(RIGHTi);
-			Do(FRONT);
-			Do(FRONT);
-			Do(LEFTi);
-			Do(RIGHT);
-			Do(UP);
-			Do(FRONT);
-			Do(FRONT);
+			Do(ROTATE_FRONT);
+			Do(ROTATE_FRONT);
+			Do(ROTATE_UP);
+			Do(ROTATE_LEFT);
+			Do(ROTATE_RIGHTi);
+			Do(ROTATE_FRONT);
+			Do(ROTATE_FRONT);
+			Do(ROTATE_LEFTi);
+			Do(ROTATE_RIGHT);
+			Do(ROTATE_UP);
+			Do(ROTATE_FRONT);
+			Do(ROTATE_FRONT);
 
 			/*
 			or
-			Do(FRONT);
-			Do(FRONT);
-			Do(UPi);
-			Do(LEFT);
-			Do(RIGHTi);
-			Do(FRONT);
-			Do(FRONT);
-			Do(LEFTi);
-			Do(RIGHT);
-			Do(UPi);
-			Do(FRONT);
-			Do(FRONT);
+			Do(ROTATE_FRONT);
+			Do(ROTATE_FRONT);
+			Do(ROTATE_UPi);
+			Do(ROTATE_LEFT);
+			Do(ROTATE_RIGHTi);
+			Do(ROTATE_FRONT);
+			Do(ROTATE_FRONT);
+			Do(ROTATE_LEFTi);
+			Do(ROTATE_RIGHT);
+			Do(ROTATE_UPi);
+			Do(ROTATE_FRONT);
+			Do(ROTATE_FRONT);
 			*/
 			CheckStage7EFGH(&E, &F, &G, &H);
 		}
@@ -894,44 +894,44 @@ void AlgorithmSolver::Stage7()
 			CheckStage7EFGH(&E, &F, &G, &H);
 			while (!F)
 			{
-				Do(WHOLEY);
+				Do(ROTATE_WHOLEY);
 				CheckStage7EFGH(&E, &F, &G, &H);
 			}
 
 			if (GET_FRONT(cube.subCubes[FU_EDGE]) == GET_LEFT(cube.subCubes[L_CENTRE]))
 			{
-				Do(FRONT);
-				Do(FRONT);
-				Do(UP);
-				Do(LEFT);
-				Do(RIGHTi);
-				Do(FRONT);
-				Do(FRONT);
-				Do(LEFTi);
-				Do(RIGHT);
-				Do(UP);
-				Do(FRONT);
-				Do(FRONT);
+				Do(ROTATE_FRONT);
+				Do(ROTATE_FRONT);
+				Do(ROTATE_UP);
+				Do(ROTATE_LEFT);
+				Do(ROTATE_RIGHTi);
+				Do(ROTATE_FRONT);
+				Do(ROTATE_FRONT);
+				Do(ROTATE_LEFTi);
+				Do(ROTATE_RIGHT);
+				Do(ROTATE_UP);
+				Do(ROTATE_FRONT);
+				Do(ROTATE_FRONT);
 			}
 			else if (GET_FRONT(cube.subCubes[FU_EDGE]) == GET_RIGHT(cube.subCubes[R_CENTRE]))
 			{
-				Do(FRONT);
-				Do(FRONT);
-				Do(UPi);
-				Do(LEFT);
-				Do(RIGHTi);
-				Do(FRONT);
-				Do(FRONT);
-				Do(LEFTi);
-				Do(RIGHT);
-				Do(UPi);
-				Do(FRONT);
-				Do(FRONT);
+				Do(ROTATE_FRONT);
+				Do(ROTATE_FRONT);
+				Do(ROTATE_UPi);
+				Do(ROTATE_LEFT);
+				Do(ROTATE_RIGHTi);
+				Do(ROTATE_FRONT);
+				Do(ROTATE_FRONT);
+				Do(ROTATE_LEFTi);
+				Do(ROTATE_RIGHT);
+				Do(ROTATE_UPi);
+				Do(ROTATE_FRONT);
+				Do(ROTATE_FRONT);
 			}
 			else
 			{
 				//assert false
-				throw SolverError();
+				throw SolverError("L934");
 			}
 		}
 		CheckStage7EFGH(&E, &F, &G, &H);
