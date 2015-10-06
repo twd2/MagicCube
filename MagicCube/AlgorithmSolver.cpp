@@ -548,9 +548,92 @@ void AlgorithmSolver::Stage3()
 	
 }
 
+bool AlgorithmSolver::CheckStage4State1()
+{
+	CubeColor centre = GET_UP(cube.subCubes[1][2][1]);
+	return GET_UP(cube.subCubes[1][2][0]) == centre &&
+		   GET_UP(cube.subCubes[0][2][1]) == centre &&
+		   GET_UP(cube.subCubes[1][2][1]) == centre &&
+		   GET_UP(cube.subCubes[2][2][1]) == centre &&
+		   GET_UP(cube.subCubes[1][2][2]) == centre;
+}
+
+bool AlgorithmSolver::CheckStage4State3()
+{
+	CubeColor centre = GET_UP(cube.subCubes[1][2][1]);
+	return GET_UP(cube.subCubes[1][2][0]) == centre &&
+		   GET_UP(cube.subCubes[0][2][1]) == centre &&
+		   GET_UP(cube.subCubes[1][2][1]) == centre;
+}
+
+bool AlgorithmSolver::CheckStage4State4()
+{
+	CubeColor centre = GET_UP(cube.subCubes[1][2][1]);
+	return GET_UP(cube.subCubes[0][2][1]) == centre &&
+		   GET_UP(cube.subCubes[1][2][1]) == centre &&
+		   GET_UP(cube.subCubes[2][2][1]) == centre;
+}
+
+bool AlgorithmSolver::CheckStage4State4i()
+{
+	CubeColor centre = GET_UP(cube.subCubes[1][2][1]);
+	return GET_UP(cube.subCubes[1][2][0]) == centre &&
+		   GET_UP(cube.subCubes[1][2][1]) == centre &&
+		   GET_UP(cube.subCubes[1][2][2]) == centre;
+}
+
 void AlgorithmSolver::Stage4()
 {
+	while (!CheckStage4State1())
+	{
+		//state4
+		if (CheckStage4State4i())
+		{
+			Do(WHOLEY);
+			//assert CheckStage4State4 == true
+		}
+		if (CheckStage4State4())
+		{
+			Do(FRONT);
+			Do(RIGHT);
+			Do(UP);
+			Do(RIGHTi);
+			Do(UPi);
+			Do(FRONTi);
+			continue;
+		}
 
+		//state3
+		bool state3 = false;
+		for (int i = 0; i < 4; ++i)
+		{
+			if (CheckStage4State3())
+			{
+				Do(FRONT);
+				Do(UP);
+				Do(RIGHT);
+				Do(UPi);
+				Do(RIGHTi);
+				Do(FRONTi);
+				state3 = true;
+				break;
+			}
+			if (i < 3)
+			{
+				Do(WHOLEY);
+			}
+		}
+		if (state3) continue;
+
+		//state2: .
+		Do(FRONT);
+		Do(UP);
+		Do(RIGHT);
+		Do(UPi);
+		Do(RIGHTi);
+		Do(FRONTi);
+	}
+	//must be state1
 }
 
 void AlgorithmSolver::Stage5()

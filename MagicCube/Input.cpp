@@ -127,7 +127,7 @@ void execCommand(string s)
 	{
 		//for (;;)
 		{
-			printf("OK\n");
+			//printf("OK\n");
 			cube = Cube();
 			for (int i = 0; i < rand() % 1000 + 1; ++i)
 			{

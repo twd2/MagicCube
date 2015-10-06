@@ -30,5 +30,9 @@ public:
 
 private:
 	bool CheckStage3();
+	bool CheckStage4State1(); // +
+	bool CheckStage4State3();
+	bool CheckStage4State4(); // -
+	bool CheckStage4State4i(); // |
 };
 
