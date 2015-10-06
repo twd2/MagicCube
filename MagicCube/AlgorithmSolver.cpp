@@ -16,7 +16,7 @@ void AlgorithmSolver::Solve()
 	Stage7();
 }
 
-void AlgorithmSolver::GetUp(CubeColor color)
+void AlgorithmSolver::MoveToUp(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
@@ -46,7 +46,7 @@ void AlgorithmSolver::GetUp(CubeColor color)
 	}
 }
 
-void AlgorithmSolver::GetDown(CubeColor color)
+void AlgorithmSolver::MoveToDown(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
@@ -76,7 +76,7 @@ void AlgorithmSolver::GetDown(CubeColor color)
 	}
 }
 
-void AlgorithmSolver::GetLeft(CubeColor color)
+void AlgorithmSolver::MoveToLeft(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
@@ -106,7 +106,7 @@ void AlgorithmSolver::GetLeft(CubeColor color)
 	}
 }
 
-void AlgorithmSolver::GetRight(CubeColor color)
+void AlgorithmSolver::MoveToRight(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
@@ -136,7 +136,7 @@ void AlgorithmSolver::GetRight(CubeColor color)
 	}
 }
 
-void AlgorithmSolver::GetFront(CubeColor color)
+void AlgorithmSolver::MoveToFront(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
@@ -166,7 +166,7 @@ void AlgorithmSolver::GetFront(CubeColor color)
 	}
 }
 
-void AlgorithmSolver::GetBack(CubeColor color)
+void AlgorithmSolver::MoveToBack(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
@@ -199,10 +199,10 @@ void AlgorithmSolver::GetBack(CubeColor color)
 void AlgorithmSolver::Stage1()
 {
 	//white centre piece on the top face
-	GetUp(COLOR_WHITE);
+	MoveToUp(COLOR_WHITE);
 
 	//blue, orange, green, red
-	GetRight(COLOR_BLUE);
+	MoveToRight(COLOR_BLUE);
 
 	auto colors = { COLOR_BLUE, COLOR_ORANGE, COLOR_GREEN, COLOR_RED };
 	bool isFirst = true;
@@ -301,24 +301,14 @@ void AlgorithmSolver::Stage1()
 			Do(FRONTi);
 			Do(UPi);
 		}
+
+		//is not last, rotate to next color
 		if (color != *(colors.end() - 1))
 		{
 			Do(WHOLEY);
 		}
 		isFirst = false;
 	}
-	/*if (IsColorMatch2(cube.subCubes[FD_EDGE], COLOR_WHITE, COLOR_BLUE))
-	{
-		Do(DOWN);
-		Do(DOWN);
-		Do(BACK);
-		Do(BACK);
-	}
-	else
-	{
-		printf("orz\n");
-	}*/
-
 }
 
 void AlgorithmSolver::Stage2()
