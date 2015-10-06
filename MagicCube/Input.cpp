@@ -170,7 +170,7 @@ void keyboardCallback(GLFWwindow *window, int key, int scancode, int action, int
 			printf("\r%s ", commandBuffer.c_str());
 			printf("\r%s", commandBuffer.c_str());
 		}
-		else if (key == GLFW_KEY_ENTER)
+		else if (key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER)
 		{
 			printf("\n");
 			execCommand(commandBuffer);

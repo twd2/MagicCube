@@ -638,7 +638,120 @@ void AlgorithmSolver::Stage4()
 
 void AlgorithmSolver::Stage5()
 {
+	while (!cube.CheckU())
+	{
+		CubeColor centre = GET_UP(cube.subCubes[1][2][1]);
+		int correctCount = (GET_UP(cube.subCubes[0][2][0]) == centre) +
+						   (GET_UP(cube.subCubes[2][2][0]) == centre) +
+						   (GET_UP(cube.subCubes[0][2][2]) == centre) +
+						   (GET_UP(cube.subCubes[2][2][2]) == centre);
 
+		if (correctCount == 2)
+		{
+			if (GET_FRONT(cube.subCubes[FLU_CORNER]) == COLOR_YELLOW)
+			{
+				//nope
+			}
+			else if (GET_RIGHT(cube.subCubes[FRU_CORNER]) == COLOR_YELLOW)
+			{
+				Do(WHOLEY); // -> FLU
+			}
+			else if (GET_BACK(cube.subCubes[BRU_CORNER]) == COLOR_YELLOW)
+			{
+				Do(WHOLEY); // -> FRU
+				Do(WHOLEY); // -> FLU
+			}
+			else if (GET_LEFT(cube.subCubes[BLU_CORNER]) == COLOR_YELLOW)
+			{
+				Do(WHOLEYi); // -> FLU
+			}
+			else
+			{
+				--correctCount;
+				//regard as correctCount = 1
+			}
+		}
+		if (correctCount == 2)
+		{
+			Do(RIGHT);
+			Do(UP);
+			Do(RIGHTi);
+			Do(UP);
+			Do(RIGHT);
+			Do(UP);
+			Do(UP);
+			Do(RIGHTi);
+			continue;
+		}
+		if (correctCount == 1)
+		{
+			if (GET_UP(cube.subCubes[FLU_CORNER]) == COLOR_YELLOW)
+			{
+				//nope
+			}
+			else if (GET_UP(cube.subCubes[FRU_CORNER]) == COLOR_YELLOW)
+			{
+				Do(WHOLEY); // -> FLU
+			}
+			else if (GET_UP(cube.subCubes[BRU_CORNER]) == COLOR_YELLOW)
+			{
+				Do(WHOLEY); // -> FRU
+				Do(WHOLEY); // -> FLU
+			}
+			else if (GET_UP(cube.subCubes[BLU_CORNER]) == COLOR_YELLOW)
+			{
+				Do(WHOLEYi); // -> FLU
+			}
+			else
+			{
+				//assert false
+				throw SolverError();
+			}
+			Do(RIGHT);
+			Do(UP);
+			Do(RIGHTi);
+			Do(UP);
+			Do(RIGHT);
+			Do(UP);
+			Do(UP);
+			Do(RIGHTi);
+			continue;
+		}
+		if (correctCount == 0)
+		{
+			if (GET_LEFT(cube.subCubes[FLU_CORNER]) == COLOR_YELLOW)
+			{
+				//nope
+			}
+			else if (GET_FRONT(cube.subCubes[FRU_CORNER]) == COLOR_YELLOW)
+			{
+				Do(WHOLEY); // -> FLU
+			}
+			else if (GET_RIGHT(cube.subCubes[BRU_CORNER]) == COLOR_YELLOW)
+			{
+				Do(WHOLEY); // -> FRU
+				Do(WHOLEY); // -> FLU
+			}
+			else if (GET_BACK(cube.subCubes[BLU_CORNER]) == COLOR_YELLOW)
+			{
+				Do(WHOLEYi); // -> FLU
+			}
+			else
+			{
+				//assert false
+				throw SolverError();
+			}
+			Do(RIGHT);
+			Do(UP);
+			Do(RIGHTi);
+			Do(UP);
+			Do(RIGHT);
+			Do(UP);
+			Do(UP);
+			Do(RIGHTi);
+			continue;
+		}
+	}
 }
 
 void AlgorithmSolver::Stage6()
