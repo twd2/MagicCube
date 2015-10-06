@@ -34,5 +34,6 @@ private:
 	bool CheckStage4State3();
 	bool CheckStage4State4(); // -
 	bool CheckStage4State4i(); // |
+	void CheckStage6ABCD(bool*, bool*, bool*, bool*);
 };
 

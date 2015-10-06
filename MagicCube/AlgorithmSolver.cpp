@@ -754,8 +754,88 @@ void AlgorithmSolver::Stage5()
 	}
 }
 
+void AlgorithmSolver::CheckStage6ABCD(bool *A, bool *B, bool *C, bool*D)
+{
+	*A = (GET_LEFT(cube.subCubes[BLU_CORNER]) == GET_LEFT(cube.subCubes[L_CENTRE])) &&
+		 (GET_BACK(cube.subCubes[BLU_CORNER]) == GET_BACK(cube.subCubes[B_CENTRE]));
+
+	*B = (GET_RIGHT(cube.subCubes[BRU_CORNER]) == GET_RIGHT(cube.subCubes[R_CENTRE])) &&
+		 (GET_BACK(cube.subCubes[BRU_CORNER]) == GET_BACK(cube.subCubes[B_CENTRE]));
+
+	*C = (GET_LEFT(cube.subCubes[FLU_CORNER]) == GET_LEFT(cube.subCubes[L_CENTRE])) &&
+		 (GET_FRONT(cube.subCubes[FLU_CORNER]) == GET_FRONT(cube.subCubes[F_CENTRE]));
+
+	*D = (GET_RIGHT(cube.subCubes[FRU_CORNER]) == GET_RIGHT(cube.subCubes[R_CENTRE])) &&
+		 (GET_FRONT(cube.subCubes[FRU_CORNER]) == GET_FRONT(cube.subCubes[F_CENTRE]));
+}
+
 void AlgorithmSolver::Stage6()
 {
+	bool A, B, C, D;
+	CheckStage6ABCD(&A, &B, &C, &D);
+
+	while (A + B + C + D < 2)
+	{
+		Do(UP);
+		CheckStage6ABCD(&A, &B, &C, &D);
+	}
+
+	while (!((A&&B) || (A&&D) || (B&&C)))
+	{
+		Do(WHOLEY);
+		CheckStage6ABCD(&A, &B, &C, &D);
+	}
+
+	if ((A&&D) || (B&&C))
+	{
+		Do(RIGHTi);
+		Do(FRONT);
+		Do(RIGHTi);
+		Do(BACK);
+		Do(BACK);
+		Do(RIGHT);
+		Do(FRONTi);
+		Do(RIGHTi);
+		Do(BACK);
+		Do(BACK);
+		Do(RIGHT);
+		Do(RIGHT);
+		Do(UPi);
+
+		CheckStage6ABCD(&A, &B, &C, &D);
+		while (A + B + C + D < 2)
+		{
+			Do(UP);
+			CheckStage6ABCD(&A, &B, &C, &D);
+		}
+		while (!(A&&B))
+		{
+			Do(WHOLEY);
+			CheckStage6ABCD(&A, &B, &C, &D);
+		}
+	}
+
+	if (A&&B)
+	{
+		Do(RIGHTi);
+		Do(FRONT);
+		Do(RIGHTi);
+		Do(BACK);
+		Do(BACK);
+		Do(RIGHT);
+		Do(FRONTi);
+		Do(RIGHTi);
+		Do(BACK);
+		Do(BACK);
+		Do(RIGHT);
+		Do(RIGHT);
+		Do(UPi);
+	}
+	else
+	{
+		//assert false
+		throw SolverError();
+	}
 
 }
 
