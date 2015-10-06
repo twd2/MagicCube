@@ -4,14 +4,14 @@
 #ifdef USE_GL
 
 bool playing = false;
-vector<CubeRotateMethod> *stepsToPlay;
-int playIndex = 0;
+vector<CubeRotateMethod> stepsToPlay;
+ptrdiff_t playIndex = 0;
 
 double rotateAngle = 0.0;
 double finishAngle = 90.0;
 CubeRotateMethod rotateMethod = ROTATE_NONE;
 
-const double speed = 2.0;
+const double speed = 1.5;
 
 double easingDelta(double currentAngle)
 {
@@ -132,10 +132,11 @@ void startRotate(CubeRotateMethod method)
 
 void play(vector<CubeRotateMethod> &steps)
 {
-	stepsToPlay = &steps;
+	if (steps.size() <= 0) return;
+	stepsToPlay = steps;
 	playIndex = 0;
 	playing = true;
-	startRotate((*stepsToPlay)[0]);
+	startRotate(stepsToPlay[0]);
 }
 
 void playNext()
@@ -143,9 +144,9 @@ void playNext()
 	if (playing)
 	{
 		++playIndex;
-		if (playIndex < stepsToPlay->size())
+		if (playIndex < (ptrdiff_t)stepsToPlay.size())
 		{
-			startRotate((*stepsToPlay)[playIndex]);
+			startRotate(stepsToPlay[playIndex]);
 		}
 		else
 		{

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include "CubeError.h"
 
 extern map<char, CubeColor> CharColorMap;
 extern map<CubeColor, char> ColorCharMap;

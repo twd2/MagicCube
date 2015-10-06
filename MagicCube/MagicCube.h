@@ -3,6 +3,7 @@
 #include "Cube.h"
 #include "CubeSolver.h"
 #include "AlgorithmSolver.h"
+#include "StepReduce.h"
 
 #ifdef USE_GL
 #include "Input.h"

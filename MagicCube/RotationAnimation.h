@@ -6,11 +6,13 @@
 #ifdef USE_GL
 
 extern bool playing;
-extern vector<CubeRotateMethod> *stepsToPlay;
-extern int playIndex;
+extern vector<CubeRotateMethod> stepsToPlay;
+extern ptrdiff_t playIndex;
 
 extern double rotateAngle, finishAngle;
 extern CubeRotateMethod rotateMethod;
+
+extern const double speed;
 
 double easingDelta(double);
 void rotateFinishCallback();

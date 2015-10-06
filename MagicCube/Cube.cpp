@@ -61,6 +61,10 @@ Cube::~Cube()
 
 void Cube::Load(string data)
 {
+	if (data.length() != 162)
+	{
+		throw CubeError("Length mismatch");
+	}
 	for (int z = 0; z < 3; ++z)
 	{
 		for (int y = 0; y < 3; ++y)

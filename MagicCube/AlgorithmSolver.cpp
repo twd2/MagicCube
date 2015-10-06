@@ -7,12 +7,19 @@ AlgorithmSolver::~AlgorithmSolver()
 
 void AlgorithmSolver::Solve()
 {
+	if (cube.Check()) return;
 	Stage1();
+	if (cube.Check()) return;
 	Stage2();
+	if (cube.Check()) return;
 	Stage3();
+	if (cube.Check()) return;
 	Stage4();
+	if (cube.Check()) return;
 	Stage5();
+	if (cube.Check()) return;
 	Stage6();
+	if (cube.Check()) return;
 	Stage7();
 }
 
@@ -334,10 +341,15 @@ void AlgorithmSolver::Stage2()
 		},
 		{
 			//FRU
-			Do(ROTATE_RIGHTi); // -> FRD
-			Do(ROTATE_DOWNi); // -> FLD to save
-			Do(ROTATE_RIGHT); //restore right
-			Do(ROTATE_DOWN); // -> FRD
+			if (!(GET_UP(cube.subCubes[FRU_CORNER]) == COLOR_WHITE &&
+			GET_FRONT(cube.subCubes[FRU_CORNER]) == color[0] &&
+			GET_RIGHT(cube.subCubes[FRU_CORNER]) == color[1]))
+			{
+				Do(ROTATE_RIGHTi); // -> FRD
+				Do(ROTATE_DOWNi); // -> FLD to save
+				Do(ROTATE_RIGHT); //restore right
+				Do(ROTATE_DOWN); // -> FRD
+			}
 		},
 		{
 			//FRD
@@ -365,15 +377,16 @@ void AlgorithmSolver::Stage2()
 			//BRD
 			Do(ROTATE_DOWNi); // -> FRD
 		});
-		do
+
+		while (!(GET_UP(cube.subCubes[FRU_CORNER]) == COLOR_WHITE &&
+			GET_FRONT(cube.subCubes[FRU_CORNER]) == color[0] &&
+			GET_RIGHT(cube.subCubes[FRU_CORNER]) == color[1]))
 		{
 			Do(ROTATE_RIGHTi);
 			Do(ROTATE_DOWNi);
 			Do(ROTATE_RIGHT);
 			Do(ROTATE_DOWN);
-		} while (!(GET_UP(cube.subCubes[FRU_CORNER]) == COLOR_WHITE &&
-			GET_FRONT(cube.subCubes[FRU_CORNER]) == color[0] &&
-			GET_RIGHT(cube.subCubes[FRU_CORNER]) == color[1]));
+		}
 
 		if (color != lastColor)
 		{
@@ -774,11 +787,15 @@ void AlgorithmSolver::Stage6()
 	bool A, B, C, D;
 	CheckStage6ABCD(&A, &B, &C, &D);
 
+	if (A + B + C + D == 4) return;
+
 	while (A + B + C + D < 2)
 	{
 		Do(ROTATE_UP);
 		CheckStage6ABCD(&A, &B, &C, &D);
 	}
+
+	if (A + B + C + D == 4) return;
 
 	while (!((A&&B) || (A&&D) || (B&&C)))
 	{

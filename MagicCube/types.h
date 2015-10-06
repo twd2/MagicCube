@@ -192,7 +192,7 @@ enum CubeColor
 	COLOR_INVALID = 0xF
 };
 
-//i means inverse, +9 -> i
+//i means inverse, +10 -> i
 enum CubeRotateMethod
 {
 	ROTATE_NONE,
@@ -205,6 +205,7 @@ enum CubeRotateMethod
 	ROTATE_WHOLEX,  //whole up
 	ROTATE_WHOLEY,  //whole left
 	ROTATE_WHOLEZ,  //whole clockwise
+	ROTATE_NONE2,
 	ROTATE_FRONTi,
 	ROTATE_BACKi,
 	ROTATE_LEFTi,

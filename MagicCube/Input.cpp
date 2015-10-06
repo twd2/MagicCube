@@ -15,7 +15,6 @@ void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
 		lastAngleX = viewRotationAngleX;
 		lastAngleY = viewRotationAngleY;
 		glfwGetCursorPos(window, &lastX, &lastY);
-		//printf("p%f, %f\n", lastX, lastY);
 		mouseDown = true;
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
@@ -35,101 +34,151 @@ void mouseMove()
 	double deltaX = currX - lastX,
 		deltaY = currY - lastY;
 
-	//printf("d%f, %f\n", deltaX, deltaY);
-
 	viewRotationAngleY = (GLfloat)(lastAngleY + deltaX*0.5);
 	viewRotationAngleX = (GLfloat)(lastAngleX + deltaY*0.5);
 }
 
-void execCommand(string s)
+void execCommand(string cmd)
 {
-	if (s == "R")
+	string value = "";
+	size_t index = cmd.find(' ');
+	if (index != string::npos)
+	{
+		value = cmd.substr(index + 1);
+		cmd = cmd.substr(0, index);
+	}
+	cmd = toUpperString(cmd);
+	if (cmd == "R")
 	{
 		startRotate(ROTATE_RIGHT);
 	}
-	else if (s == "RI")
+	else if (cmd == "RI")
 	{
 		startRotate(ROTATE_RIGHTi);
 	}
-	else if (s == "L")
+	else if (cmd == "L")
 	{
 		startRotate(ROTATE_LEFT);
 	}
-	else if (s == "LI")
+	else if (cmd == "LI")
 	{
 		startRotate(ROTATE_LEFTi);
 	}
-	else if (s == "B")
+	else if (cmd == "B")
 	{
 		startRotate(ROTATE_BACK);
 	}
-	else if (s == "BI")
+	else if (cmd == "BI")
 	{
 		startRotate(ROTATE_BACKi);
 	}
-	else if (s == "D")
+	else if (cmd == "D")
 	{
 		startRotate(ROTATE_DOWN);
 	}
-	else if (s == "DI")
+	else if (cmd == "DI")
 	{
 		startRotate(ROTATE_DOWNi);
 	}
-	else if (s == "F")
+	else if (cmd == "F")
 	{
 		startRotate(ROTATE_FRONT);
 	}
-	else if (s == "FI")
+	else if (cmd == "FI")
 	{
 		startRotate(ROTATE_FRONTi);
 	}
-	else if (s == "U")
+	else if (cmd == "U")
 	{
 		startRotate(ROTATE_UP);
 	}
-	else if (s == "UI")
+	else if (cmd == "UI")
 	{
 		startRotate(ROTATE_UPi);
 	}
-	else if (s == "X")
+	else if (cmd == "X")
 	{
 		startRotate(ROTATE_WHOLEX);
 	}
-	else if (s == "Y")
+	else if (cmd == "Y")
 	{
 		startRotate(ROTATE_WHOLEY);
 	}
-	else if (s == "Z")
+	else if (cmd == "Z")
 	{
 		startRotate(ROTATE_WHOLEZ);
 	}
-	else if (s == "XI")
+	else if (cmd == "XI")
 	{
 		startRotate(ROTATE_WHOLEXi);
 	}
-	else if (s == "YI")
+	else if (cmd == "YI")
 	{
 		startRotate(ROTATE_WHOLEYi);
 	}
-	else if (s == "ZI")
+	else if (cmd == "ZI")
 	{
 		startRotate(ROTATE_WHOLEZi);
 	}
-	else if (s == "CHECK")
+	else if (cmd == "CHECK")
 	{
 		printf("U%d D%d L%d R%d F%d B%d: %d\n", cube.CheckU(), cube.CheckD(), cube.CheckL(), cube.CheckR(), cube.CheckF(), cube.CheckB(), cube.Check());
 	}
-	else if (s == "ABOUT")
+	else if (cmd == "ABOUT")
 	{
 		printf("Wandai :)\n");
 	}
-	else if (s == "SOLVE")
+	else if (cmd == "SOLVE")
 	{
 		CubeSolver *solver = (CubeSolver*)new AlgorithmSolver(cube);
 		solver->Solve();
 		delete solver;
 	}
-	else if (s == "TEST")
+	else if (cmd == "PLAY")
+	{
+		Cube oldCube = cube;
+		CubeSolver *solver = (CubeSolver*)new AlgorithmSolver(cube);
+		solver->Solve();
+		auto steps = StepReduce::Reduce(solver->Step);
+		delete solver;
+		cube = oldCube;
+		play(steps);
+	}
+	else if (cmd == "RANDOM")
+	{
+		for (int i = 0; i < rand() % 1000 + 1; ++i)
+		{
+			CubeRotateMethod method = (CubeRotateMethod)((rand() % 12) + 1);
+			cube.DoMethod(method);
+		}
+	}
+	else if (cmd == "FILE")
+	{
+		try
+		{
+			ifstream file(value);
+			if (!file.eof())
+			{
+				string line;
+				getline(file, line);
+				cube.Load(line);
+				file.close();
+			}
+			else
+			{
+				printf("ERROR\n");
+			}
+		}
+		catch (CubeError err)
+		{
+			printf("CubeError: %s\n", err.why.c_str());
+		}
+	}
+	else if (cmd == "LOAD")
+	{
+		cube.Load(value);
+	}
+	else if (cmd == "TEST")
 	{
 		unsigned long long count = 0;
 		for (;;)
@@ -171,12 +220,7 @@ void keyboardCallback(GLFWwindow *window, int key, int scancode, int action, int
 {
 	if (action == GLFW_PRESS || action == GLFW_REPEAT)
 	{
-		if (key >= GLFW_KEY_SPACE && key <= GLFW_KEY_GRAVE_ACCENT)
-		{
-			commandBuffer += (char)key;
-			printf("%c", key);
-		}
-		else if (key == GLFW_KEY_BACKSPACE)
+		if (key == GLFW_KEY_BACKSPACE)
 		{
 			if (commandBuffer.length() > 0)
 			{
@@ -192,6 +236,16 @@ void keyboardCallback(GLFWwindow *window, int key, int scancode, int action, int
 			printf("\nDone.\n");
 			commandBuffer = "";
 		}
+	}
+}
+
+void characterCallback(GLFWwindow *window, unsigned int codepoint)
+{
+	if (codepoint < 256)
+	{
+		char ch = (char)codepoint;
+		commandBuffer += ch;
+		printf("%c", ch);
 	}
 }
 
