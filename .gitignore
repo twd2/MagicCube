@@ -198,3 +198,5 @@ FakesAssemblies/
 include
 lib
 libx64
+
+.DS_Store
