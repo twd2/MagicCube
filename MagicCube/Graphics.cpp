@@ -80,7 +80,11 @@ void updateFPS()
 	if (currTime - lastTime >= 1.0)
 	{
 		char str[256];
+#ifdef _WIN32
 		sprintf_s(str, "Magic Cube (FPS: %d)", lastFPS);
+#else
+		snprintf(str, sizeof(str), "Magic Cube (FPS: %d)", lastFPS);
+#endif
 		glfwSetWindowTitle(window, str);
 		lastTime = glfwGetTime();
 		lastFPS = 0;
