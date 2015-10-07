@@ -215,7 +215,7 @@ void AlgorithmSolver::Stage1()
 	CubeColor lastColor = *(colors.end() - 1);
 	bool isFirst = true;
 
-	for each (CubeColor color in colors)
+	for (CubeColor color : colors)
 	{
 		//find ????/white edge and put it DR
 		FIND_EDGE(cube.subCubes, color, COLOR_WHITE,
@@ -325,7 +325,7 @@ void AlgorithmSolver::Stage2()
 	vector<vector<CubeColor> > colors = { { COLOR_GREEN, COLOR_RED }, { COLOR_RED, COLOR_BLUE }, { COLOR_BLUE, COLOR_ORANGE }, { COLOR_ORANGE, COLOR_GREEN } };
 	auto lastColor = *(colors.end()-1);
 
-	for each (auto color in colors)
+	for (auto color : colors)
 	{
 		//find white/????/???? corner and put it FRD
 		FIND_CORNER(cube.subCubes, COLOR_WHITE, color[0], color[1],
@@ -455,7 +455,7 @@ void AlgorithmSolver::Stage3()
 		vector<CubeColor> colors = { COLOR_RED, COLOR_GREEN, COLOR_ORANGE, COLOR_BLUE };
 
 		CubeColor foundColor = COLOR_INVALID;
-		for each (auto color in colors)
+		for (auto color : colors)
 		{
 			MoveToFront(color);
 			if (GET_FRONT(cube.subCubes[FU_EDGE]) == color && GET_UP(cube.subCubes[FU_EDGE]) != COLOR_YELLOW)
@@ -493,7 +493,7 @@ void AlgorithmSolver::Stage3()
 		if (foundColor == COLOR_INVALID)
 		{
 			//truly SAD
-			for each (auto color in colors)
+			for (auto color : colors)
 			{
 				MoveToFront(color);
 				if ((GET_FRONT(cube.subCubes[FL_EDGE]) != color || GET_LEFT(cube.subCubes[FL_EDGE]) != leftColor[color]) &&
