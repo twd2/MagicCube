@@ -5,8 +5,7 @@ Great homework for Fundamentals of Programming course.
 
 # Dependencies
 
-1. [GLEW](http://glew.sourceforge.net/)
-2. [GLFW](http://www.glfw.org/)
+1. [GLFW](http://www.glfw.org/)
 
 # Building
 
