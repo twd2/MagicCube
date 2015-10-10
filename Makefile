@@ -1,16 +1,34 @@
-OBJECTS = build/AlgorithmSolver.o build/Input.o build/SolverError.o \
-build/Cube.o build/MagicCube.o build/StepReduce.o \
-build/CubeError.o build/RandomSolver.o build/Vertices.o \
-build/CubeSolver.o build/Rendering.o build/stdafx.o \
-build/Graphics.o build/RotationAnimation.o build/utilities.o
+PROJECT = MagicCube
 
-MagicCube: $(OBJECTS)
-	$(CC) -Llib -o build/MagicCube -lc++ -lSystem -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo $(OBJECTS)
-build/stdafx.o: MagicCube/stdafx.cpp
-	$(CC) -IMagicCube/include -o $@ -c $< 
-build/%.o: MagicCube/%.cpp
-	clang++ -std=c++11 -IMagicCube/include -o $@  -c $<
+SOURCES := $(shell ls $(PROJECT)/*.cpp)
+OBJECTS := $(patsubst $(PROJECT)/%.cpp, build/%.o, $(SOURCES))
+
+#cc
+
+INC_DIR = $(PROJECT)/include
+
+CC_FLAGS = -O2 -Wall -std=c++11 -I $(INC_DIR)
+
+#linker
+
+LIB_DIR = lib
+
+LIBS = -lc++ -lm -lSystem -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
+
+LINKER_FLAGS = -L $(LIB_DIR) $(LIBS)
+
+.PHONY: all
+all:
+	-mkdir build
+	make $(PROJECT)
+
+$(PROJECT): $(OBJECTS)
+	$(CC) $(LINKER_FLAGS) -o build/$(PROJECT) $(OBJECTS)
+
+build/%.o: $(PROJECT)/%.cpp $(PROJECT)/%.h $(PROJECT)/Config.h
+	$(CC) -c $(CC_FLAGS) -o $@ $<
 
 .PHONY: clean
 clean:
 	-rm build/*
+	-rm -rf build
