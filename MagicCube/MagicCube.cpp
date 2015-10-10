@@ -74,41 +74,6 @@ void textMode(int argc, char *argv[])
 }
 #endif //USE_GL
 
-string stepsToString(vector<CubeRotateMethod> &steps)
-{
-	string r;
-	ptrdiff_t size = steps.size();
-	for (ptrdiff_t i = 0; i < size; ++i)
-	{
-		r += CubeRotateMethodName[steps[i]] + " ";
-	}
-	return r;
-}
-
-void printError(CubeError err)
-{
-	if (err.why == "")
-	{
-		fprintf(stderr, "CubeError\n");
-	}
-	else
-	{
-		fprintf(stderr, "CubeError: %s\n", err.why.c_str());
-	}
-}
-
-void printError(SolverError err)
-{
-	if (err.why == "")
-	{
-		fprintf(stderr, "SolverError\n");
-	}
-	else
-	{
-		fprintf(stderr, "SolverError: %s\n", err.why.c_str());
-	}
-}
-
 int main(int argc, char *argv[])
 {
 	srand(clock());

@@ -5,8 +5,17 @@
 #include <sstream>
 #include <algorithm>
 
-std::vector<std::string> split(const std::string &, char);
+#include "CubeError.h"
+#include "SolverError.h"
+#include "Cube.h"
+
+vector<string> split(const string &, char);
 char toUpper(char);
 char toLower(char);
 string toUpperString(string);
 string toLowerString(string);
+string stepsToString(vector<CubeRotateMethod>&);
+void printError(CubeError);
+void printError(SolverError);
+void randomCube(Cube&);
+string randomCube();

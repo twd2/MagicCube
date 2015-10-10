@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utilities.h"
 #include "Cube.h"
 #include "CubeSolver.h"
 #include "GeneralSolver.h"

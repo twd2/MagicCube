@@ -40,177 +40,204 @@ void mouseMove()
 
 void execCommand(string cmd)
 {
-	string value = "";
-	size_t index = cmd.find(' ');
-	if (index != string::npos)
+	try
 	{
-		value = cmd.substr(index + 1);
-		cmd = cmd.substr(0, index);
-	}
-	cmd = toUpperString(cmd);
-	if (cmd == "R")
-	{
-		startRotate(ROTATE_RIGHT);
-	}
-	else if (cmd == "RI")
-	{
-		startRotate(ROTATE_RIGHTi);
-	}
-	else if (cmd == "L")
-	{
-		startRotate(ROTATE_LEFT);
-	}
-	else if (cmd == "LI")
-	{
-		startRotate(ROTATE_LEFTi);
-	}
-	else if (cmd == "B")
-	{
-		startRotate(ROTATE_BACK);
-	}
-	else if (cmd == "BI")
-	{
-		startRotate(ROTATE_BACKi);
-	}
-	else if (cmd == "D")
-	{
-		startRotate(ROTATE_DOWN);
-	}
-	else if (cmd == "DI")
-	{
-		startRotate(ROTATE_DOWNi);
-	}
-	else if (cmd == "F")
-	{
-		startRotate(ROTATE_FRONT);
-	}
-	else if (cmd == "FI")
-	{
-		startRotate(ROTATE_FRONTi);
-	}
-	else if (cmd == "U")
-	{
-		startRotate(ROTATE_UP);
-	}
-	else if (cmd == "UI")
-	{
-		startRotate(ROTATE_UPi);
-	}
-	else if (cmd == "X")
-	{
-		startRotate(ROTATE_WHOLEX);
-	}
-	else if (cmd == "Y")
-	{
-		startRotate(ROTATE_WHOLEY);
-	}
-	else if (cmd == "Z")
-	{
-		startRotate(ROTATE_WHOLEZ);
-	}
-	else if (cmd == "XI")
-	{
-		startRotate(ROTATE_WHOLEXi);
-	}
-	else if (cmd == "YI")
-	{
-		startRotate(ROTATE_WHOLEYi);
-	}
-	else if (cmd == "ZI")
-	{
-		startRotate(ROTATE_WHOLEZi);
-	}
-	else if (cmd == "CHECK")
-	{
-		printf("U%d D%d L%d R%d F%d B%d: %d\n", cube.CheckU(), cube.CheckD(), cube.CheckL(), cube.CheckR(), cube.CheckF(), cube.CheckB(), cube.Check());
-	}
-	else if (cmd == "ABOUT")
-	{
-		printf("Wandai :)\n");
-	}
-	else if (cmd == "SOLVE")
-	{
-		CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
-		solver->Solve();
-		delete solver;
-	}
-	else if (cmd == "PLAY")
-	{
-		Cube oldCube = cube;
-		CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
-		solver->Solve();
-		auto steps = StepReduce::Reduce(solver->Step);
-		delete solver;
-		cube = oldCube;
-		play(steps);
-	}
-	else if (cmd == "RANDOM")
-	{
-		for (int i = 0; i < rand() % 1000 + 1; ++i)
+		string value = "";
+		size_t index = cmd.find(' ');
+		if (index != string::npos)
 		{
-			CubeRotateMethod method = (CubeRotateMethod)((rand() % 12) + 1);
-			cube.DoMethod(method);
+			value = cmd.substr(index + 1);
+			cmd = cmd.substr(0, index);
 		}
-	}
-	else if (cmd == "FILE")
-	{
-		try
+		cmd = toUpperString(cmd);
+		if (cmd == "R")
 		{
-			ifstream file(value);
-			if (!file.eof())
+			startRotate(ROTATE_RIGHT);
+		}
+		else if (cmd == "RI")
+		{
+			startRotate(ROTATE_RIGHTi);
+		}
+		else if (cmd == "L")
+		{
+			startRotate(ROTATE_LEFT);
+		}
+		else if (cmd == "LI")
+		{
+			startRotate(ROTATE_LEFTi);
+		}
+		else if (cmd == "B")
+		{
+			startRotate(ROTATE_BACK);
+		}
+		else if (cmd == "BI")
+		{
+			startRotate(ROTATE_BACKi);
+		}
+		else if (cmd == "D")
+		{
+			startRotate(ROTATE_DOWN);
+		}
+		else if (cmd == "DI")
+		{
+			startRotate(ROTATE_DOWNi);
+		}
+		else if (cmd == "F")
+		{
+			startRotate(ROTATE_FRONT);
+		}
+		else if (cmd == "FI")
+		{
+			startRotate(ROTATE_FRONTi);
+		}
+		else if (cmd == "U")
+		{
+			startRotate(ROTATE_UP);
+		}
+		else if (cmd == "UI")
+		{
+			startRotate(ROTATE_UPi);
+		}
+		else if (cmd == "X")
+		{
+			startRotate(ROTATE_WHOLEX);
+		}
+		else if (cmd == "Y")
+		{
+			startRotate(ROTATE_WHOLEY);
+		}
+		else if (cmd == "Z")
+		{
+			startRotate(ROTATE_WHOLEZ);
+		}
+		else if (cmd == "XI")
+		{
+			startRotate(ROTATE_WHOLEXi);
+		}
+		else if (cmd == "YI")
+		{
+			startRotate(ROTATE_WHOLEYi);
+		}
+		else if (cmd == "ZI")
+		{
+			startRotate(ROTATE_WHOLEZi);
+		}
+		else if (cmd == "CHECK")
+		{
+			printf("U%d D%d L%d R%d F%d B%d: %d\n", cube.CheckU(), cube.CheckD(), cube.CheckL(), cube.CheckR(), cube.CheckF(), cube.CheckB(), cube.Check());
+		}
+		else if (cmd == "ABOUT")
+		{
+			printf("Wandai :)\n");
+		}
+		else if (cmd == "SOLVE")
+		{
+			CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
+			solver->Solve();
+			auto steps = StepReduce::Reduce(solver->Step);
+			printf("Steps: %s\n", stepsToString(steps).c_str());
+			delete solver;
+		}
+		else if (cmd == "PLAY")
+		{
+			Cube oldCube = cube;
+			CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
+			solver->Solve();
+			auto steps = StepReduce::Reduce(solver->Step);
+			delete solver;
+			cube = oldCube;
+			printf("Steps: %s\n", stepsToString(steps).c_str());
+			play(steps);
+		}
+		else if (cmd == "RANDOM")
+		{
+			randomCube(cube);
+		}
+		else if (cmd == "FILE")
+		{
+			try
 			{
+				ifstream file(value);
+				if (file.is_open())
+				{
+					string line;
+					getline(file, line);
+					printf("Loading: %s\n", line.c_str());
+					cube.Load(line);
+					file.close();
+				}
+				else
+				{
+					printf("ERROR\n");
+				}
+			}
+			catch (CubeError err)
+			{
+				printf("CubeError: %s\n", err.why.c_str());
+			}
+		}
+		else if (cmd == "LOAD")
+		{
+			if (toUpperString(value) == "CMD")
+			{
+				printf(">");
 				string line;
-				getline(file, line);
+				getline(cin, line);
+				printf("Loading: %s\n", line.c_str());
 				cube.Load(line);
-				file.close();
 			}
 			else
 			{
-				printf("ERROR\n");
+				cube.Load(value);
 			}
 		}
-		catch (CubeError err)
+		else if (cmd == "SAVE")
 		{
-			printf("CubeError: %s\n", err.why.c_str());
+			string data = cube.Save();
+			printf("%s\n", data.c_str());
+		}
+		else if (cmd == "TEST")
+		{
+			unsigned long long count = 0;
+			for (;;)
+			{
+				++count;
+				if (count % 10000 == 0)
+				{
+					printf("%ld\n", count);
+				}
+				cube = Cube();
+				for (int i = 0; i < rand() % 1000 + 1; ++i)
+				{
+					CubeRotateMethod method = (CubeRotateMethod)((rand() % 12) + 1);
+					cube.DoMethod(method);
+				}
+
+				CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
+				try
+				{
+					solver->Solve();
+				}
+				catch (SolverError err)
+				{
+					printf("ERROR %s %s\n", err.why.c_str(), cube.Save().c_str());
+				}
+				delete solver;
+
+				if (!cube.Check())
+				{
+					printf("FAIL %s\n", cube.Save().c_str());
+				}
+			}
 		}
 	}
-	else if (cmd == "LOAD")
+	catch (SolverError err)
 	{
-		cube.Load(value);
+		printError(err);
 	}
-	else if (cmd == "TEST")
+	catch (CubeError err)
 	{
-		unsigned long long count = 0;
-		for (;;)
-		{
-			++count;
-			if (count % 10000 == 0)
-			{
-				printf("%ld\n", count);
-			}
-			cube = Cube();
-			for (int i = 0; i < rand() % 1000 + 1; ++i)
-			{
-				CubeRotateMethod method = (CubeRotateMethod)((rand() % 12) + 1);
-				cube.DoMethod(method);
-			}
-
-			CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
-			try
-			{
-				solver->Solve();
-			}
-			catch (SolverError err)
-			{
-				printf("ERROR%s %s\n", err.why.c_str(), cube.Save().c_str());
-			}
-			delete solver;
-
-			if (!cube.Check())
-			{
-				printf("FAIL¡¡%s\n", cube.Save().c_str());
-			}
-		}
+		printError(err);
 	}
 }
 

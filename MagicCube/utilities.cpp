@@ -2,11 +2,11 @@
 #include "utilities.h"
 
 //http://stackoverflow.com/questions/236129/split-a-string-in-c
-std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems)
+vector<string> &split(const string &s, char delim, vector<string> &elems)
 {
-	std::stringstream ss(s);
-	std::string item;
-	while (std::getline(ss, item, delim))
+	stringstream ss(s);
+	string item;
+	while (getline(ss, item, delim))
 	{
 		elems.push_back(item);
 	}
@@ -14,9 +14,9 @@ std::vector<std::string> &split(const std::string &s, char delim, std::vector<st
 }
 
 
-std::vector<std::string> split(const std::string &s, char delim)
+vector<string> split(const string &s, char delim)
 {
-	std::vector<std::string> elems;
+	vector<string> elems;
 	split(s, delim, elems);
 	return elems;
 }
@@ -41,4 +41,55 @@ string toLowerString(string str)
 {
 	transform(str.begin(), str.end(), str.begin(), toLower);
 	return  str;
+}
+
+string stepsToString(vector<CubeRotateMethod> &steps)
+{
+	string r;
+	ptrdiff_t size = steps.size();
+	for (ptrdiff_t i = 0; i < size; ++i)
+	{
+		r += CubeRotateMethodName[steps[i]] + " ";
+	}
+	return r;
+}
+
+void printError(CubeError err)
+{
+	if (err.why == "")
+	{
+		fprintf(stderr, "CubeError\n");
+	}
+	else
+	{
+		fprintf(stderr, "CubeError: %s\n", err.why.c_str());
+	}
+}
+
+void printError(SolverError err)
+{
+	if (err.why == "")
+	{
+		fprintf(stderr, "SolverError\n");
+	}
+	else
+	{
+		fprintf(stderr, "SolverError: %s\n", err.why.c_str());
+	}
+}
+
+void randomCube(Cube &cube)
+{
+	for (int i = 0; i < rand() % 1000 + 1; ++i)
+	{
+		CubeRotateMethod method = (CubeRotateMethod)((rand() % 19) + 1);
+		cube.DoMethod(method);
+	}
+}
+
+string randomCube()
+{
+	Cube cube;
+	randomCube(cube);
+	return cube.Save();
 }
