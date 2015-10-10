@@ -3,13 +3,13 @@
 #include <assert.h>
 #include "CubeSolver.h"
 
-class AlgorithmSolver :
+class GeneralSolver :
 	public CubeSolver
 {
 public:
-	AlgorithmSolver(Cube &cube) : CubeSolver(cube)
+	GeneralSolver(Cube &cube) : CubeSolver(cube)
 	{}
-	~AlgorithmSolver();
+	~GeneralSolver();
 
 	void Solve();
 

@@ -16,7 +16,7 @@ extern const double speed;
 
 double easingDelta(double);
 void rotateFinishCallback();
-void nextAngle();
+void nextFrame();
 void finishCurrentRotate();
 void startRotate(CubeRotateMethod);
 void play(vector<CubeRotateMethod>&);

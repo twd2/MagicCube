@@ -216,3 +216,5 @@ enum CubeRotateMethod
 	ROTATE_WHOLEYi, //whole right
 	ROTATE_WHOLEZi  //whole counter-clockwise
 };
+
+extern map<CubeRotateMethod, string> CubeRotateMethodName;

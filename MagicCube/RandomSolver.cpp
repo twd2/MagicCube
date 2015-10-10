@@ -11,7 +11,6 @@ void RandomSolver::Solve()
 	while (!cube.Check())
 	{
 		CubeRotateMethod method = (CubeRotateMethod)((rand() % 12) + 1);
-		cube.DoMethod(method);
-		Step.push_back(method);
+		Do(method);
 	}
 }

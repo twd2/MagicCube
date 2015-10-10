@@ -232,7 +232,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AlgorithmSolver.h" />
+    <ClInclude Include="GeneralSolver.h" />
+    <ClInclude Include="BruteForceSolver.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="CubeError.h" />
@@ -240,8 +241,6 @@
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="include\GLFW\glfw3.h" />
     <ClInclude Include="include\GLFW\glfw3native.h" />
-    <ClInclude Include="include\GL\glew.h" />
-    <ClInclude Include="include\GL\glxew.h" />
     <ClInclude Include="include\GL\wglew.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="MagicCube.h" />
@@ -257,7 +256,8 @@
     <ClInclude Include="Vertices.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AlgorithmSolver.cpp" />
+    <ClCompile Include="BruteForceSolver.cpp" />
+    <ClCompile Include="GeneralSolver.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="CubeError.cpp" />
     <ClCompile Include="CubeSolver.cpp" />
@@ -277,6 +277,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Static_Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="StepReduce.cpp" />
+    <ClCompile Include="types.cpp" />
     <ClCompile Include="utilities.cpp" />
     <ClCompile Include="Vertices.cpp" />
   </ItemGroup>

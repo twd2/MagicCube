@@ -72,9 +72,36 @@ const GLfloat cubeVertexBufferData[] = {
 	0.0f, 0.0f, 1.0f
 };
 
+const GLfloat cubeEdgeVertexBufferData[] = {
+	0.0f, 1.0f, 0.0f, 
+	0.0f, 1.0f, 1.0f,
+	0.0f, 1.0f, 1.0f,
+	1.0f, 1.0f, 1.0f,
+	1.0f, 1.0f, 1.0f,
+	1.0f, 1.0f, 0.0f,
+	0.0f, 1.0f, 0.0f,
+	1.0f, 1.0f, 0.0f,
+	0.0f, 0.0f, 0.0f,
+	0.0f, 0.0f, 1.0f,
+	0.0f, 0.0f, 1.0f,
+	1.0f, 0.0f, 1.0f,
+	1.0f, 0.0f, 1.0f,
+	1.0f, 0.0f, 0.0f,
+	0.0f, 0.0f, 0.0f,
+	1.0f, 0.0f, 0.0f,
+	0.0f, 0.0f, 0.0f,
+	0.0f, 1.0f, 0.0f,
+	1.0f, 0.0f, 0.0f,
+	1.0f, 1.0f, 0.0f,
+	0.0f, 0.0f, 1.0f,
+	0.0f, 1.0f, 1.0f,
+	1.0f, 0.0f, 1.0f,
+	1.0f, 1.0f, 1.0f
+};
+
 #ifndef NO_VERTICES_BUFFER
 
-GLuint axisVertexBuffer, cubeVertexBuffer;
+GLuint axisVertexBuffer, cubeVertexBuffer, cubeEdgeVertexBuffer;
 
 void initAxisVertexBuffer()
 {
@@ -88,6 +115,13 @@ void initCubeVertexBuffer()
 	glGenBuffers(1, &cubeVertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, cubeVertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertexBufferData), cubeVertexBufferData, GL_STATIC_DRAW);
+}
+
+void initCubeEdgeVertexBuffer()
+{
+	glGenBuffers(1, &cubeEdgeVertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, cubeEdgeVertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeEdgeVertexBufferData), cubeEdgeVertexBufferData, GL_STATIC_DRAW);
 }
 
 #endif

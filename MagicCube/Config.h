@@ -3,10 +3,8 @@
 #define WIDTH  800
 #define HEIGHT 600
 
+#ifndef NOGL
 #define USE_GL
+#endif
 
 #define NO_VERTICES_BUFFER
-
-#ifdef NOGL
-#undef USE_GL
-#endif

@@ -130,14 +130,14 @@ void execCommand(string cmd)
 	}
 	else if (cmd == "SOLVE")
 	{
-		CubeSolver *solver = (CubeSolver*)new AlgorithmSolver(cube);
+		CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
 		solver->Solve();
 		delete solver;
 	}
 	else if (cmd == "PLAY")
 	{
 		Cube oldCube = cube;
-		CubeSolver *solver = (CubeSolver*)new AlgorithmSolver(cube);
+		CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
 		solver->Solve();
 		auto steps = StepReduce::Reduce(solver->Step);
 		delete solver;
@@ -195,7 +195,7 @@ void execCommand(string cmd)
 				cube.DoMethod(method);
 			}
 
-			CubeSolver *solver = (CubeSolver*)new AlgorithmSolver(cube);
+			CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
 			try
 			{
 				solver->Solve();

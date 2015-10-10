@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "AlgorithmSolver.h"
+#include "GeneralSolver.h"
 
-AlgorithmSolver::~AlgorithmSolver()
+GeneralSolver::~GeneralSolver()
 {
 }
 
-void AlgorithmSolver::Solve()
+void GeneralSolver::Solve()
 {
 	if (cube.Check()) return;
 	Stage1();
@@ -23,7 +23,7 @@ void AlgorithmSolver::Solve()
 	Stage7();
 }
 
-void AlgorithmSolver::MoveToUp(CubeColor color)
+void GeneralSolver::MoveToUp(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
@@ -53,7 +53,7 @@ void AlgorithmSolver::MoveToUp(CubeColor color)
 	}
 }
 
-void AlgorithmSolver::MoveToDown(CubeColor color)
+void GeneralSolver::MoveToDown(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
@@ -83,7 +83,7 @@ void AlgorithmSolver::MoveToDown(CubeColor color)
 	}
 }
 
-void AlgorithmSolver::MoveToLeft(CubeColor color)
+void GeneralSolver::MoveToLeft(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
@@ -113,7 +113,7 @@ void AlgorithmSolver::MoveToLeft(CubeColor color)
 	}
 }
 
-void AlgorithmSolver::MoveToRight(CubeColor color)
+void GeneralSolver::MoveToRight(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
@@ -143,7 +143,7 @@ void AlgorithmSolver::MoveToRight(CubeColor color)
 	}
 }
 
-void AlgorithmSolver::MoveToFront(CubeColor color)
+void GeneralSolver::MoveToFront(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
@@ -173,7 +173,7 @@ void AlgorithmSolver::MoveToFront(CubeColor color)
 	}
 }
 
-void AlgorithmSolver::MoveToBack(CubeColor color)
+void GeneralSolver::MoveToBack(CubeColor color)
 {
 	if (GET_UP(cube.subCubes[U_CENTRE]) == color)
 	{
@@ -203,7 +203,7 @@ void AlgorithmSolver::MoveToBack(CubeColor color)
 	}
 }
 
-void AlgorithmSolver::Stage1()
+void GeneralSolver::Stage1()
 {
 	//white centre piece on the top face
 	MoveToUp(COLOR_WHITE);
@@ -319,7 +319,7 @@ void AlgorithmSolver::Stage1()
 	}
 }
 
-void AlgorithmSolver::Stage2()
+void GeneralSolver::Stage2()
 {
 
 	vector<vector<CubeColor> > colors = { { COLOR_GREEN, COLOR_RED }, { COLOR_RED, COLOR_BLUE }, { COLOR_BLUE, COLOR_ORANGE }, { COLOR_ORANGE, COLOR_GREEN } };
@@ -395,7 +395,7 @@ void AlgorithmSolver::Stage2()
 	}
 }
 
-bool AlgorithmSolver::CheckStage3()
+bool GeneralSolver::CheckStage3()
 {
 	CubeColor leftCentre = GET_LEFT(cube.subCubes[0][1][1]);
 	bool checkLeft = GET_LEFT(cube.subCubes[0][0][0]) == leftCentre &&
@@ -432,7 +432,7 @@ bool AlgorithmSolver::CheckStage3()
 	return cube.CheckD() && checkLeft && checkRight && checkFront && checkBack;
 }
 
-void AlgorithmSolver::Stage3()
+void GeneralSolver::Stage3()
 {
 	MoveToUp(COLOR_YELLOW);
 
@@ -561,7 +561,7 @@ void AlgorithmSolver::Stage3()
 	
 }
 
-bool AlgorithmSolver::CheckStage4State1()
+bool GeneralSolver::CheckStage4State1()
 {
 	CubeColor centre = GET_UP(cube.subCubes[1][2][1]);
 	return GET_UP(cube.subCubes[1][2][0]) == centre &&
@@ -571,7 +571,7 @@ bool AlgorithmSolver::CheckStage4State1()
 		   GET_UP(cube.subCubes[1][2][2]) == centre;
 }
 
-bool AlgorithmSolver::CheckStage4State3()
+bool GeneralSolver::CheckStage4State3()
 {
 	CubeColor centre = GET_UP(cube.subCubes[1][2][1]);
 	return GET_UP(cube.subCubes[1][2][0]) == centre &&
@@ -579,7 +579,7 @@ bool AlgorithmSolver::CheckStage4State3()
 		   GET_UP(cube.subCubes[1][2][1]) == centre;
 }
 
-bool AlgorithmSolver::CheckStage4State4()
+bool GeneralSolver::CheckStage4State4()
 {
 	CubeColor centre = GET_UP(cube.subCubes[1][2][1]);
 	return GET_UP(cube.subCubes[0][2][1]) == centre &&
@@ -587,7 +587,7 @@ bool AlgorithmSolver::CheckStage4State4()
 		   GET_UP(cube.subCubes[2][2][1]) == centre;
 }
 
-bool AlgorithmSolver::CheckStage4State4i()
+bool GeneralSolver::CheckStage4State4i()
 {
 	CubeColor centre = GET_UP(cube.subCubes[1][2][1]);
 	return GET_UP(cube.subCubes[1][2][0]) == centre &&
@@ -595,7 +595,7 @@ bool AlgorithmSolver::CheckStage4State4i()
 		   GET_UP(cube.subCubes[1][2][2]) == centre;
 }
 
-void AlgorithmSolver::Stage4()
+void GeneralSolver::Stage4()
 {
 	while (!CheckStage4State1())
 	{
@@ -649,7 +649,7 @@ void AlgorithmSolver::Stage4()
 	//must be state1
 }
 
-void AlgorithmSolver::Stage5()
+void GeneralSolver::Stage5()
 {
 	while (!cube.CheckU())
 	{
@@ -767,7 +767,7 @@ void AlgorithmSolver::Stage5()
 	}
 }
 
-void AlgorithmSolver::CheckStage6ABCD(bool *A, bool *B, bool *C, bool*D)
+void GeneralSolver::CheckStage6ABCD(bool *A, bool *B, bool *C, bool*D)
 {
 	*A = (GET_LEFT(cube.subCubes[BLU_CORNER]) == GET_LEFT(cube.subCubes[L_CENTRE])) &&
 		 (GET_BACK(cube.subCubes[BLU_CORNER]) == GET_BACK(cube.subCubes[B_CENTRE]));
@@ -782,7 +782,7 @@ void AlgorithmSolver::CheckStage6ABCD(bool *A, bool *B, bool *C, bool*D)
 		 (GET_FRONT(cube.subCubes[FRU_CORNER]) == GET_FRONT(cube.subCubes[F_CENTRE]));
 }
 
-void AlgorithmSolver::Stage6()
+void GeneralSolver::Stage6()
 {
 	bool A, B, C, D;
 	CheckStage6ABCD(&A, &B, &C, &D);
@@ -855,7 +855,7 @@ void AlgorithmSolver::Stage6()
 	}
 }
 
-void AlgorithmSolver::CheckStage7EFGH(bool *E, bool *F, bool *G, bool*H)
+void GeneralSolver::CheckStage7EFGH(bool *E, bool *F, bool *G, bool*H)
 {
 	*E = (GET_LEFT(cube.subCubes[UL_EDGE]) == GET_LEFT(cube.subCubes[L_CENTRE]));
 
@@ -866,7 +866,7 @@ void AlgorithmSolver::CheckStage7EFGH(bool *E, bool *F, bool *G, bool*H)
 	*H = (GET_FRONT(cube.subCubes[FU_EDGE]) == GET_FRONT(cube.subCubes[F_CENTRE]));
 }
 
-void AlgorithmSolver::Stage7()
+void GeneralSolver::Stage7()
 {
 	bool E, F, G, H;
 	CheckStage7EFGH(&E, &F, &G, &H);

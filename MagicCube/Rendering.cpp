@@ -167,6 +167,16 @@ void renderSubCube(GLfloat x, GLfloat y, GLfloat z, cube_t colorInfo)
 			cubeVertexBufferData[i * 3 + 2]);
 	}
 	glEnd();
+
+	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+	glBegin(GL_LINES);
+	for (int i = 0; i < 24; ++i)
+	{
+		glVertex3f(cubeEdgeVertexBufferData[i * 3 + 0],
+			cubeEdgeVertexBufferData[i * 3 + 1],
+			cubeEdgeVertexBufferData[i * 3 + 2]);
+	}
+	glEnd();
 #endif
 
 	glPopMatrix();
@@ -339,7 +349,7 @@ void renderCube(Cube &cube, float angle, CubeRotateMethod method)
 
 void render()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glFlush();
 

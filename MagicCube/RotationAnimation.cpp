@@ -11,6 +11,8 @@ double rotateAngle = 0.0;
 double finishAngle = 90.0;
 CubeRotateMethod rotateMethod = ROTATE_NONE;
 
+double lastPlayTime = glfwGetTime();
+
 const double speed = 1.5;
 
 double easingDelta(double currentAngle)
@@ -99,14 +101,13 @@ void rotateFinishCallback()
 	playNext();
 }
 
-void nextAngle()
+void nextFrame()
 {
-	static double lastTime = glfwGetTime();
-	double currTime = glfwGetTime();
+	double currentTime = glfwGetTime();
 
 	if (rotateMethod != ROTATE_NONE)
 	{
-		double delta = easingDelta(rotateAngle) * (currTime - lastTime);
+		double delta = easingDelta(rotateAngle) * (currentTime - lastPlayTime);
 		rotateAngle += delta;
 		if (rotateAngle >= finishAngle)
 		{
@@ -114,7 +115,7 @@ void nextAngle()
 		}
 	}
 
-	lastTime = currTime;
+	lastPlayTime = currentTime;
 }
 
 void finishCurrentRotate()
@@ -128,6 +129,7 @@ void startRotate(CubeRotateMethod method)
 	if (rotateMethod != ROTATE_NONE)
 		finishCurrentRotate();
 	rotateMethod = method;
+	lastPlayTime = glfwGetTime();
 }
 
 void play(vector<CubeRotateMethod> &steps)
