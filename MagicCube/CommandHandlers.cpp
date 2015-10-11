@@ -77,7 +77,7 @@ void loadHandler(string value)
 		}
 		else
 		{
-			printf("Loading: %s\n", value);
+			printf("Loading: %s\n", value.c_str());
 			cube.Load(value);
 		}
 	}
