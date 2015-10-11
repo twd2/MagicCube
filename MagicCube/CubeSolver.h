@@ -14,7 +14,7 @@ public:
 	CubeSolver(Cube& cube): cube(cube)
 	{}
 
-	~CubeSolver();
+	virtual ~CubeSolver() = 0;
 
 	virtual void Solve() = 0;
 

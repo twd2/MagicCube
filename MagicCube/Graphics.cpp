@@ -35,10 +35,18 @@ void initGL()
 	glViewport(0, 0, WIDTH, HEIGHT);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+#ifndef __MACOSX__
 	gluPerspective(45.0f, (float)(WIDTH) / (float)(HEIGHT), 0.1f, 1000.0f);
+#else
+	glMultMatrixf(GLKMatrix4MakePerspective(45.0f, (float)(WIDTH) / (float)(HEIGHT), 0.1f, 1000.0f).m);
+#endif
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+#ifndef __MACOSX__
 	gluLookAt(0.0f, 0.0f, 0.1f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+#else
+	glMultMatrixf(GLKMatrix4MakeLookAt(0.0f, 0.0f, 0.1f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f).m);
+#endif
 }
 
 void updateFPS()

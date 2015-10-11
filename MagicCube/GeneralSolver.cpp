@@ -509,7 +509,7 @@ void GeneralSolver::Stage3()
 					Do(ROTATE_UP);
 					break;
 				}
-				if (GET_FRONT(cube.subCubes[FR_EDGE]) != color || GET_RIGHT(cube.subCubes[FR_EDGE]) != rightColor[color] &&
+				if ((GET_FRONT(cube.subCubes[FR_EDGE]) != color || GET_RIGHT(cube.subCubes[FR_EDGE]) != rightColor[color]) &&
 					GET_FRONT(cube.subCubes[FR_EDGE]) != COLOR_YELLOW && GET_RIGHT(cube.subCubes[FR_EDGE]) != COLOR_YELLOW)
 				{
 					Do(ROTATE_FRONTi);
