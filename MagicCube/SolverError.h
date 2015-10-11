@@ -3,10 +3,10 @@
 class SolverError
 {
 public:
-	string why;
+	string what;
 
 	SolverError();
-	SolverError(string why) : why(why)
+	SolverError(string what) : what(what)
 	{}
 	~SolverError();
 };

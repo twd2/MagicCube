@@ -7,6 +7,7 @@
 #include "StepReduce.h"
 
 #ifdef USE_GL
+#include "CommandHandlers.h"
 #include "Input.h"
 #include "RotationAnimation.h"
 #include "Vertices.h"

@@ -19,3 +19,4 @@ void printError(CubeError);
 void printError(SolverError);
 void randomCube(Cube&);
 string randomCube();
+CubeRotateMethod inverse(CubeRotateMethod);

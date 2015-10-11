@@ -84,6 +84,9 @@
     <ClInclude Include="GeneralSolver.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CommandHandlers.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -135,6 +138,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="types.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandHandlers.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

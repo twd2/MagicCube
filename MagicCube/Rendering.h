@@ -9,7 +9,9 @@
 #ifdef USE_GL
 
 extern GLfloat viewRotationAngleX, viewRotationAngleY;
+extern bool isTransparent;
 
+void setColor(CubeColor);
 void renderAxis();
 void renderSubCube(GLfloat, GLfloat, GLfloat, cube_t);
 void renderCube(Cube&);

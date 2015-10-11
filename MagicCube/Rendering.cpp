@@ -5,6 +5,44 @@
 
 GLfloat viewRotationAngleX = 45.0, viewRotationAngleY = -45.0;
 
+bool isTransparent = false;
+
+void setColor(CubeColor color)
+{
+	GLfloat alpha = 1.0f;
+	if (isTransparent)
+	{
+		alpha = 0.5f;
+	}
+
+	switch (color)
+	{
+	case COLOR_UNUSED:
+		glColor4f(0.5f, 0.5f, 0.5f, alpha);
+		break;
+	case COLOR_BLUE:
+		glColor4f(0.0f, 0.0f, 1.0f, alpha);
+		break;
+	case COLOR_GREEN:
+		glColor4f(0.0f, 1.0f, 0.0f, alpha);
+		break;
+	case COLOR_ORANGE:
+		glColor4f(1.0f, 0.5f, 0.0f, alpha);
+		break;
+	case COLOR_RED:
+		glColor4f(1.0f, 0.0f, 0.0f, alpha);
+		break;
+	case COLOR_WHITE:
+		glColor4f(1.0f, 1.0f, 1.0f, alpha);
+		break;
+	case COLOR_YELLOW:
+		glColor4f(1.0f, 1.0f, 0.0f, alpha);
+		break;
+	default:
+		break;
+	}
+}
+
 void renderAxis()
 {
 #ifndef NO_VERTICES_BUFFER
@@ -217,8 +255,6 @@ inline void renderCubeRange(Cube &cube, int x0, int x1, int y0, int y1, int z0, 
 
 void renderCube(Cube &cube, float angle, CubeRotateMethod method)
 {
-	renderSubCube(1, 1, 1, cube.subCubes[1][1][1]); //never rotate
-
 	switch (method)
 	{
 	case ROTATE_FRONT:

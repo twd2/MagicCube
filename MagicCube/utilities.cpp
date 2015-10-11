@@ -56,25 +56,25 @@ string stepsToString(vector<CubeRotateMethod> &steps)
 
 void printError(CubeError err)
 {
-	if (err.why == "")
+	if (err.what == "")
 	{
 		fprintf(stderr, "CubeError\n");
 	}
 	else
 	{
-		fprintf(stderr, "CubeError: %s\n", err.why.c_str());
+		fprintf(stderr, "CubeError: %s\n", err.what.c_str());
 	}
 }
 
 void printError(SolverError err)
 {
-	if (err.why == "")
+	if (err.what == "")
 	{
 		fprintf(stderr, "SolverError\n");
 	}
 	else
 	{
-		fprintf(stderr, "SolverError: %s\n", err.why.c_str());
+		fprintf(stderr, "SolverError: %s\n", err.what.c_str());
 	}
 }
 
@@ -92,4 +92,17 @@ string randomCube()
 	Cube cube;
 	randomCube(cube);
 	return cube.Save();
+}
+
+CubeRotateMethod inverse(CubeRotateMethod m)
+{
+	if (m < ROTATE_NONEi)
+	{
+		return (CubeRotateMethod)(m + (ROTATE_NONEi - ROTATE_NONE)); //inverse
+	}
+	else
+	{
+		return (CubeRotateMethod)(m - (ROTATE_NONEi - ROTATE_NONE)); //inverse
+	}
+
 }

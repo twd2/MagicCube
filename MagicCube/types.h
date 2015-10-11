@@ -1,6 +1,8 @@
 #pragma once
 
 typedef unsigned int cube_t; //0bMETA DATA ffff bbbb llll rrrr uuuu dddd
+typedef void(*ptrCommandHandler)(string);
+
 
 #define GET_FRONT(x) ((CubeColor)(((x)&0xF00000)>>20))
 #define GET_BACK(x)  ((CubeColor)(((x)&0x0F0000)>>16))
@@ -205,7 +207,7 @@ enum CubeRotateMethod
 	ROTATE_WHOLEX,  //whole up
 	ROTATE_WHOLEY,  //whole left
 	ROTATE_WHOLEZ,  //whole clockwise
-	ROTATE_NONE2,
+	ROTATE_NONEi,
 	ROTATE_FRONTi,
 	ROTATE_BACKi,
 	ROTATE_LEFTi,

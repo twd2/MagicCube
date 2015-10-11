@@ -5,10 +5,10 @@
 class CubeError
 {
 public:
-	string why;
+	string what;
 
 	CubeError();
-	CubeError(string why) : why(why)
+	CubeError(string what) : what(what)
 	{}
 
 	~CubeError();

@@ -13,7 +13,7 @@ map<CubeRotateMethod, string> CubeRotateMethodName =
 	{ROTATE_WHOLEX, "X"},
 	{ROTATE_WHOLEY, "Y"},
 	{ROTATE_WHOLEZ, "Z"},
-	{ROTATE_NONE2, "NONE"},
+	{ROTATE_NONEi, "NONE"},
 	{ROTATE_FRONTi, "Fi"},
 	{ROTATE_BACKi, "Bi"},
 	{ROTATE_LEFTi, "Li"},

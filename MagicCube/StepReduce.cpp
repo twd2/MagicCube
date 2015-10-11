@@ -29,7 +29,7 @@ void StepReduce::Copy(vector<CubeRotateMethod>& src, vector<CubeRotateMethod>& d
 	size_t size = src.size();
 	for (ptrdiff_t i = 0; i < (ptrdiff_t)size; ++i)
 	{
-		if (src[i] != ROTATE_NONE && src[i] != ROTATE_NONE2)
+		if (src[i] != ROTATE_NONE && src[i] != ROTATE_NONEi)
 			dest.push_back(src[i]);
 	}
 }
@@ -42,14 +42,7 @@ bool StepReduce::ReduceContinuous(vector<CubeRotateMethod>& steps)
 	{
 		if (steps[i] == steps[i + 1] && steps[i] == steps[i + 2])
 		{
-			if (steps[i] < ROTATE_NONE2)
-			{
-				steps[i] = (CubeRotateMethod)(steps[i] + 10); //inverse
-			}
-			else
-			{
-				steps[i] = (CubeRotateMethod)(steps[i] - 10); //inverse
-			}
+			steps[i] = inverse(steps[i]);
 			steps[i + 1] = steps[i + 2] = ROTATE_NONE;
 			found = true;
 		}
@@ -63,7 +56,7 @@ bool StepReduce::ReduceI(vector<CubeRotateMethod>& steps)
 	bool found = false;
 	for (ptrdiff_t i = 0; i < (ptrdiff_t)size - 1; ++i)
 	{
-		if (steps[i] == steps[i + 1] + 10 || steps[i] + 10 == steps[i + 1]) // == inverse
+		if (steps[i] == inverse(steps[i + 1]))
 		{
 			steps[i] = steps[i + 1] = ROTATE_NONE;
 			found = true;

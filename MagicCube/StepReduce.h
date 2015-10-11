@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include "utilities.h"
 #include "types.h"
 
 class StepReduce

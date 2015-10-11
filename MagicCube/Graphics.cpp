@@ -41,36 +41,6 @@ void initGL()
 	gluLookAt(0.0f, 0.0f, 0.1f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 }
 
-void setColor(CubeColor color)
-{
-	switch (color)
-	{
-	case COLOR_UNUSED:
-		glColor4f(0.5, 0.5, 0.5, 1.0);
-		break;
-	case COLOR_BLUE:
-		glColor4f(0.0, 0.0, 1.0, 1.0);
-		break;
-	case COLOR_GREEN:
-		glColor4f(0.0, 1.0, 0.0, 1.0);
-		break;
-	case COLOR_ORANGE:
-		glColor4f(1.0, 0.5, 0.0, 1.0);
-		break;
-	case COLOR_RED:
-		glColor4f(1.0, 0.0, 0.0, 1.0);
-		break;
-	case COLOR_WHITE:
-		glColor4f(1.0, 1.0, 1.0, 1.0);
-		break;
-	case COLOR_YELLOW:
-		glColor4f(1.0, 1.0, 0.0, 1.0);
-		break;
-	default:
-		break;
-	}
-}
-
 void updateFPS()
 {
 	static double lastTime = glfwGetTime();

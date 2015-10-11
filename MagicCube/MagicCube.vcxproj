@@ -232,6 +232,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommandHandlers.h" />
     <ClInclude Include="GeneralSolver.h" />
     <ClInclude Include="BruteForceSolver.h" />
     <ClInclude Include="Config.h" />
@@ -257,6 +258,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BruteForceSolver.cpp" />
+    <ClCompile Include="CommandHandlers.cpp" />
     <ClCompile Include="GeneralSolver.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="CubeError.cpp" />

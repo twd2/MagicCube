@@ -13,7 +13,6 @@ void initVertexArray();
 #endif
 
 void initGL();
-void setColor(CubeColor);
 void updateFPS();
 
 #endif

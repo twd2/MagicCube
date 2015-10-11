@@ -8,6 +8,8 @@ bool mouseDown = false;
 
 double lastAngleX, lastAngleY;
 
+map<string, ptrCommandHandler> commandHandler;
+
 void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
@@ -38,6 +40,11 @@ void mouseMove()
 	viewRotationAngleX = (GLfloat)(lastAngleX + deltaY*0.5);
 }
 
+void addCommandHandler(string cmd, ptrCommandHandler handler)
+{
+	commandHandler[cmd] = handler;
+}
+
 void execCommand(string cmd)
 {
 	try
@@ -50,6 +57,8 @@ void execCommand(string cmd)
 			cmd = cmd.substr(0, index);
 		}
 		cmd = toUpperString(cmd);
+
+		//basic commands
 		if (cmd == "R")
 		{
 			startRotate(ROTATE_RIGHT);
@@ -122,120 +131,21 @@ void execCommand(string cmd)
 		{
 			startRotate(ROTATE_WHOLEZi);
 		}
-		else if (cmd == "CHECK")
+		else
 		{
-			printf("U%d D%d L%d R%d F%d B%d: %d\n", cube.CheckU(), cube.CheckD(), cube.CheckL(), cube.CheckR(), cube.CheckF(), cube.CheckB(), cube.Check());
-		}
-		else if (cmd == "ABOUT")
-		{
-			printf("Wandai :)\n");
-		}
-		else if (cmd == "SOLVE")
-		{
-			CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
-			solver->Solve();
-			auto steps = StepReduce::Reduce(solver->Step);
-			printf("Steps: %s\n", stepsToString(steps).c_str());
-			delete solver;
-		}
-		else if (cmd == "PLAY")
-		{
-			Cube oldCube = cube;
-			CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
-			solver->Solve();
-			auto steps = StepReduce::Reduce(solver->Step);
-			delete solver;
-			cube = oldCube;
-			printf("Steps: %s\n", stepsToString(steps).c_str());
-			play(steps);
-		}
-		else if (cmd == "RANDOM")
-		{
-			randomCube(cube);
-		}
-		else if (cmd == "FILE")
-		{
-			try
+			//other commands
+			ptrCommandHandler handler = commandHandler[cmd];
+			if (handler != NULL)
 			{
-				ifstream file(value);
-				if (file.is_open())
-				{
-					string line;
-					getline(file, line);
-					printf("Loading: %s\n", line.c_str());
-					cube.Load(line);
-					file.close();
-				}
-				else
-				{
-					printf("ERROR\n");
-				}
-			}
-			catch (CubeError err)
-			{
-				printf("CubeError: %s\n", err.why.c_str());
-			}
-		}
-		else if (cmd == "LOAD")
-		{
-			if (toUpperString(value) == "CMD")
-			{
-				printf(">");
-				string line;
-				getline(cin, line);
-				printf("Loading: %s\n", line.c_str());
-				cube.Load(line);
-			}
-			else
-			{
-				cube.Load(value);
-			}
-		}
-		else if (cmd == "SAVE")
-		{
-			string data = cube.Save();
-			printf("%s\n", data.c_str());
-		}
-		else if (cmd == "TEST")
-		{
-			unsigned long long count = 0;
-			for (;;)
-			{
-				++count;
-				if (count % 10000 == 0)
-				{
-					printf("%ld\n", count);
-				}
-				cube = Cube();
-				for (int i = 0; i < rand() % 1000 + 1; ++i)
-				{
-					CubeRotateMethod method = (CubeRotateMethod)((rand() % 12) + 1);
-					cube.DoMethod(method);
-				}
-
-				CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
-				try
-				{
-					solver->Solve();
-				}
-				catch (SolverError err)
-				{
-					printf("ERROR %s %s\n", err.why.c_str(), cube.Save().c_str());
-				}
-				delete solver;
-
-				if (!cube.Check())
-				{
-					printf("FAIL %s\n", cube.Save().c_str());
-				}
+				handler(value);
 			}
 		}
 	}
-	catch (SolverError err)
+	catch (const SolverError &err)
 	{
 		printError(err);
 	}
-	catch (CubeError err)
+	catch (const CubeError &err)
 	{
 		printError(err);
 	}

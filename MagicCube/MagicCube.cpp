@@ -28,9 +28,11 @@ void graphicMode(int argc, char *argv[])
 	glfwMakeContextCurrent(window);
 
 	glfwSetMouseButtonCallback(window, mouseButtonCallback);
+	
+	initCommandHandlers();
 	glfwSetKeyCallback(window, keyboardCallback);
 	glfwSetCharCallback(window, characterCallback);
-
+		
 	initGL();
 
 #ifndef NO_VERTICES_BUFFER
@@ -84,11 +86,11 @@ int main(int argc, char *argv[])
 	{
 		textMode(argc, argv);
 	}
-	catch (SolverError err)
+	catch (const SolverError &err)
 	{
 		printError(err);
 	}
-	catch (CubeError err)
+	catch (const CubeError &err)
 	{
 		printError(err);
 	}
