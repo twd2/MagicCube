@@ -1,5 +1,5 @@
 # MagicCube
-Great homework for Fundamentals of Programming course.
+### Great homework for Fundamentals of Programming course.
 
 ![](https://raw.githubusercontent.com/twd2/MagicCube/master/Doc/image1.png)
 
@@ -7,7 +7,9 @@ Great homework for Fundamentals of Programming course.
 
 # Dependencies
 
-1. [GLFW](http://www.glfw.org/)
+1. Your interest.
+
+2. [GLFW](http://www.glfw.org/) if compile without NOGL option.
 
 # Building
 
@@ -18,12 +20,15 @@ Great homework for Fundamentals of Programming course.
 3. Add dependencies `glu32.lib;opengl32.lib;glfw3dll.lib` to the linker.
 4. Build!
 
-##OS X
+## OS X
 
 1. Build glfw (BUILD\_SHARED\_LIBS=OFF).
 2. Put `libglfw3.a` into `lib` (you need create this directory before).
-3. Create a directory named `build`.
-4. Execute `make` and `build/MagicCube` is the binary.
+3. Execute `make` and `build/MagicCube` is the binary.
+
+## Linux
+
+Sorry :(
 
 # Usage
 
