@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "CommandHandlers.h"
 
+#ifdef USE_GL
+
 void checkHandler(string value)
 {
 	printf("U%d D%d L%d R%d F%d B%d: %d\n", cube.CheckU(), cube.CheckD(), cube.CheckL(), cube.CheckR(), cube.CheckF(), cube.CheckB(), cube.Check());
@@ -152,3 +154,5 @@ void initCommandHandlers()
 	addCommandHandler("TRAN", tranHandler);
 	addCommandHandler("ECHO", echoHandler);
 }
+
+#endif
