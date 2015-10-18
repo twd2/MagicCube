@@ -7,4 +7,4 @@
 #define USE_GL
 #endif
 
-#define NO_VERTICES_BUFFER
+#define NO_VERTICES_BUFFER //TODO: fix vertices buffer 

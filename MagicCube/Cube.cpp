@@ -23,6 +23,7 @@ map<CubeColor, char> ColorCharMap = {
 
 Cube::Cube()
 {
+	//-BO--Y-B---Y-B-R-Y-BO----B-----B-R---BO-W--B--W--B-RW---O--Y-----Y---R-Y--O------------R----O-W-----W----RW-G-O--YG----YG--R-YG-O---G-----G--R--G-O-W-G---W-G--RW-
 	subCubes[0][0][0] = 0x063002;
 	subCubes[1][0][0] = 0x060002;
 	subCubes[2][0][0] = 0x060402;

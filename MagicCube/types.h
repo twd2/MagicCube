@@ -3,7 +3,6 @@
 typedef unsigned int cube_t; //0bMETA DATA ffff bbbb llll rrrr uuuu dddd
 typedef void(*ptrCommandHandler)(string);
 
-
 #define GET_FRONT(x) ((CubeColor)(((x)&0xF00000)>>20))
 #define GET_BACK(x)  ((CubeColor)(((x)&0x0F0000)>>16))
 #define GET_LEFT(x)  ((CubeColor)(((x)&0x00F000)>>12))
@@ -220,3 +219,4 @@ enum CubeRotateMethod
 };
 
 extern map<CubeRotateMethod, string> CubeRotateMethodName;
+extern map<string, CubeRotateMethod> NameToCubeRotateMethod;

@@ -133,6 +133,11 @@ void tranHandler(string value)
 	isTransparent = !isTransparent;
 }
 
+void echoHandler(string value)
+{
+	printf("%s\n", value.c_str());
+}
+
 void initCommandHandlers()
 {
 	addCommandHandler("CHECK", checkHandler);
@@ -145,4 +150,5 @@ void initCommandHandlers()
 	addCommandHandler("SAVE", saveHandler);
 	addCommandHandler("TEST", testHandler);
 	addCommandHandler("TRAN", tranHandler);
+	addCommandHandler("ECHO", echoHandler);
 }
