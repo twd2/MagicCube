@@ -101,7 +101,7 @@ void testHandler(string value)
 		++count;
 		if (count % 10000 == 0)
 		{
-			printf("%ld\n", count);
+			printf("%lld\n", count);
 		}
 		cube = Cube();
 		for (int i = 0; i < rand() % 1000 + 1; ++i)

@@ -169,7 +169,7 @@ void keyboardCallback(GLFWwindow *window, int key, int scancode, int action, int
 		else if (key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER)
 		{
 			printf("\n");
-			GLfloat start = glfwGetTime();
+			double start = glfwGetTime();
 			execCommand(commandBuffer);
 			printf("\nDone(%.4f ms).\n", (glfwGetTime() - start) * 1000);
 			commandBuffer = "";
