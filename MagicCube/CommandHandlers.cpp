@@ -77,13 +77,27 @@ void loadHandler(string value)
 {
 	try
 	{
-		if (toUpperString(value) == "CMD")
+		if (toLowerString(value) == "CMD")
 		{
 			printf(">");
 			string line;
 			getline(cin, line);
 			printf("Loading: %s\n", line.c_str());
 			cube.Load(line);
+		}
+		else if (toLowerString(value) == "format2")
+		{
+			printf(">");
+
+			char f2[54];
+			for (int i = 0; i < 54; ++i)
+			{
+				cin >> f2[i];
+			}
+
+			string data = convertFromFormat2(f2);
+			printf("Loading: %s\n", data.c_str());
+			cube.Load(data);
 		}
 		else
 		{
@@ -100,7 +114,24 @@ void loadHandler(string value)
 void saveHandler(string value)
 {
 	string data = cube.Save();
-	printf("%s\n", data.c_str());
+	if (toLowerString(value) != "format2")
+	{
+		printf("%s\n", data.c_str());
+	}
+	else
+	{
+		char *f2 = convertToFormat2(data);
+		for (int i = 0; i < 54; ++i)
+		{
+			printf("%c ", f2[i]);
+
+			if ((i + 1) % 3 == 0)
+			{
+				printf("\n");
+			}
+		}
+		delete[] f2;
+	}
 }
 
 void testHandler(string value)

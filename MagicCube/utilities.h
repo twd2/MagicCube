@@ -25,3 +25,7 @@ CubeRotateMethod inverse(CubeRotateMethod);
 void copySteps(CubeSteps &src, CubeSteps &dest);
 
 bool isWholeRotate(CubeRotateMethod);
+
+// format2: see pair 1
+string convertFromFormat2(char*);
+char *convertToFormat2(string);
