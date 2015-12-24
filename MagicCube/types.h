@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 typedef unsigned int cube_t; //0bMETA DATA ffff bbbb llll rrrr uuuu dddd
 typedef void(*ptrCommandHandler)(string);
 
@@ -217,6 +219,8 @@ enum CubeRotateMethod
 	ROTATE_WHOLEYi, //whole right
 	ROTATE_WHOLEZi  //whole counter-clockwise
 };
+
+typedef vector<CubeRotateMethod> CubeSteps;
 
 extern map<CubeRotateMethod, string> CubeRotateMethodName;
 extern map<string, CubeRotateMethod> NameToCubeRotateMethod;

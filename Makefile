@@ -25,7 +25,7 @@ all:
 $(PROJECT): $(OBJECTS)
 	$(CC) $(LINKER_FLAGS) -o build/$(PROJECT) $(OBJECTS)
 
-build/%.o: $(PROJECT)/%.cpp $(PROJECT)/%.h $(PROJECT)/Config.h
+build/%.o: $(PROJECT)/%.cpp $(PROJECT)/%.h $(PROJECT)/Config.h $(PROJECT)/types.h $(PROJECT)/utilities.h
 	$(CC) -c $(CC_FLAGS) -o $@ $<
 
 .PHONY: clean

@@ -78,9 +78,22 @@ void textMode(int argc, char *argv[])
 }
 #endif //USE_GL
 
+void test()
+{
+	Cube a, b;
+	a.DoMethod(ROTATE_WHOLEY);
+	a.DoMethod(ROTATE_FRONT);
+	a.DoMethod(ROTATE_WHOLEYi);
+	b.DoMethod(ROTATE_RIGHT);
+	printf("test1: %d\n", a == b);
+
+
+}
+
 int main(int argc, char *argv[])
 {
 	srand(clock());
+	test();
 #ifdef USE_GL
 	graphicMode(argc, argv);
 #else

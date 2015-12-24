@@ -69,9 +69,6 @@
     <ClInclude Include="SolverError.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="StepReduce.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="utilities.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -85,6 +82,12 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="CommandHandlers.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="StepFilter.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ReduceFilter.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -122,9 +125,6 @@
     <ClCompile Include="SolverError.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="StepReduce.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="utilities.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -141,6 +141,12 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="CommandHandlers.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="StepFilter.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ReduceFilter.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

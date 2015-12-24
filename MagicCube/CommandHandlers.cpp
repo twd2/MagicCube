@@ -18,7 +18,7 @@ void solveHandler(string value)
 	CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
 	solver->Solve();
 	printf("Steps: %s\n", stepsToString(solver->Step).c_str());
-	auto steps = StepReduce::Reduce(solver->Step);
+	CubeSteps steps = ReduceFilter::Filter(solver->Step);
 	printf("Reduced steps: %s\n", stepsToString(steps).c_str());
 	delete solver;
 }
@@ -29,7 +29,7 @@ void playHandler(string value)
 	CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
 	solver->Solve();
 	printf("Steps: %s\n", stepsToString(solver->Step).c_str());
-	auto steps = StepReduce::Reduce(solver->Step);
+	CubeSteps steps = ReduceFilter::Filter(solver->Step);
 	delete solver;
 	cube = oldCube;
 	printf("Reduced steps: %s\n", stepsToString(steps).c_str());
@@ -105,17 +105,26 @@ void testHandler(string value)
 		{
 			printf("%lld\n", count);
 		}
-		cube = Cube();
+		
+		Cube cube1, cube2;
+
 		for (int i = 0; i < rand() % 1000 + 1; ++i)
 		{
 			CubeRotateMethod method = (CubeRotateMethod)((rand() % 12) + 1);
-			cube.DoMethod(method);
+			cube1.DoMethod(method);
 		}
 
-		CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
+		cube2 = cube1;
+
+		CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube1);
 		try
 		{
 			solver->Solve();
+			CubeSteps steps = solver->Step;
+			for (auto step : steps)
+			{
+				cube2.DoMethod(step);
+			}
 		}
 		catch (const SolverError &err)
 		{
@@ -123,7 +132,7 @@ void testHandler(string value)
 		}
 		delete solver;
 
-		if (!cube.Check())
+		if (!cube2.Check())
 		{
 			printf("FAIL %s\n", cube.Save().c_str());
 		}

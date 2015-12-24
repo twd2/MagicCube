@@ -55,6 +55,25 @@ Cube::Cube()
 	subCubes[2][2][2] = 0x500410;
 }
 
+Cube::Cube(const Cube &b)
+{
+	*this = b;
+}
+
+const Cube& Cube::operator=(const Cube &b)
+{
+	for (int x = 0; x < 3; ++x)
+	{
+		for (int y = 0; y < 3; ++y)
+		{
+			for (int z = 0; z < 3; ++z)
+			{
+				subCubes[x][y][z] = b.subCubes[x][y][z];
+			}
+		}
+	}
+	return *this;
+}
 
 Cube::~Cube()
 {
@@ -66,6 +85,7 @@ void Cube::Load(string data)
 	{
 		throw CubeError("Length mismatch");
 	}
+
 	for (int z = 0; z < 3; ++z)
 	{
 		for (int y = 0; y < 3; ++y)
@@ -536,4 +556,22 @@ bool Cube::CheckB()
 bool Cube::Check()
 {
 	return CheckU() && CheckD() && CheckL() && CheckR() && CheckF() && CheckB();
+}
+
+bool Cube::operator==(const Cube &b)
+{
+	for (int x = 0; x < 3; ++x)
+	{
+		for (int y = 0; y < 3; ++y)
+		{
+			for (int z = 0; z < 3; ++z)
+			{
+				if (subCubes[x][y][z] != b.subCubes[x][y][z])
+				{
+					return false;
+				}
+			}
+		}
+	}
+	return true;
 }

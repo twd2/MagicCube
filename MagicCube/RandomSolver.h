@@ -6,7 +6,7 @@ class RandomSolver :
 	public CubeSolver
 {
 public:
-	RandomSolver(Cube& cube) : CubeSolver(cube)
+	RandomSolver(Cube &cube) : CubeSolver(cube)
 	{}
 	~RandomSolver();
 

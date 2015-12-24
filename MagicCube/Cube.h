@@ -10,6 +10,14 @@ class Cube
 {
 public:
 	Cube();
+
+	// copy
+	Cube(const Cube&);
+
+	// copy
+	const Cube& operator=(const Cube&);
+
+
 	~Cube();
 
 	cube_t subCubes[3][3][3];
@@ -55,6 +63,12 @@ public:
 	bool CheckF();
 	bool CheckB();
 	bool Check();
+
+	// completely same, not only equivalent
+	bool operator==(const Cube&);
+
+	// TODO
+	bool Equivalent(const Cube&);
 
 private:
 	cube_t oldSubCubes[3][3][3];

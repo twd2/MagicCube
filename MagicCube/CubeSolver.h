@@ -11,7 +11,7 @@ public:
 	Cube &cube;
 	vector<CubeRotateMethod> Step;
 
-	CubeSolver(Cube& cube): cube(cube)
+	CubeSolver(Cube &cube): cube(cube)
 	{}
 
 	virtual ~CubeSolver() = 0;

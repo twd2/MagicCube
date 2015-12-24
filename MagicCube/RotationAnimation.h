@@ -6,7 +6,7 @@
 #ifdef USE_GL
 
 extern bool playing;
-extern vector<CubeRotateMethod> stepsToPlay;
+extern CubeSteps stepsToPlay;
 extern ptrdiff_t playIndex;
 
 extern double rotateAngle, finishAngle;
@@ -19,7 +19,7 @@ void rotateFinishCallback();
 void nextFrame();
 void finishCurrentRotate();
 void startRotate(CubeRotateMethod);
-void play(vector<CubeRotateMethod>&);
+void play(CubeSteps&);
 void playNext();
 void stopPlay();
 

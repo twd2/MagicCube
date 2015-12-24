@@ -4,7 +4,7 @@ class BruteForceSolver :
 	public CubeSolver
 {
 public:
-	BruteForceSolver(Cube& cube) : CubeSolver(cube)
+	BruteForceSolver(Cube &cube) : CubeSolver(cube)
 	{}
 	~BruteForceSolver();
 

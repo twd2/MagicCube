@@ -4,7 +4,7 @@
 #include "Cube.h"
 #include "CubeSolver.h"
 #include "GeneralSolver.h"
-#include "StepReduce.h"
+#include "ReduceFilter.h"
 
 #ifdef USE_GL
 #include "CommandHandlers.h"
@@ -22,5 +22,3 @@ void graphicMode(int, char *[]);
 #else
 void textMode(int, char *[]);
 #endif //USE_GL
-
-string stepsToString(vector<CubeRotateMethod>&);

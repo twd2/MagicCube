@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "utilities.h"
 
-//http://stackoverflow.com/questions/236129/split-a-string-in-c
+// http://stackoverflow.com/questions/236129/split-a-string-in-c
 vector<string> &split(const string &s, char delim, vector<string> &elems)
 {
 	stringstream ss(s);
@@ -43,7 +43,7 @@ string toLowerString(string str)
 	return  str;
 }
 
-string stepsToString(vector<CubeRotateMethod> &steps)
+string stepsToString(CubeSteps &steps)
 {
 	string r;
 	ptrdiff_t size = steps.size();
@@ -105,4 +105,14 @@ CubeRotateMethod inverse(CubeRotateMethod m)
 		return (CubeRotateMethod)(m - (ROTATE_NONEi - ROTATE_NONE)); //inverse
 	}
 
+}
+
+void copySteps(CubeSteps &src, CubeSteps &dest)
+{
+	size_t size = src.size();
+	for (ptrdiff_t i = 0; i < (ptrdiff_t)size; ++i)
+	{
+		if (src[i] != ROTATE_NONE && src[i] != ROTATE_NONEi)
+			dest.push_back(src[i]);
+	}
 }
