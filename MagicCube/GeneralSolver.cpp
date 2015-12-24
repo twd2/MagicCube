@@ -377,7 +377,7 @@ void GeneralSolver::Stage2()
 			Do(ROTATE_DOWNi); // -> FRD
 		});
 
-		//TODO: check if the cube is vaild to avoid infinite loop
+		//TODO: check if the cube is valid to avoid infinite loop
 		while (!(GET_UP(cube.subCubes[FRU_CORNER]) == COLOR_WHITE &&
 			GET_FRONT(cube.subCubes[FRU_CORNER]) == color[0] &&
 			GET_RIGHT(cube.subCubes[FRU_CORNER]) == color[1]))
@@ -450,7 +450,7 @@ void GeneralSolver::Stage3()
 			{ COLOR_RED, COLOR_GREEN}
 	};
 
-	//TODO: check if the cube is vaild to avoid infinite loop
+	//TODO: check if the cube is valid to avoid infinite loop
 	while (!CheckStage3())
 	{
 		vector<CubeColor> colors = { COLOR_RED, COLOR_GREEN, COLOR_ORANGE, COLOR_BLUE };
@@ -555,7 +555,7 @@ void GeneralSolver::Stage3()
 			else
 			{
 				//assert false
-				throw SolverError("Stage3: cannot find vaild edge");
+				throw SolverError("Stage3: cannot find valid edge");
 			}
 		}
 	}
@@ -597,7 +597,7 @@ bool GeneralSolver::CheckStage4State4i()
 
 void GeneralSolver::Stage4()
 {
-	//TODO: check if the cube is vaild to avoid infinite loop
+	//TODO: check if the cube is valid to avoid infinite loop
 	while (!CheckStage4State1())
 	{
 		//state4
@@ -652,7 +652,7 @@ void GeneralSolver::Stage4()
 
 void GeneralSolver::Stage5()
 {
-	//TODO: check if the cube is vaild to avoid infinite loop
+	//TODO: check if the cube is valid to avoid infinite loop
 	while (!cube.CheckU())
 	{
 		CubeColor centre = GET_UP(cube.subCubes[1][2][1]);
@@ -720,7 +720,7 @@ void GeneralSolver::Stage5()
 			else
 			{
 				//assert false
-				throw SolverError("Stage5: cannot find vaild yellow (correctCount = 1)");
+				throw SolverError("Stage5: cannot find valid yellow (correctCount = 1)");
 			}
 			Do(ROTATE_RIGHT);
 			Do(ROTATE_UP);
@@ -754,7 +754,7 @@ void GeneralSolver::Stage5()
 			else
 			{
 				//assert false
-				throw SolverError("Stage5: cannot find vaild yellow (correctCount = 0)");
+				throw SolverError("Stage5: cannot find valid yellow (correctCount = 0)");
 			}
 			Do(ROTATE_RIGHT);
 			Do(ROTATE_UP);
@@ -791,7 +791,7 @@ void GeneralSolver::Stage6()
 
 	if (A + B + C + D == 4) return;
 
-	//TODO: check if the cube is vaild to avoid infinite loop
+	//TODO: check if the cube is valid to avoid infinite loop
 	while (A + B + C + D < 2)
 	{
 		Do(ROTATE_UP);
@@ -800,7 +800,7 @@ void GeneralSolver::Stage6()
 
 	if (A + B + C + D == 4) return;
 
-	//TODO: check if the cube is vaild to avoid infinite loop
+	//TODO: check if the cube is valid to avoid infinite loop
 	while (!((A && B) || (A && D) || (B && C)))
 	{
 		Do(ROTATE_WHOLEY);
@@ -824,14 +824,14 @@ void GeneralSolver::Stage6()
 		Do(ROTATE_UPi);
 
 		CheckStage6ABCD(&A, &B, &C, &D);
-		//TODO: check if the cube is vaild to avoid infinite loop
+		//TODO: check if the cube is valid to avoid infinite loop
 		while (A + B + C + D < 2)
 		{
 			Do(ROTATE_UP);
 			CheckStage6ABCD(&A, &B, &C, &D);
 		}
 
-		//TODO: check if the cube is vaild to avoid infinite loop
+		//TODO: check if the cube is valid to avoid infinite loop
 		while (!(A && B))
 		{
 			Do(ROTATE_WHOLEY);
@@ -878,7 +878,7 @@ void GeneralSolver::Stage7()
 	bool E, F, G, H;
 	CheckStage7EFGH(&E, &F, &G, &H);
 
-	//TODO: check if the cube is vaild to avoid infinite loop
+	//TODO: check if the cube is valid to avoid infinite loop
 	while (E + F + G + H != 4)
 	{
 		if (E + F + G + H == 0)
@@ -917,7 +917,7 @@ void GeneralSolver::Stage7()
 		if (E + F + G + H == 1)
 		{
 			CheckStage7EFGH(&E, &F, &G, &H);
-			//TODO: check if the cube is vaild to avoid infinite loop
+			//TODO: check if the cube is valid to avoid infinite loop
 			while (!F)
 			{
 				Do(ROTATE_WHOLEY);
