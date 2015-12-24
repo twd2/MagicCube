@@ -72,28 +72,25 @@ void textMode(int argc, char *argv[])
 	cube.Load(data);
 	CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
 	solver->Solve();
-	auto steps = StepReduce::Reduce(solver->Step);
+	auto steps = ReduceFilter::Filter(solver->Step);
+	steps = NoXYZFilter::Filter(steps);
+	steps = ReduceFilter::Filter(steps);
 	delete solver;
-	printf("%s\n", stepsToString(steps).c_str());
+
+	if (steps.size() > 0)
+	{
+		printf("%s\n", stepsToString(steps).c_str());
+	}
+	else
+	{
+		printf("Nothing to do.\n");
+	}
 }
 #endif //USE_GL
-
-void test()
-{
-	Cube a, b;
-	a.DoMethod(ROTATE_WHOLEY);
-	a.DoMethod(ROTATE_FRONT);
-	a.DoMethod(ROTATE_WHOLEYi);
-	b.DoMethod(ROTATE_RIGHT);
-	printf("test1: %d\n", a == b);
-
-
-}
 
 int main(int argc, char *argv[])
 {
 	srand(clock());
-	test();
 #ifdef USE_GL
 	graphicMode(argc, argv);
 #else

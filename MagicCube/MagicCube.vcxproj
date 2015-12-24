@@ -245,6 +245,7 @@
     <ClInclude Include="include\GL\wglew.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="MagicCube.h" />
+    <ClInclude Include="NoXYZFilter.h" />
     <ClInclude Include="RandomSolver.h" />
     <ClInclude Include="Rendering.h" />
     <ClInclude Include="RotationAnimation.h" />
@@ -267,6 +268,7 @@
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="MagicCube.cpp" />
+    <ClCompile Include="NoXYZFilter.cpp" />
     <ClCompile Include="RandomSolver.cpp" />
     <ClCompile Include="Rendering.cpp" />
     <ClCompile Include="RotationAnimation.cpp" />

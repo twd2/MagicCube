@@ -23,3 +23,5 @@ CubeRotateMethod inverse(CubeRotateMethod);
 
 // copy steps with deleting NONE steps
 void copySteps(CubeSteps &src, CubeSteps &dest);
+
+bool isWholeRotate(CubeRotateMethod);

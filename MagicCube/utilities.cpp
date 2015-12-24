@@ -116,3 +116,8 @@ void copySteps(CubeSteps &src, CubeSteps &dest)
 			dest.push_back(src[i]);
 	}
 }
+
+bool isWholeRotate(CubeRotateMethod m)
+{
+	return (m >= ROTATE_WHOLEX && m <= ROTATE_WHOLEZ) || (m >= ROTATE_WHOLEXi && m <= ROTATE_WHOLEZi);
+}

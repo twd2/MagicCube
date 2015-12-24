@@ -5,16 +5,18 @@
 #include "types.h"
 #include "StepFilter.h"
 
-class ReduceFilter
-	: StepFilter
+class ReduceFilter :
+	public StepFilter
 {
 public:
-	ReduceFilter();
-	~ReduceFilter();
+	virtual ~ReduceFilter() = 0;
 
 	static CubeSteps Filter(CubeSteps&);
 
 private:
+
+	ReduceFilter();
+
 	static bool ReduceContinuous(CubeSteps&);
 	static bool ReduceInverse(CubeSteps&);
 };

@@ -5,6 +5,7 @@
 #include "CubeSolver.h"
 #include "GeneralSolver.h"
 #include "ReduceFilter.h"
+#include "NoXYZFilter.h"
 
 #ifdef USE_GL
 #include "CommandHandlers.h"

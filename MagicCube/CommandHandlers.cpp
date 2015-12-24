@@ -17,9 +17,13 @@ void solveHandler(string value)
 {
 	CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
 	solver->Solve();
-	printf("Steps: %s\n", stepsToString(solver->Step).c_str());
+	printf("Steps(%llu): %s\n", solver->Step.size(), stepsToString(solver->Step).c_str());
 	CubeSteps steps = ReduceFilter::Filter(solver->Step);
-	printf("Reduced steps: %s\n", stepsToString(steps).c_str());
+	printf("Reduced steps(%llu): %s\n", steps.size(), stepsToString(steps).c_str());
+	steps = NoXYZFilter::Filter(steps);
+	printf("No XYZ steps(%llu): %s\n", steps.size(), stepsToString(steps).c_str());
+	steps = ReduceFilter::Filter(steps);
+	printf("Reduced again steps(%llu): %s\n", steps.size(), stepsToString(steps).c_str());
 	delete solver;
 }
 
@@ -28,11 +32,15 @@ void playHandler(string value)
 	Cube oldCube = cube;
 	CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
 	solver->Solve();
-	printf("Steps: %s\n", stepsToString(solver->Step).c_str());
+	printf("Steps(%llu): %s\n", solver->Step.size(), stepsToString(solver->Step).c_str());
 	CubeSteps steps = ReduceFilter::Filter(solver->Step);
+	printf("Reduced steps(%llu): %s\n", steps.size(), stepsToString(steps).c_str());
+	steps = NoXYZFilter::Filter(steps);
+	printf("No XYZ steps(%llu): %s\n", steps.size(), stepsToString(steps).c_str());
+	steps = ReduceFilter::Filter(steps);
+	printf("Reduced again steps(%llu): %s\n", steps.size(), stepsToString(steps).c_str());
 	delete solver;
 	cube = oldCube;
-	printf("Reduced steps: %s\n", stepsToString(steps).c_str());
 	play(steps);
 }
 
@@ -103,7 +111,7 @@ void testHandler(string value)
 		++count;
 		if (count % 10000 == 0)
 		{
-			printf("%lld\n", count);
+			printf("%llu\n", count);
 		}
 		
 		Cube cube1, cube2;
@@ -121,6 +129,9 @@ void testHandler(string value)
 		{
 			solver->Solve();
 			CubeSteps steps = solver->Step;
+			steps = ReduceFilter::Filter(steps);
+			steps = NoXYZFilter::Filter(steps);
+			steps = ReduceFilter::Filter(steps);
 			for (auto step : steps)
 			{
 				cube2.DoMethod(step);
@@ -128,13 +139,13 @@ void testHandler(string value)
 		}
 		catch (const SolverError &err)
 		{
-			printf("ERROR %s %s\n", err.what.c_str(), cube.Save().c_str());
+			printf("ERROR %s %s\n", err.what.c_str(), cube1.Save().c_str());
 		}
 		delete solver;
 
 		if (!cube2.Check())
 		{
-			printf("FAIL %s\n", cube.Save().c_str());
+			printf("FAIL %s\n", cube1.Save().c_str());
 		}
 	}
 }

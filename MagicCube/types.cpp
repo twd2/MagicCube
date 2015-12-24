@@ -25,6 +25,30 @@ map<CubeRotateMethod, string> CubeRotateMethodName =
 	{ROTATE_WHOLEZi, "Zi"  }
 };
 
+map<CubeRotateMethod, string> CubeRotateMethodEnumName =
+{
+	{ ROTATE_NONE   , "ROTATE_NONE" },
+	{ ROTATE_FRONT  , "ROTATE_FRONT" },
+	{ ROTATE_BACK   , "ROTATE_BACK" },
+	{ ROTATE_LEFT   , "ROTATE_LEFT" },
+	{ ROTATE_RIGHT  , "ROTATE_RIGHT" },
+	{ ROTATE_UP     , "ROTATE_UP" },
+	{ ROTATE_DOWN   , "ROTATE_DOWN" },
+	{ ROTATE_WHOLEX , "ROTATE_WHOLEX" },
+	{ ROTATE_WHOLEY , "ROTATE_WHOLEY" },
+	{ ROTATE_WHOLEZ , "ROTATE_WHOLEZ" },
+	{ ROTATE_NONEi  , "ROTATE_NONEi" },
+	{ ROTATE_FRONTi , "ROTATE_FRONTi" },
+	{ ROTATE_BACKi  , "ROTATE_BACKi" },
+	{ ROTATE_LEFTi  , "ROTATE_LEFTi" },
+	{ ROTATE_RIGHTi , "ROTATE_RIGHTi" },
+	{ ROTATE_UPi    , "ROTATE_UPi" },
+	{ ROTATE_DOWNi  , "ROTATE_DOWNi" },
+	{ ROTATE_WHOLEXi, "ROTATE_WHOLEXi" },
+	{ ROTATE_WHOLEYi, "ROTATE_WHOLEYi" },
+	{ ROTATE_WHOLEZi, "ROTATE_WHOLEZi" }
+};
+
 map<string, CubeRotateMethod> NameToCubeRotateMethod =
 {
 	{"NONE", ROTATE_NONE   },

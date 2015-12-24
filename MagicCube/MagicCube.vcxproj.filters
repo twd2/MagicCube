@@ -90,6 +90,9 @@
     <ClInclude Include="ReduceFilter.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="NoXYZFilter.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -147,6 +150,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="ReduceFilter.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="NoXYZFilter.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
