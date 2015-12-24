@@ -79,9 +79,9 @@ Cube::~Cube()
 {
 }
 
-void Cube::Load(string data)
+void Cube::Deserialize(string data)
 {
-	if (data.length() != 162)
+	if (data.length() != FORMAT1_LENGTH)
 	{
 		throw CubeError("Length mismatch");
 	}
@@ -104,7 +104,7 @@ void Cube::Load(string data)
 	}
 }
 
-string Cube::Save()
+string Cube::Serialize()
 {
 	string data;
 	for (int z = 0; z < 3; ++z)

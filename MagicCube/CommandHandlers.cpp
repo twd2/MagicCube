@@ -17,13 +17,13 @@ void solveHandler(string value)
 {
 	CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
 	solver->Solve();
-	printf("Steps(%llu): %s\n", solver->Step.size(), stepsToString(solver->Step).c_str());
+	printf("Steps(%llu): %s\n", (unsigned long long)solver->Step.size(), stepsToString(solver->Step, ' ').c_str());
 	CubeSteps steps = ReduceFilter::Filter(solver->Step);
-	printf("Reduced steps(%llu): %s\n", steps.size(), stepsToString(steps).c_str());
+	printf("Reduced steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
 	steps = NoXYZFilter::Filter(steps);
-	printf("No XYZ steps(%llu): %s\n", steps.size(), stepsToString(steps).c_str());
+	printf("No XYZ steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
 	steps = ReduceFilter::Filter(steps);
-	printf("Reduced again steps(%llu): %s\n", steps.size(), stepsToString(steps).c_str());
+	printf("Reduced again steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
 	delete solver;
 }
 
@@ -32,13 +32,13 @@ void playHandler(string value)
 	Cube oldCube = cube;
 	CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
 	solver->Solve();
-	printf("Steps(%llu): %s\n", solver->Step.size(), stepsToString(solver->Step).c_str());
+	printf("Steps(%llu): %s\n", (unsigned long long)solver->Step.size(), stepsToString(solver->Step, ' ').c_str());
 	CubeSteps steps = ReduceFilter::Filter(solver->Step);
-	printf("Reduced steps(%llu): %s\n", steps.size(), stepsToString(steps).c_str());
+	printf("Reduced steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
 	steps = NoXYZFilter::Filter(steps);
-	printf("No XYZ steps(%llu): %s\n", steps.size(), stepsToString(steps).c_str());
+	printf("No XYZ steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
 	steps = ReduceFilter::Filter(steps);
-	printf("Reduced again steps(%llu): %s\n", steps.size(), stepsToString(steps).c_str());
+	printf("Reduced again steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
 	delete solver;
 	cube = oldCube;
 	play(steps);
@@ -59,7 +59,7 @@ void fileHandler(string value)
 			string line;
 			getline(file, line);
 			printf("Loading: %s\n", line.c_str());
-			cube.Load(line);
+			cube.Deserialize(line);
 			file.close();
 		}
 		else
@@ -77,13 +77,13 @@ void loadHandler(string value)
 {
 	try
 	{
-		if (toLowerString(value) == "CMD")
+		if (toLowerString(value) == "cmd")
 		{
 			printf(">");
 			string line;
 			getline(cin, line);
 			printf("Loading: %s\n", line.c_str());
-			cube.Load(line);
+			cube.Deserialize(line);
 		}
 		else if (toLowerString(value) == "format2")
 		{
@@ -97,12 +97,12 @@ void loadHandler(string value)
 
 			string data = convertFromFormat2(f2);
 			printf("Loading: %s\n", data.c_str());
-			cube.Load(data);
+			cube.Deserialize(data);
 		}
 		else
 		{
 			printf("Loading: %s\n", value.c_str());
-			cube.Load(value);
+			cube.Deserialize(value);
 		}
 	}
 	catch (const CubeError &err)
@@ -113,7 +113,7 @@ void loadHandler(string value)
 
 void saveHandler(string value)
 {
-	string data = cube.Save();
+	string data = cube.Serialize();
 	if (toLowerString(value) != "format2")
 	{
 		printf("%s\n", data.c_str());
@@ -170,13 +170,13 @@ void testHandler(string value)
 		}
 		catch (const SolverError &err)
 		{
-			printf("ERROR %s %s\n", err.what.c_str(), cube1.Save().c_str());
+			printf("ERROR %s %s\n", err.what.c_str(), cube1.Serialize().c_str());
 		}
 		delete solver;
 
 		if (!cube2.Check())
 		{
-			printf("FAIL %s\n", cube1.Save().c_str());
+			printf("FAIL %s\n", cube1.Serialize().c_str());
 		}
 	}
 }

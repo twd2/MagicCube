@@ -34,8 +34,8 @@ public:
 	z 
 	*/
 
-	void Load(string);
-	string Save();
+	void Deserialize(string);
+	string Serialize();
 	void SaveState();
 	void DoMethod(CubeRotateMethod);
 	void R();

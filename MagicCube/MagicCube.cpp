@@ -67,19 +67,27 @@ void graphicMode(int argc, char *argv[])
 #else
 void textMode(int argc, char *argv[])
 {
-	string data;
-	getline(cin, data);
-	cube.Load(data);
+	char f2[FORMAT2_LENGTH];
+	for (int i = 0; i < FORMAT2_LENGTH; ++i)
+	{
+		cin >> f2[i];
+	}
+
+	string data = convertFromFormat2(f2);
+	cube.Deserialize(data);
+	
 	CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
 	solver->Solve();
+	
 	auto steps = ReduceFilter::Filter(solver->Step);
 	steps = NoXYZFilter::Filter(steps);
 	steps = ReduceFilter::Filter(steps);
+	
 	delete solver;
 
 	if (steps.size() > 0)
 	{
-		printf("%s\n", stepsToString(steps).c_str());
+		printf("%s", stepsToString(steps, '\n').c_str());
 	}
 	else
 	{

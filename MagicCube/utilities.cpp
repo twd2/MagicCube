@@ -34,22 +34,22 @@ char toLower(char c)
 string toUpperString(string str)
 {
 	transform(str.begin(), str.end(), str.begin(), toUpper);
-	return  str;
+	return str;
 }
 
 string toLowerString(string str)
 {
 	transform(str.begin(), str.end(), str.begin(), toLower);
-	return  str;
+	return str;
 }
 
-string stepsToString(CubeSteps &steps)
+string stepsToString(CubeSteps &steps, char delim)
 {
 	string r;
 	ptrdiff_t size = steps.size();
 	for (ptrdiff_t i = 0; i < size; ++i)
 	{
-		r += CubeRotateMethodName[steps[i]] + " ";
+		r += CubeRotateMethodName[steps[i]] + delim;
 	}
 	return r;
 }
@@ -91,7 +91,7 @@ string randomCube()
 {
 	Cube cube;
 	randomCube(cube);
-	return cube.Save();
+	return cube.Serialize();
 }
 
 CubeRotateMethod inverse(CubeRotateMethod m)
@@ -104,7 +104,6 @@ CubeRotateMethod inverse(CubeRotateMethod m)
 	{
 		return (CubeRotateMethod)(m - (ROTATE_NONEi - ROTATE_NONE)); //inverse
 	}
-
 }
 
 void copySteps(CubeSteps &src, CubeSteps &dest)
@@ -122,7 +121,7 @@ bool isWholeRotate(CubeRotateMethod m)
 	return (m >= ROTATE_WHOLEX && m <= ROTATE_WHOLEZ) || (m >= ROTATE_WHOLEXi && m <= ROTATE_WHOLEZi);
 }
 
-int format1ToFormat2Table[] = {
+int format1ToFormat2Table[FORMAT1_LENGTH] = {
 	-1, 17, 24, -1, -1, 51, -1, 16, -1, -1, -1, 52, -1, 15, -1, 35, -1, 53, //(0, 0, 0) ~ (2, 0, 0)
 	-1, 14, 21, -1, -1, -1, -1, 13, -1, -1, -1, -1, -1, 12, -1, 32, -1, -1, //(0, 1, 0) ~ (2, 1, 0)
 	-1, 11, 18, -1, 36, -1, -1, 10, -1, -1, 37, -1, -1,  9, -1, 29, 38, -1, //(0, 2, 0) ~ (2, 2, 0)
@@ -134,11 +133,11 @@ int format1ToFormat2Table[] = {
 	 0, -1, 20, -1, 42, -1,  1, -1, -1, -1, 43, -1,  2, -1, -1, 27, 44, -1  //(0, 2, 2) ~ (2, 2, 2)
 };
 
-int format2ToFormat1Table[54] = {-1};
+int format2ToFormat1Table[FORMAT2_LENGTH] = {-1};
 
 void makeTable2()
 {
-	for (int i = 0; i < 162; ++i)
+	for (int i = 0; i < FORMAT1_LENGTH; ++i)
 	{
 		if (format1ToFormat2Table[i] >= 0) format2ToFormat1Table[format1ToFormat2Table[i]] = i;
 	}
@@ -146,8 +145,8 @@ void makeTable2()
 
 string convertFromFormat2(char *f2)
 {
-	string f1(162, '-');
-	for (int i = 0; i < 162; ++i)
+	string f1(FORMAT1_LENGTH, '-');
+	for (int i = 0; i < FORMAT1_LENGTH; ++i)
 	{
 		if (format1ToFormat2Table[i] >= 0)
 		{
@@ -164,8 +163,8 @@ char *convertToFormat2(string f1)
 		makeTable2();
 	}
 
-	char *f2 = new char[54];
-	for (int i = 0; i < 54; ++i)
+	char *f2 = new char[FORMAT2_LENGTH];
+	for (int i = 0; i < FORMAT2_LENGTH; ++i)
 	{
 		f2[i] = f1[format2ToFormat1Table[i]];
 	}

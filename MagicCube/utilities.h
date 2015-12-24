@@ -14,7 +14,7 @@ char toUpper(char);
 char toLower(char);
 string toUpperString(string);
 string toLowerString(string);
-string stepsToString(CubeSteps&);
+string stepsToString(CubeSteps&, char);
 void printError(CubeError);
 void printError(SolverError);
 void randomCube(Cube&);
