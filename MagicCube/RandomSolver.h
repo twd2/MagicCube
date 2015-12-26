@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utilities.h"
 #include "CubeSolver.h"
 
 class RandomSolver : 
