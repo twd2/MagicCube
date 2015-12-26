@@ -26,15 +26,12 @@
 3. Add dependencies `glu32.lib;opengl32.lib;glfw3dll.lib` to the linker.
 4. Build!
 
-## OS X
+## OS X & Linux
 
 1. Build glfw (BUILD\_SHARED\_LIBS=OFF).
-2. Put `libglfw3.a` into `lib` (you need create this directory before).
-3. Execute `make -j8` and `build/MagicCube` is the binary.
-
-## Linux
-
-Sorry :(
+2. Put `libglfw3.a` into `lib/osx` or `lib/linux` (you may need create this directory before).
+3. Execute `./configure`.
+4. Execute `make -j8` and `build/MagicCube` is the binary.
 
 # Data Format
 
