@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "CubeSolver.h"
 
+string currentSolver = "general";
+
 CubeSolver::~CubeSolver()
 {
 }

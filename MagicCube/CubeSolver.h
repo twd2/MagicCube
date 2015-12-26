@@ -20,3 +20,5 @@ public:
 
 	void Do(CubeRotateMethod);
 };
+
+extern string currentSolver;

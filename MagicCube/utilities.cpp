@@ -170,3 +170,19 @@ char *convertToFormat2(string f1)
 	}
 	return f2;
 }
+
+CubeSolver *newSolver(Cube &cube)
+{
+	if (currentSolver == "general")
+	{
+		return (CubeSolver*)new GeneralSolver(cube);
+	}
+	else if (currentSolver == "random")
+	{
+		return (CubeSolver*)new RandomSolver(cube);
+	}
+	else if (currentSolver == "bruteforce")
+	{
+		return (CubeSolver*)new BruteForceSolver(cube);
+	}
+}

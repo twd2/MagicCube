@@ -11,6 +11,12 @@
 
 2. [GLFW](http://www.glfw.org/) if compile without NOGL option.
 
+# Solvers
+
+1. General solver(general): Fast, ~130 steps.
+2. Random solver(random, monkey): Very very slow, infinite steps.
+3. Brute force solver(bruteforce, bf): Very slow, less than 21 steps.
+
 # Building
 
 ## Windows - Visual Studio
@@ -30,7 +36,7 @@
 
 Sorry :(
 
-# Usage
+# Usage - GUI
 
 不好意思其实我不会说英语。
 
@@ -49,11 +55,19 @@ Sorry :(
 	U, Ui, D, Di, L, Li, R, Ri, F, Fi, B, Bi, X, Xi, Y, Yi, Z, Zi: 参考PROBLEM.md中说明，其中“正对魔方”操作应将视角调整为程序打开时视角的初始位置。 
 	CHECK: 检查上下左右前后六个面每个小方块的颜色相等情况。
 	ABOUT: 输出“Wandai :)”，没有实际用处，但拥有超级牛力。
+	RESET: 新魔方。
 	SOLVE: 解当前状态的魔方，输出参考步骤，窗口表现为魔方颜色复原。
 	PLAY: 解当前状态的魔方，输出参考步骤，窗口表现为魔方颜色复原每一步的动画。
+	SET_SOLVER <solver_name>: 设置求解算法(general/bruteforce/random)。
 	RANDOM: 随机转动魔方，“打乱”。
 	FILE <filename>: 从文件<filename>加载魔方表示。
 	LOAD CMD: 从控制台输入魔方表示并加载。
 	LOAD <data>: 加载魔方表示数据<data>。
 	SAVE: 保存当前魔方装态为魔方表示。
 	TEST: 测试(不好玩)。
+
+# Usage - Text mode
+
+1. Input cube data in format2.
+2. Press `Enter`.
+3. See the steps.

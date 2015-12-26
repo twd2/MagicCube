@@ -5,6 +5,10 @@
 #include <sstream>
 #include <algorithm>
 
+#include "CubeSolver.h"
+#include "GeneralSolver.h"
+#include "BruteForceSolver.h"
+#include "RandomSolver.h"
 #include "CubeError.h"
 #include "SolverError.h"
 #include "Cube.h"
@@ -29,3 +33,4 @@ bool isWholeRotate(CubeRotateMethod);
 // format2: see pair 1
 string convertFromFormat2(char*);
 char *convertToFormat2(string);
+CubeSolver *newSolver(Cube&);

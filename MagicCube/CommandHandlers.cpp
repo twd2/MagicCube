@@ -26,9 +26,14 @@ void aboutHandler(string value)
 	printf("Wandai :)\n");
 }
 
+void resetHandler(string value)
+{
+	cube = Cube();
+}
+
 void solveHandler(string value)
 {
-	CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
+	CubeSolver *solver = newSolver(cube);
 	solver->Solve();
 	printf("Steps(%llu): %s\n", (unsigned long long)solver->Step.size(), stepsToString(solver->Step, ' ').c_str());
 	CubeSteps steps = ReduceFilter::Filter(solver->Step);
@@ -43,8 +48,7 @@ void solveHandler(string value)
 void playHandler(string value)
 {
 	Cube oldCube = cube;
-	//CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
-	CubeSolver *solver = (CubeSolver*)new BruteForceSolver(cube);
+	CubeSolver *solver = newSolver(cube);
 	solver->Solve();
 	printf("Steps(%llu): %s\n", (unsigned long long)solver->Step.size(), stepsToString(solver->Step, ' ').c_str());
 	CubeSteps steps = ReduceFilter::Filter(solver->Step);
@@ -215,11 +219,34 @@ void echoHandler(string value)
 	printf("%s\n", value.c_str());
 }
 
+void setSolverHandler(string value)
+{
+	value = toLowerString(value);
+	if (value == "" || value == "general")
+	{
+		currentSolver = "general";
+	}
+	else if (value == "random" || value == "monkey")
+	{
+		currentSolver = "random";
+	}
+	else if (value == "bruteforce" || value == "bf")
+	{
+		currentSolver = "bruteforce";
+	}
+}
+
+void getSolverHandler(string value)
+{
+	printf("%s\n", currentSolver.c_str());
+}
+
 void initCommandHandlers()
 {
 	addCommandHandler("ROTATE", rotateHandler);
 	addCommandHandler("CHECK", checkHandler);
 	addCommandHandler("ABOUT", aboutHandler);
+	addCommandHandler("RESET", resetHandler);
 	addCommandHandler("SOLVE", solveHandler);
 	addCommandHandler("PLAY", playHandler);
 	addCommandHandler("STOP", stopHandler);
@@ -231,6 +258,8 @@ void initCommandHandlers()
 	addCommandHandler("TRAN", tranHandler);
 	addCommandHandler("AXIS", axisHandler);
 	addCommandHandler("ECHO", echoHandler);
+	addCommandHandler("SET_SOLVER", setSolverHandler);
+	addCommandHandler("GET_SOLVER", getSolverHandler);
 }
 
 #endif
