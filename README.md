@@ -28,6 +28,7 @@
 
 ## OS X & Linux
 
+0. If the OS is Linux, install `xorg-dev`, `libgl1-mesa-dev` and `libglu1-mesa-dev` packages.
 1. Build glfw (BUILD\_SHARED\_LIBS=OFF).
 2. Put `libglfw3.a` into `lib/osx` or `lib/linux` (you may need create this directory before).
 3. Execute `./configure`.
