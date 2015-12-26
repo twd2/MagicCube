@@ -43,7 +43,8 @@ void solveHandler(string value)
 void playHandler(string value)
 {
 	Cube oldCube = cube;
-	CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
+	//CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
+	CubeSolver *solver = (CubeSolver*)new BruteForceSolver(cube);
 	solver->Solve();
 	printf("Steps(%llu): %s\n", (unsigned long long)solver->Step.size(), stepsToString(solver->Step, ' ').c_str());
 	CubeSteps steps = ReduceFilter::Filter(solver->Step);
