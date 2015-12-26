@@ -30,7 +30,7 @@
 
 1. Build glfw (BUILD\_SHARED\_LIBS=OFF).
 2. Put `libglfw3.a` into `lib` (you need create this directory before).
-3. Execute `make` and `build/MagicCube` is the binary.
+3. Execute `make -j8` and `build/MagicCube` is the binary.
 
 ## Linux
 

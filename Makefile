@@ -11,7 +11,7 @@ CC_FLAGS = -O2 -Wall -std=c++11 -I $(INC_DIR)
 
 #linker
 
-LIB_DIR = lib
+LIB_DIR = lib/osx
 
 LIBS = -lc++ -lm -lSystem -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
 
