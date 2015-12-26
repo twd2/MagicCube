@@ -14,9 +14,9 @@
 #include "Vertices.h"
 #include "Graphics.h"
 #include "Rendering.h"
-#endif
 
 extern Cube cube;
+#endif
 
 #ifdef USE_GL
 void graphicMode(int, char *[]);

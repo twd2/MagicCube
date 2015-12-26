@@ -200,3 +200,6 @@ lib
 libx64
 
 .DS_Store
+
+Static_Release
+NOGL_Static_Release

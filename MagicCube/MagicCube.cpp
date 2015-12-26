@@ -4,9 +4,10 @@
 #include "stdafx.h"
 #include "MagicCube.h"
 
-Cube cube;
 
 #ifdef USE_GL
+Cube cube;
+
 void graphicMode(int argc, char *argv[])
 {
 	//Initialize the library
@@ -67,6 +68,8 @@ void graphicMode(int argc, char *argv[])
 #else
 void textMode(int argc, char *argv[])
 {
+	Cube cube;
+
 	char f2[FORMAT2_LENGTH];
 	for (int i = 0; i < FORMAT2_LENGTH; ++i)
 	{
@@ -76,10 +79,10 @@ void textMode(int argc, char *argv[])
 	string data = convertFromFormat2(f2);
 	cube.Deserialize(data);
 	
-	CubeSolver *solver = (CubeSolver*)new GeneralSolver(cube);
+	CubeSolver *solver = newSolver(cube);
 	solver->Solve();
 	
-	auto steps = ReduceFilter::Filter(solver->Step);
+	auto steps = ReduceFilter::Filter(solver->Steps);
 	steps = NoXYZFilter::Filter(steps);
 	steps = ReduceFilter::Filter(steps);
 	

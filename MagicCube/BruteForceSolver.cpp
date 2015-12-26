@@ -18,7 +18,7 @@ void BruteForceSolver::Solve()
 
 		if (task.cube.Check())
 		{
-			Step = task.Steps;
+			Steps = task.Steps;
 			break;
 		}
 

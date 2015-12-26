@@ -9,7 +9,7 @@ class CubeSolver
 public:
 
 	Cube &cube;
-	vector<CubeRotateMethod> Step;
+	vector<CubeRotateMethod> Steps;
 
 	CubeSolver(Cube &cube): cube(cube)
 	{}

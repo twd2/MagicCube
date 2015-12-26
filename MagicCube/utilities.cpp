@@ -185,4 +185,8 @@ CubeSolver *newSolver(Cube &cube)
 	{
 		return (CubeSolver*)new BruteForceSolver(cube);
 	}
+	else
+	{
+		throw "Unknown solver";
+	}
 }

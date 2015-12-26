@@ -35,8 +35,8 @@ void solveHandler(string value)
 {
 	CubeSolver *solver = newSolver(cube);
 	solver->Solve();
-	printf("Steps(%llu): %s\n", (unsigned long long)solver->Step.size(), stepsToString(solver->Step, ' ').c_str());
-	CubeSteps steps = ReduceFilter::Filter(solver->Step);
+	printf("Steps(%llu): %s\n", (unsigned long long)solver->Steps.size(), stepsToString(solver->Steps, ' ').c_str());
+	CubeSteps steps = ReduceFilter::Filter(solver->Steps);
 	printf("Reduced steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
 	steps = NoXYZFilter::Filter(steps);
 	printf("No XYZ steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
@@ -50,8 +50,8 @@ void playHandler(string value)
 	Cube oldCube = cube;
 	CubeSolver *solver = newSolver(cube);
 	solver->Solve();
-	printf("Steps(%llu): %s\n", (unsigned long long)solver->Step.size(), stepsToString(solver->Step, ' ').c_str());
-	CubeSteps steps = ReduceFilter::Filter(solver->Step);
+	printf("Steps(%llu): %s\n", (unsigned long long)solver->Steps.size(), stepsToString(solver->Steps, ' ').c_str());
+	CubeSteps steps = ReduceFilter::Filter(solver->Steps);
 	printf("Reduced steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
 	steps = NoXYZFilter::Filter(steps);
 	printf("No XYZ steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
@@ -182,7 +182,7 @@ void testHandler(string value)
 		try
 		{
 			solver->Solve();
-			CubeSteps steps = solver->Step;
+			CubeSteps steps = solver->Steps;
 			steps = ReduceFilter::Filter(steps);
 			steps = NoXYZFilter::Filter(steps);
 			steps = ReduceFilter::Filter(steps);
