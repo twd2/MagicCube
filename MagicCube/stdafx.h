@@ -15,8 +15,8 @@
 #ifdef _UNIX
 #endif
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include <cmath>
 #include <ctime>
 #include <cstring>
