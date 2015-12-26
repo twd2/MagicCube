@@ -33,72 +33,15 @@ void rotateFinishCallback()
 	if (rotateMethod == ROTATE_NONE)
 		return;
 
-	switch (rotateMethod)
-	{
-	case ROTATE_NONE:
-		break;
-	case ROTATE_FRONT:
-		cube.F();
-		break;
-	case ROTATE_BACK:
-		cube.B();
-		break;
-	case ROTATE_LEFT:
-		cube.L();
-		break;
-	case ROTATE_RIGHT:
-		cube.R();
-		break;
-	case ROTATE_UP:
-		cube.U();
-		break;
-	case ROTATE_DOWN:
-		cube.D();
-		break;
-	case ROTATE_WHOLEX:
-		cube.RotateUp();
-		break;
-	case ROTATE_WHOLEY:
-		cube.RotateLeft();
-		break;
-	case ROTATE_WHOLEZ:
-		cube.RotateClockwise();
-		break;
-	case ROTATE_FRONTi:
-		cube.Fi();
-		break;
-	case ROTATE_BACKi:
-		cube.Bi();
-		break;
-	case ROTATE_LEFTi:
-		cube.Li();
-		break;
-	case ROTATE_RIGHTi:
-		cube.Ri();
-		break;
-	case ROTATE_UPi:
-		cube.Ui();
-		break;
-	case ROTATE_DOWNi:
-		cube.Di();
-		break;
-	case ROTATE_WHOLEXi:
-		cube.RotateDown();
-		break;
-	case ROTATE_WHOLEYi:
-		cube.RotateRight();
-		break;
-	case ROTATE_WHOLEZi:
-		cube.RotateCounterClockwise();
-		break;
-	default:
-		break;
-	}
+	cube.DoMethod(rotateMethod);
 
 	rotateAngle = 0.0;
 	rotateMethod = ROTATE_NONE;
 
-	playNext();
+	if (playing)
+	{
+		playNext();
+	}
 }
 
 void nextFrame()
@@ -132,7 +75,7 @@ void startRotate(CubeRotateMethod method)
 	lastPlayTime = glfwGetTime();
 }
 
-void play(vector<CubeRotateMethod> &steps)
+void play(CubeSteps &steps)
 {
 	if (steps.size() <= 0) return;
 	stepsToPlay = steps;
@@ -143,17 +86,19 @@ void play(vector<CubeRotateMethod> &steps)
 
 void playNext()
 {
-	if (playing)
+	if (!playing)
 	{
-		++playIndex;
-		if (playIndex < (ptrdiff_t)stepsToPlay.size())
-		{
-			startRotate(stepsToPlay[playIndex]);
-		}
-		else
-		{
-			stopPlay();
-		}
+		return;
+	}
+
+	++playIndex;
+	if (playIndex < (ptrdiff_t)stepsToPlay.size())
+	{
+		startRotate(stepsToPlay[playIndex]);
+	}
+	else
+	{
+		stopPlay();
 	}
 }
 
@@ -161,6 +106,5 @@ void stopPlay()
 {
 	playing = false;
 	playIndex = 0;
-
 }
 #endif

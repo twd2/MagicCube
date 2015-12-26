@@ -58,86 +58,19 @@ void execCommand(string cmd)
 		}
 		cmd = toUpperString(cmd);
 
-		//basic commands
-		if (cmd == "R")
+		// other commands
+		ptrCommandHandler handler = commandHandler[cmd];
+		if (handler != NULL)
 		{
-			startRotate(ROTATE_RIGHT);
-		}
-		else if (cmd == "RI")
-		{
-			startRotate(ROTATE_RIGHTi);
-		}
-		else if (cmd == "L")
-		{
-			startRotate(ROTATE_LEFT);
-		}
-		else if (cmd == "LI")
-		{
-			startRotate(ROTATE_LEFTi);
-		}
-		else if (cmd == "B")
-		{
-			startRotate(ROTATE_BACK);
-		}
-		else if (cmd == "BI")
-		{
-			startRotate(ROTATE_BACKi);
-		}
-		else if (cmd == "D")
-		{
-			startRotate(ROTATE_DOWN);
-		}
-		else if (cmd == "DI")
-		{
-			startRotate(ROTATE_DOWNi);
-		}
-		else if (cmd == "F")
-		{
-			startRotate(ROTATE_FRONT);
-		}
-		else if (cmd == "FI")
-		{
-			startRotate(ROTATE_FRONTi);
-		}
-		else if (cmd == "U")
-		{
-			startRotate(ROTATE_UP);
-		}
-		else if (cmd == "UI")
-		{
-			startRotate(ROTATE_UPi);
-		}
-		else if (cmd == "X")
-		{
-			startRotate(ROTATE_WHOLEX);
-		}
-		else if (cmd == "Y")
-		{
-			startRotate(ROTATE_WHOLEY);
-		}
-		else if (cmd == "Z")
-		{
-			startRotate(ROTATE_WHOLEZ);
-		}
-		else if (cmd == "XI")
-		{
-			startRotate(ROTATE_WHOLEXi);
-		}
-		else if (cmd == "YI")
-		{
-			startRotate(ROTATE_WHOLEYi);
-		}
-		else if (cmd == "ZI")
-		{
-			startRotate(ROTATE_WHOLEZi);
+			handler(value);
 		}
 		else
 		{
-			//other commands
-			ptrCommandHandler handler = commandHandler[cmd];
+			// rotate
+			handler = commandHandler["ROTATE"];
 			if (handler != NULL)
 			{
-				handler(value);
+				handler(cmd);
 			}
 		}
 	}

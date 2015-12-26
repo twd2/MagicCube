@@ -10,6 +10,7 @@
 
 extern GLfloat viewRotationAngleX, viewRotationAngleY;
 extern bool isTransparent;
+extern bool doRenderAxis;
 
 void setColor(CubeColor);
 void renderAxis();

@@ -61,7 +61,6 @@ map<string, CubeRotateMethod> NameToCubeRotateMethod =
 	{"X"   , ROTATE_WHOLEX },
 	{"Y"   , ROTATE_WHOLEY },
 	{"Z"   , ROTATE_WHOLEZ },
-	{"NONE", ROTATE_NONEi  },
 	{"Fi"  , ROTATE_FRONTi },
 	{"Bi"  , ROTATE_BACKi  },
 	{"Li"  , ROTATE_LEFTi  },

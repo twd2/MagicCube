@@ -6,6 +6,7 @@
 GLfloat viewRotationAngleX = 45.0, viewRotationAngleY = -45.0;
 
 bool isTransparent = false;
+bool doRenderAxis = true;
 
 void setColor(CubeColor color)
 {
@@ -401,7 +402,10 @@ void render()
 	glPushMatrix();
 	glScalef(3, 3, 3);
 
-	renderAxis();
+	if (doRenderAxis)
+	{
+		renderAxis();
+	}
 
 	glPopMatrix();
 

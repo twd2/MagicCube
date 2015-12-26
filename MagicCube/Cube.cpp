@@ -145,6 +145,7 @@ void Cube::DoMethod(CubeRotateMethod method)
 	switch (method)
 	{
 	case ROTATE_NONE:
+	case ROTATE_NONEi:
 		break;
 	case ROTATE_FRONT:
 		F();

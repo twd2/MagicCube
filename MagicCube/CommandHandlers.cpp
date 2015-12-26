@@ -3,6 +3,19 @@
 
 #ifdef USE_GL
 
+void rotateHandler(string value)
+{
+	value = toUpperString(value);
+	if (value.length() > 1)
+		value[1] = toLower(value[1]);
+
+	CubeRotateMethod method = NameToCubeRotateMethod[value];
+	if (method != ROTATE_NONE)
+	{
+		startRotate(method);
+	}
+}
+
 void checkHandler(string value)
 {
 	printf("U%d D%d L%d R%d F%d B%d: %d\n", cube.CheckU(), cube.CheckD(), cube.CheckL(), cube.CheckR(), cube.CheckF(), cube.CheckB(), cube.Check());
@@ -42,6 +55,11 @@ void playHandler(string value)
 	delete solver;
 	cube = oldCube;
 	play(steps);
+}
+
+void stopHandler(string value)
+{
+	stopPlay();
 }
 
 void randomHandler(string value)
@@ -186,6 +204,11 @@ void tranHandler(string value)
 	isTransparent = !isTransparent;
 }
 
+void axisHandler(string value)
+{
+	doRenderAxis = !doRenderAxis;
+}
+
 void echoHandler(string value)
 {
 	printf("%s\n", value.c_str());
@@ -193,16 +216,19 @@ void echoHandler(string value)
 
 void initCommandHandlers()
 {
+	addCommandHandler("ROTATE", rotateHandler);
 	addCommandHandler("CHECK", checkHandler);
 	addCommandHandler("ABOUT", aboutHandler);
 	addCommandHandler("SOLVE", solveHandler);
 	addCommandHandler("PLAY", playHandler);
+	addCommandHandler("STOP", stopHandler);
 	addCommandHandler("RANDOM", randomHandler);
 	addCommandHandler("FILE", fileHandler);
 	addCommandHandler("LOAD", loadHandler);
 	addCommandHandler("SAVE", saveHandler);
 	addCommandHandler("TEST", testHandler);
 	addCommandHandler("TRAN", tranHandler);
+	addCommandHandler("AXIS", axisHandler);
 	addCommandHandler("ECHO", echoHandler);
 }
 
