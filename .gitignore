@@ -196,8 +196,6 @@ FakesAssemblies/
 *.opt
 
 include
-lib
-libx64
 
 .DS_Store
 
