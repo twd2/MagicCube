@@ -3,22 +3,33 @@
 
 #ifdef USE_GL
 
+map<string, ptrCommandHandler> commandHandler;
+
 void rotateHandler(string value)
 {
-	value = toUpperString(value);
-	if (value.length() > 1)
-		value[1] = toLower(value[1]);
+	string rotateCmd = toUpperString(value);
+	if (rotateCmd.length() > 1)
+		rotateCmd[1] = toLower(rotateCmd[1]);
 
-	CubeRotateMethod method = NameToCubeRotateMethod[value];
+	CubeRotateMethod method = NameToCubeRotateMethod[rotateCmd];
 	if (method != ROTATE_NONE)
 	{
 		startRotate(method);
+	}
+	else
+	{
+		printf("Unknown command %s\n", value.c_str());
 	}
 }
 
 void checkHandler(string value)
 {
 	printf("U%d D%d L%d R%d F%d B%d: %d\n", cube.CheckU(), cube.CheckD(), cube.CheckL(), cube.CheckR(), cube.CheckF(), cube.CheckB(), cube.Check());
+}
+
+void helpHandler(string value)
+{
+	printf(":)\n");
 }
 
 void aboutHandler(string value)
@@ -33,32 +44,12 @@ void resetHandler(string value)
 
 void solveHandler(string value)
 {
-	CubeSolver *solver = newSolver(cube);
-	solver->Solve();
-	printf("Steps(%llu): %s\n", (unsigned long long)solver->Steps.size(), stepsToString(solver->Steps, ' ').c_str());
-	CubeSteps steps = ReduceFilter::Filter(solver->Steps);
-	printf("Reduced steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
-	steps = NoXYZFilter::Filter(steps);
-	printf("No XYZ steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
-	steps = ReduceFilter::Filter(steps);
-	printf("Reduced again steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
-	delete solver;
+	solveAndPrint(cube);
 }
 
 void playHandler(string value)
 {
-	Cube oldCube = cube;
-	CubeSolver *solver = newSolver(cube);
-	solver->Solve();
-	printf("Steps(%llu): %s\n", (unsigned long long)solver->Steps.size(), stepsToString(solver->Steps, ' ').c_str());
-	CubeSteps steps = ReduceFilter::Filter(solver->Steps);
-	printf("Reduced steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
-	steps = NoXYZFilter::Filter(steps);
-	printf("No XYZ steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
-	steps = ReduceFilter::Filter(steps);
-	printf("Reduced again steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
-	delete solver;
-	cube = oldCube;
+	CubeSteps steps = solveAndPrint(cube);
 	play(steps);
 }
 
@@ -241,10 +232,60 @@ void getSolverHandler(string value)
 	printf("%s\n", currentSolver.c_str());
 }
 
+
+void addCommandHandler(string cmd, ptrCommandHandler handler)
+{
+	commandHandler[cmd] = handler;
+}
+
+void execCommand(string cmd)
+{
+	try
+	{
+		string value = "";
+		size_t index = cmd.find(' ');
+		if (index != string::npos)
+		{
+			value = cmd.substr(index + 1);
+			cmd = cmd.substr(0, index);
+		}
+		cmd = toUpperString(cmd);
+
+		// other commands
+		ptrCommandHandler handler = commandHandler[cmd];
+		if (handler != NULL)
+		{
+			handler(value);
+		}
+		else
+		{
+			// rotate
+			handler = commandHandler["ROTATE"];
+			if (handler != NULL)
+			{
+				handler(cmd);
+			}
+			else
+			{
+				printf("Unknown command %s\n", cmd.c_str());
+			}
+		}
+	}
+	catch (const SolverError &err)
+	{
+		printError(err);
+	}
+	catch (const CubeError &err)
+	{
+		printError(err);
+	}
+}
+
 void initCommandHandlers()
 {
 	addCommandHandler("ROTATE", rotateHandler);
 	addCommandHandler("CHECK", checkHandler);
+	addCommandHandler("HELP", helpHandler);
 	addCommandHandler("ABOUT", aboutHandler);
 	addCommandHandler("RESET", resetHandler);
 	addCommandHandler("SOLVE", solveHandler);

@@ -14,12 +14,10 @@
 #include "Vertices.h"
 #include "Graphics.h"
 #include "Rendering.h"
-
-extern Cube cube;
 #endif
 
-#ifdef USE_GL
-void graphicMode(int, char *[]);
-#else
-void textMode(int, char *[]);
+#ifndef USE_GL
+int textMode(int, char *[]);
 #endif //USE_GL
+
+int main(int, char *[]);

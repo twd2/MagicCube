@@ -22,7 +22,9 @@
 #include <cstring>
 #include <string>
 #include <iostream>
+#include <vector>
 #include <map>
+#include <thread>
 using namespace std;
 
 #include "Config.h"

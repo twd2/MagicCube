@@ -8,8 +8,6 @@ bool mouseDown = false;
 
 double lastAngleX, lastAngleY;
 
-map<string, ptrCommandHandler> commandHandler;
-
 void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
@@ -36,52 +34,8 @@ void mouseMove()
 	double deltaX = currX - lastX,
 		deltaY = currY - lastY;
 
-	viewRotationAngleY = (GLfloat)(lastAngleY + deltaX*0.5);
-	viewRotationAngleX = (GLfloat)(lastAngleX + deltaY*0.5);
-}
-
-void addCommandHandler(string cmd, ptrCommandHandler handler)
-{
-	commandHandler[cmd] = handler;
-}
-
-void execCommand(string cmd)
-{
-	try
-	{
-		string value = "";
-		size_t index = cmd.find(' ');
-		if (index != string::npos)
-		{
-			value = cmd.substr(index + 1);
-			cmd = cmd.substr(0, index);
-		}
-		cmd = toUpperString(cmd);
-
-		// other commands
-		ptrCommandHandler handler = commandHandler[cmd];
-		if (handler != NULL)
-		{
-			handler(value);
-		}
-		else
-		{
-			// rotate
-			handler = commandHandler["ROTATE"];
-			if (handler != NULL)
-			{
-				handler(cmd);
-			}
-		}
-	}
-	catch (const SolverError &err)
-	{
-		printError(err);
-	}
-	catch (const CubeError &err)
-	{
-		printError(err);
-	}
+	viewRotationAngleY = (GLfloat)(lastAngleY + deltaX * 0.5);
+	viewRotationAngleX = (GLfloat)(lastAngleX + deltaY * 0.5);
 }
 
 string commandBuffer = "";

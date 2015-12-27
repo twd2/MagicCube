@@ -13,7 +13,6 @@ vector<string> &split(const string &s, char delim, vector<string> &elems)
 	return elems;
 }
 
-
 vector<string> split(const string &s, char delim)
 {
 	vector<string> elems;
@@ -23,11 +22,13 @@ vector<string> split(const string &s, char delim)
 
 char toUpper(char c)
 {
+	if (c < 'a' || c > 'z') return c;
 	return c & ~32;
 }
 
 char toLower(char c)
 {
+	if (c < 'A' || c > 'Z') return c;
 	return c | 32;
 }
 
@@ -189,4 +190,24 @@ CubeSolver *newSolver(Cube &cube)
 	{
 		throw "Unknown solver";
 	}
+}
+
+CubeSteps solveAndPrint(Cube cube)
+{
+	printf("Solving...\n");
+
+	CubeSolver *solver = newSolver(cube);
+	solver->Solve();
+	CubeSteps steps = solver->Steps;
+	delete solver;
+
+	printf("Steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
+	steps = ReduceFilter::Filter(steps);
+	printf("Reduced steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
+	steps = NoXYZFilter::Filter(steps);
+	printf("No XYZ steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
+	steps = ReduceFilter::Filter(steps);
+	printf("Reduced again steps(%llu): %s\n", (unsigned long long)steps.size(), stepsToString(steps, ' ').c_str());
+
+	return steps;
 }

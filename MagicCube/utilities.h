@@ -9,6 +9,8 @@
 #include "GeneralSolver.h"
 #include "BruteForceSolver.h"
 #include "RandomSolver.h"
+#include "ReduceFilter.h"
+#include "NoXYZFilter.h"
 #include "CubeError.h"
 #include "SolverError.h"
 #include "Cube.h"
@@ -34,3 +36,4 @@ bool isWholeRotate(CubeRotateMethod);
 string convertFromFormat2(char*);
 char *convertToFormat2(string);
 CubeSolver *newSolver(Cube&);
+CubeSteps solveAndPrint(Cube);

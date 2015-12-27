@@ -4,69 +4,8 @@
 #include "stdafx.h"
 #include "MagicCube.h"
 
-
-#ifdef USE_GL
-Cube cube;
-
-void graphicMode(int argc, char *argv[])
-{
-	//Initialize the library
-	if (!glfwInit())
-		throw "glfwInit";
-
-	//MSAA
-	glfwWindowHint(GLFW_SAMPLES, 9);
-
-	//Create a windowed mode window and its OpenGL context
-	window = glfwCreateWindow(WIDTH, HEIGHT, "Magic Cube", NULL, NULL);
-	if (!window)
-	{
-		glfwTerminate();
-		throw "glfwCreateWindow";
-	}
-
-	//Make the window's context current
-	glfwMakeContextCurrent(window);
-
-	glfwSetMouseButtonCallback(window, mouseButtonCallback);
-	
-	initCommandHandlers();
-	glfwSetKeyCallback(window, keyboardCallback);
-	glfwSetCharCallback(window, characterCallback);
-		
-	initGL();
-
-#ifndef NO_VERTICES_BUFFER
-	initVertexArray();
-	initAxisVertexBuffer();
-	initCubeVertexBuffer();
-	initCubeEdgeVertexBuffer();
-#endif
-
-	glfwSwapInterval(1);
-
-	//Loop until the user closes the window
-	while (!glfwWindowShouldClose(window))
-	{
-		nextFrame();
-
-		render();
-
-		//Swap front and back buffers
-		glfwSwapBuffers(window);
-
-		//Poll for and process events
-		glfwPollEvents();
-
-		keyboardScan();
-		mouseMove();
-		updateFPS();
-	}
-
-	glfwTerminate();
-}
-#else
-void textMode(int argc, char *argv[])
+#ifndef USE_GL
+int textMode(int argc, char *argv[])
 {
 	Cube cube;
 
@@ -96,6 +35,7 @@ void textMode(int argc, char *argv[])
 	{
 		printf("Nothing to do.\n");
 	}
+	return 0;
 }
 #endif //USE_GL
 
@@ -103,19 +43,29 @@ int main(int argc, char *argv[])
 {
 	srand(clock());
 #ifdef USE_GL
-	graphicMode(argc, argv);
+	try
+	{
+		return graphicMode(argc, argv);
+	}
+	catch (const string &err)
+	{
+		printf("%s\n", err.c_str());
+		return 1;
+	}
 #else
 	try
 	{
-		textMode(argc, argv);
+		return textMode(argc, argv);
 	}
 	catch (const SolverError &err)
 	{
 		printError(err);
+		return 1;
 	}
 	catch (const CubeError &err)
 	{
 		printError(err);
+		return 1;
 	}
 #endif //USE_GL
 	return 0;

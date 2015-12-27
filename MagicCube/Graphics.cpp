@@ -3,7 +3,10 @@
 
 #ifdef USE_GL
 
+Cube cube;
 GLFWwindow *window;
+thread *consoleHandlerThread = NULL;
+bool consoleRunning = true;
 
 #ifndef NO_VERTICES_BUFFER
 
@@ -16,6 +19,84 @@ void initVertexArray()
 }
 
 #endif
+
+void consoleHandler()
+{
+	printf("Hello, you can type commands here!\n");
+	while (consoleRunning)
+	{
+		string cmd;
+		printf(">");
+		getline(cin, cmd);
+		double start = glfwGetTime();
+		execCommand(cmd);
+		printf("\nDone(%.4f ms).\n", (glfwGetTime() - start) * 1000);
+	}
+}
+
+int graphicMode(int argc, char *argv[])
+{
+	initCommandHandlers();
+	consoleHandlerThread = new thread(consoleHandler);
+
+	//Initialize the library
+	if (!glfwInit())
+		throw "error glfwInit";
+
+	//MSAA
+	glfwWindowHint(GLFW_SAMPLES, 9);
+
+	//Create a windowed mode window and its OpenGL context
+	window = glfwCreateWindow(WIDTH, HEIGHT, "Magic Cube", NULL, NULL);
+	if (!window)
+	{
+		glfwTerminate();
+		throw "error glfwCreateWindow";
+	}
+
+	//Make the window's context current
+	glfwMakeContextCurrent(window);
+
+	glfwSetMouseButtonCallback(window, mouseButtonCallback);
+	
+	// We process commands in console handler thread.
+	//glfwSetKeyCallback(window, keyboardCallback);
+	//glfwSetCharCallback(window, characterCallback);
+
+	initGL();
+
+#ifndef NO_VERTICES_BUFFER
+	initVertexArray();
+	initAxisVertexBuffer();
+	initCubeVertexBuffer();
+	initCubeEdgeVertexBuffer();
+#endif
+
+	glfwSwapInterval(1);
+
+	//Loop until the user closes the window
+	while (!glfwWindowShouldClose(window))
+	{
+		nextFrame();
+
+		render();
+
+		//Swap front and back buffers
+		glfwSwapBuffers(window);
+
+		//Poll for and process events
+		glfwPollEvents();
+
+		keyboardScan();
+		mouseMove();
+		updateFPS();
+	}
+
+	glfwTerminate();
+
+	consoleRunning = false;
+	return 0;
+}
 
 void initGL()
 {
