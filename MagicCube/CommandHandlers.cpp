@@ -91,9 +91,9 @@ void loadHandler(string value)
 {
 	try
 	{
-		if (toLowerString(value) == "cmd")
+		if (toLowerString(value) == "")
 		{
-			printf(">");
+			printf("Format1>");
 			string line;
 			getline(cin, line);
 			printf("Loading: %s\n", line.c_str());
@@ -101,7 +101,7 @@ void loadHandler(string value)
 		}
 		else if (toLowerString(value) == "format2")
 		{
-			printf(">");
+			printf("Format2>");
 
 			char f2[54];
 			for (int i = 0; i < 54; ++i)

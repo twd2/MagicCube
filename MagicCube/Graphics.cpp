@@ -23,7 +23,7 @@ void initVertexArray()
 void consoleHandler()
 {
 	printf("Hello, you can type commands here!\n");
-	while (consoleRunning)
+	while (consoleRunning && cin)
 	{
 		string cmd;
 		printf(">");
