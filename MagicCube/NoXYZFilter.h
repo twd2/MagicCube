@@ -2,8 +2,6 @@
 
 #include <map>
 #include <vector>
-#include "utilities.h"
-#include "types.h"
 #include "StepFilter.h"
 
 class NoXYZFilter :

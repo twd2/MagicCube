@@ -35,5 +35,5 @@ using namespace std;
 #include <GLFW/glfw3.h>
 #endif
 
-#include "types.h"
+#include "../CubeCommon/CubeCommon.h"
 #include "utilities.h"

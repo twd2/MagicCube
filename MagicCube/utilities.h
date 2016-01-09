@@ -5,35 +5,15 @@
 #include <sstream>
 #include <algorithm>
 
+#include "../CubeCommon/CubeCommon.h"
 #include "CubeSolver.h"
 #include "GeneralSolver.h"
 #include "BruteForceSolver.h"
 #include "RandomSolver.h"
 #include "ReduceFilter.h"
 #include "NoXYZFilter.h"
-#include "CubeError.h"
 #include "SolverError.h"
-#include "Cube.h"
 
-vector<string> split(const string&, char);
-char toUpper(char);
-char toLower(char);
-string toUpperString(string);
-string toLowerString(string);
-string stepsToString(CubeSteps&, char);
-void printError(CubeError);
 void printError(SolverError);
-void randomCube(Cube&);
-string randomCube();
-CubeRotateMethod inverse(CubeRotateMethod);
-
-// copy steps with deleting NONE steps
-void copySteps(CubeSteps &src, CubeSteps &dest);
-
-bool isWholeRotate(CubeRotateMethod);
-
-// format2: see pair 1
-string convertFromFormat2(char*);
-char *convertToFormat2(string);
 CubeSolver *newSolver(Cube&);
 CubeSteps solveAndPrint(Cube);

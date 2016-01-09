@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../CubeCommon/CubeCommon.h"
 #include "utilities.h"
-#include "Cube.h"
 #include "Input.h"
 #include "NoXYZFilter.h"
 #include "RandomSolver.h"

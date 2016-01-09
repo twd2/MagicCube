@@ -1,8 +1,6 @@
 #pragma once
 
 #include <vector>
-#include "utilities.h"
-#include "types.h"
 #include "StepFilter.h"
 
 class ReduceFilter :

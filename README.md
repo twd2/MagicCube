@@ -8,8 +8,8 @@
 # Dependencies
 
 1. Your interest.
-
 2. [GLFW](http://www.glfw.org/) if compile without NOGL option.
+3. libevent 2.0+ (for server)
 
 # Solvers
 
@@ -23,7 +23,7 @@
 
 1. Open `MagicCube.sln`.
 2. Configure the include directories and libraries directories.
-3. Add dependencies `glu32.lib;opengl32.lib;glfw3dll.lib` to the linker.
+3. Put `glu32.lib;opengl32.lib;glfw3dll.lib` into the libraries directories that you configured.
 4. Build!
 
 ## OS X & Linux
@@ -31,8 +31,19 @@
 0. If the OS is Linux, install `xorg-dev`, `libgl1-mesa-dev` and `libglu1-mesa-dev` packages.
 1. Build glfw (BUILD\_SHARED\_LIBS=OFF).
 2. Put `libglfw3.a` into `lib/osx` or `lib/linux` (you may need create this directory before).
-3. Execute `./configure`.
-4. Execute `make -j8` and `build/MagicCube` is the binary.
+3. Execute `make -j8` and `build/MagicCube` is the binary.
+
+# Building - Server
+
+## Windows - Visual Studio
+
+See #Building.
+
+## OS X & Linux
+
+1. Build libevent 2.0+.
+2. Put `libevent.a` into `MagicCubeServer/lib/osx` or `MagicCubeServer/lib/linux` (you may need create this directory before).
+3. Execute `make -j8` and `MagicCubeServer/build/MagicCubeServer` is the binary.
 
 # Data Format
 

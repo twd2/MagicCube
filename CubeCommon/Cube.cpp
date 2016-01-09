@@ -576,3 +576,8 @@ bool Cube::operator==(const Cube &b)
 	}
 	return true;
 }
+
+bool Cube::operator!=(const Cube &b)
+{
+	return !(*this == b);
+}

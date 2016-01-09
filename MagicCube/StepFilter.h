@@ -1,5 +1,8 @@
 #pragma once
 
+#include "utilities.h"
+#include "../CubeCommon/CubeCommon.h"
+
 class StepFilter
 {
 public:

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "MagicCube.h"
-#include "Cube.h"
 
 #ifdef USE_GL
 

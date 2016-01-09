@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "Cube.h"
+#include "../CubeCommon/CubeCommon.h"
 #include "SolverError.h"
 
 class CubeSolver

@@ -4,7 +4,6 @@
 #include "Graphics.h"
 #include "Vertices.h"
 #include "RotationAnimation.h"
-#include "Cube.h"
 
 #ifdef USE_GL
 

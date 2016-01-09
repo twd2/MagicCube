@@ -66,6 +66,7 @@ public:
 
 	// completely same, not only equivalent
 	bool operator==(const Cube&);
+	bool operator!=(const Cube&);
 
 	// TODO
 	bool Equivalent(const Cube&);

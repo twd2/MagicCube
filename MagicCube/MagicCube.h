@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../CubeCommon/CubeCommon.h"
 #include "utilities.h"
-#include "Cube.h"
 #include "CubeSolver.h"
 #include "GeneralSolver.h"
 #include "ReduceFilter.h"
