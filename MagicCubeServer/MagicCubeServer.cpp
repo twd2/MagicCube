@@ -1,6 +1,3 @@
-// MagicCubeServer.cpp : ��������̨Ӧ�ó��������ڵ㡣
-//
-
 #include "stdafx.h"
 #include "MagicCubeServer.h"
 
@@ -11,6 +8,8 @@ int main(int argc, char *argv[])
 	int err = WSAStartup(0, &data);
 	err = WSAStartup(data.wVersion, &data);
 #endif
+
+#ifdef ENABLE_IPV4
 	evutil_socket_t listener;
 	listener = socket(AF_INET, SOCK_STREAM, 0);
 	if (listener <= 0)
@@ -22,7 +21,7 @@ int main(int argc, char *argv[])
 
 	sockaddr_in sin;
 	sin.sin_family = AF_INET;
-	sin.sin_addr.s_addr = 0;
+	evutil_inet_pton(AF_INET, LISTEN_ADDR, &(sin.sin_addr.s_addr));
 	sin.sin_port = htons(LISTEN_PORT);
 
 	if (::bind(listener, (sockaddr *)&sin, sizeof(sin)) < 0)
@@ -43,6 +42,42 @@ int main(int argc, char *argv[])
 	printf("Listening...\n");
 
 	evutil_make_socket_nonblocking(listener);
+#endif
+
+#ifdef ENABLE_IPV6
+	evutil_socket_t listener6;
+	listener6 = socket(AF_INET6, SOCK_STREAM, 0);
+	if (listener6 <= 0)
+	{
+		perror("socket6");
+		return 1;
+	}
+	evutil_make_listen_socket_reuseable(listener6);
+
+	sockaddr_in6 sin6;
+	sin6.sin6_family = AF_INET6;
+	evutil_inet_pton(AF_INET6, LISTEN_ADDR6, &(sin6.sin6_addr.s6_addr));
+	sin6.sin6_port = htons(LISTEN_PORT6);
+
+	if (::bind(listener6, (sockaddr *)&sin6, sizeof(sin6)) < 0)
+	{
+		perror("bind6");
+#ifdef WIN32
+		printf("%d\n", GetLastError());
+#endif
+		return 1;
+	}
+
+	if (listen(listener6, LISTEN_BACKLOG6) < 0)
+	{
+		perror("listen6");
+		return 1;
+	}
+
+	printf("Listening6...\n");
+
+	evutil_make_socket_nonblocking(listener6);
+#endif
 
 	event_base *base = event_base_new();
 	if (!base)
@@ -50,15 +85,46 @@ int main(int argc, char *argv[])
 		perror("base");
 		return 1;
 	}
+
+#ifdef ENABLE_IPV4
 	event *listen_event;
 	listen_event = event_new(base, listener, EV_READ | EV_PERSIST, accept_cb, (void*)base);
 	event_add(listen_event, NULL);
+#endif
+
+#ifdef ENABLE_IPV6
+	event *listen6_event;
+	listen6_event = event_new(base, listener6, EV_READ | EV_PERSIST, accept6_cb, (void*)base);
+	event_add(listen6_event, NULL);
+#endif
 	
 	thread th(eventEntry, base);
+
+	printf("Press Enter to stop.\n");
+
+	string s;
+	getline(cin, s);
+#ifdef ENABLE_IPV4
+	shutdown(listener, SHUT_RDWR);
+	close(listener);
+#endif
+
+#ifdef ENABLE_IPV6
+	shutdown(listener6, SHUT_RDWR);
+	close(listener6);
+#endif
+	event_base_loopbreak(base);
+
 	th.join();
 
-	printf("The End.");
+	printf("bye\n");
+#ifdef ENABLE_IPV4
 	event_free(listen_event);
+#endif
+
+#ifdef ENABLE_IPV6
+	event_free(listen6_event);
+#endif
 	event_base_free(base);
 	return 0;
 }
@@ -68,8 +134,7 @@ void eventEntry(event_base *base)
 	event_base_dispatch(base);
 }
 
-map<int, bool> sent;
-
+#ifdef ENABLE_IPV4
 void accept_cb(evutil_socket_t listener, short event, void *arg)
 {
 	event_base *base = (event_base *)arg;
@@ -77,69 +142,36 @@ void accept_cb(evutil_socket_t listener, short event, void *arg)
 	sockaddr_in sin;
 	socklen_t slen = (socklen_t)sizeof(sin);
 	fd = accept(listener, (sockaddr *)&sin, &slen);
-	if (fd < 0) {
+	if (fd < 0)
+	{
 		perror("accept");
 		return;
 	}
-	sent[fd] = false;
 
-	char str[INET6_ADDRSTRLEN] = { 0 };
-	evutil_inet_ntop(sin.sin_family, &(sin.sin_addr), str, INET6_ADDRSTRLEN);
-	printf("ACCEPT: fd = %u, addr = %s\n", fd, str);
-
-	bufferevent *bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
-	bufferevent_setcb(bev, read_cb, write_cb, error_cb, arg);
-	bufferevent_enable(bev, EV_READ | EV_WRITE | EV_PERSIST);
+	Session *sess = new Session(base, sin, fd);
+	printf("accept fd = %u, addr = %s\n", fd, sess->RemoteAddress.c_str());
+	sess->SetCallbacks();
+	// TODO: maintain sessions.
 }
+#endif
 
-void read_cb(bufferevent *bev, void *arg)
+#ifdef ENABLE_IPV6
+void accept6_cb(evutil_socket_t listener, short event, void *arg)
 {
-#define MAX_LINE    255
-	char line[MAX_LINE + 1];
-	size_t n = 0;
-	evutil_socket_t fd = bufferevent_getfd(bev);
-
-	while ((n = bufferevent_read(bev, line, MAX_LINE)) > 0)
+	event_base *base = (event_base *)arg;
+	evutil_socket_t fd;
+	sockaddr_in6 sin6;
+	socklen_t slen = (socklen_t)sizeof(sin6);
+	fd = accept(listener, (sockaddr *)&sin6, &slen);
+	if (fd < 0)
 	{
-		line[n] = '\0';
-		printf("fd = %u, read line: %s\n", fd, line);
+		perror("accept");
+		return;
 	}
 
-	if (!sent[fd])
-	{
-		string content = string("<h1>It works!</h1>\n<p>") + to_string(rand()) + "</p>";
-		string head = string("HTTP/1.0 200 OK\r\nServer: Wandai\r\nContent-Type: text/html\r\nTransfer-Encoding: identity\r\nContent-Length: ") + to_string(content.length()) + "\r\nConnection: close\r\n\r\n";
-
-		string data = head + content;
-
-		bufferevent_write(bev, data.c_str(), data.length());
-		sent[fd] = true;
-		bufferevent_flush(bev, EV_WRITE, BEV_NORMAL);
-		//shutdown(fd, 0);
-	}
+	Session *sess = new Session(base, sin6, fd);
+	printf("accept6 fd = %u, addr = %s\n", fd, sess->RemoteAddress.c_str());
+	sess->SetCallbacks();
+	// TODO: maintain sessions.
 }
-
-void write_cb(bufferevent *bev, void *arg) 
-{
-
-}
-
-void error_cb(bufferevent *bev, short event, void *arg)
-{
-	evutil_socket_t fd = bufferevent_getfd(bev);
-	printf("fd = %u, ", fd);
-	if (event & BEV_EVENT_TIMEOUT)
-	{
-		printf("timed out\n"); //if bufferevent_set_timeouts() called
-	}
-	else if (event & BEV_EVENT_EOF)
-	{
-		printf("connection closed\n");
-	}
-	else if (event & BEV_EVENT_ERROR)
-	{
-		printf("some other error\n");
-	}
-	bufferevent_free(bev);
-}
-
+#endif
