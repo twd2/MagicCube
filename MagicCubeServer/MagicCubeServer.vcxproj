@@ -159,12 +159,14 @@
   <ItemGroup>
     <ClInclude Include="Config.h" />
     <ClInclude Include="MagicCubeServer.h" />
+    <ClInclude Include="ManualEvent.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MagicCubeServer.cpp" />
+    <ClCompile Include="ManualEvent.cpp" />
     <ClCompile Include="Session.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

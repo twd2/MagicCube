@@ -1,0 +1,8 @@
+#!/bin/bash
+
+while true; do
+	date
+	nc 172.16.222.3 2333
+	echo
+#	sleep 0.1
+done

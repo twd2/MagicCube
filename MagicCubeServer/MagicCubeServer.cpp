@@ -1,12 +1,26 @@
 #include "stdafx.h"
 #include "MagicCubeServer.h"
 
+void libeventError(int errcode)
+{
+	fatal("libevent fatal error occurred, error code: %d\n", errcode);
+	exit(1);
+}
+
 int main(int argc, char *argv[])
 {
-#ifdef WIN32
+#ifndef NDEBUG
+	event_enable_debug_mode();
+#endif
+
+	event_set_fatal_callback(libeventError);
+#ifdef _WIN32
 	WSADATA data;
 	int err = WSAStartup(0, &data);
 	err = WSAStartup(data.wVersion, &data);
+	evthread_use_windows_threads();
+#else
+	evthread_use_pthreads();
 #endif
 
 #ifdef ENABLE_IPV4
@@ -14,7 +28,7 @@ int main(int argc, char *argv[])
 	listener = socket(AF_INET, SOCK_STREAM, 0);
 	if (listener <= 0)
 	{
-		perror("socket");
+		_perror("socket");
 		return 1;
 	}
 	evutil_make_listen_socket_reuseable(listener);
@@ -26,16 +40,13 @@ int main(int argc, char *argv[])
 
 	if (::bind(listener, (sockaddr *)&sin, sizeof(sin)) < 0)
 	{
-		perror("bind");
-#ifdef WIN32
-		printf("%d\n", GetLastError());
-#endif
+		_perror("bind");
 		return 1;
 	}
 
 	if (listen(listener, LISTEN_BACKLOG) < 0)
 	{
-		perror("listen");
+		_perror("listen");
 		return 1;
 	}
 
@@ -49,7 +60,7 @@ int main(int argc, char *argv[])
 	listener6 = socket(AF_INET6, SOCK_STREAM, 0);
 	if (listener6 <= 0)
 	{
-		perror("socket6");
+		_perror("socket6");
 		return 1;
 	}
 	evutil_make_listen_socket_reuseable(listener6);
@@ -61,16 +72,13 @@ int main(int argc, char *argv[])
 
 	if (::bind(listener6, (sockaddr *)&sin6, sizeof(sin6)) < 0)
 	{
-		perror("bind6");
-#ifdef WIN32
-		printf("%d\n", GetLastError());
-#endif
+		_perror("bind6");
 		return 1;
 	}
 
 	if (listen(listener6, LISTEN_BACKLOG6) < 0)
 	{
-		perror("listen6");
+		_perror("listen6");
 		return 1;
 	}
 
@@ -82,7 +90,7 @@ int main(int argc, char *argv[])
 	event_base *base = event_base_new();
 	if (!base)
 	{
-		perror("base");
+		_perror("event_base_new");
 		return 1;
 	}
 
@@ -102,17 +110,17 @@ int main(int argc, char *argv[])
 
 	printf("Press Enter to stop.\n");
 
-	string s;
-	getline(cin, s);
+	getchar();
+
 #ifdef ENABLE_IPV4
 	shutdown(listener, SHUT_RDWR);
 	close(listener);
 #endif
-
 #ifdef ENABLE_IPV6
 	shutdown(listener6, SHUT_RDWR);
 	close(listener6);
 #endif
+
 	event_base_loopbreak(base);
 
 	th.join();
@@ -134,6 +142,15 @@ void eventEntry(event_base *base)
 	event_base_dispatch(base);
 }
 
+void wtf(Session *sess)
+{
+	//sess->SendPackage(string("{\"type\": \"hello\"}"));
+	//sess->FlushQueue();
+	sess->Close();
+	delete sess;
+	printf("%p deleted\n", sess);
+}
+
 #ifdef ENABLE_IPV4
 void accept_cb(evutil_socket_t listener, short event, void *arg)
 {
@@ -144,13 +161,18 @@ void accept_cb(evutil_socket_t listener, short event, void *arg)
 	fd = accept(listener, (sockaddr *)&sin, &slen);
 	if (fd < 0)
 	{
-		perror("accept");
+		_perror("accept");
 		return;
 	}
 
+	/*shutdown(fd, SHUT_RDWR);
+	close(fd);
+	return;*/
 	Session *sess = new Session(base, sin, fd);
-	printf("accept fd = %u, addr = %s\n", fd, sess->RemoteAddress.c_str());
+	printf("accept fd = %u, addr = %s:%d\n", fd, sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
+	//wtf(sess);
+	thread *th = new thread(wtf, sess);
 	// TODO: maintain sessions.
 }
 #endif
@@ -165,12 +187,12 @@ void accept6_cb(evutil_socket_t listener, short event, void *arg)
 	fd = accept(listener, (sockaddr *)&sin6, &slen);
 	if (fd < 0)
 	{
-		perror("accept");
+		_perror("accept");
 		return;
 	}
 
 	Session *sess = new Session(base, sin6, fd);
-	printf("accept6 fd = %u, addr = %s\n", fd, sess->RemoteAddress.c_str());
+	printf("accept fd = %u, addr = [%s]:%d\n", fd, sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
 	// TODO: maintain sessions.
 }

@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "Config.h"
 #include "Session.h"
+#include "ManualEvent.h"
 
 void eventEntry(event_base*);
 

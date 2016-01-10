@@ -1,6 +1,7 @@
 #pragma once
 
 #include <queue>
+#include "ManualEvent.h"
 
 enum ReadStateType
 {
@@ -42,18 +43,27 @@ public:
 	~Session();
 
 	void SetCallbacks();
+	void SetCallbacks(bool, bool, bool);
+	void ClearCallbacks();
 	void ReadCallback();
 	void WriteCallback();
 	void ErrorCallback(short);
+	void DoQueue();
 	void OnPackage(Package*&);
 	void SendPackage(Package*&);
 	void SendPackage(string);
+
+	// sync, block
+	void FlushQueue();
+
+	void Close();
+
 	static Package *MakePackage(string&);
 
 private:
 	event_base *evbase;
 	bufferevent *buffev;
-	int fd;
+	evutil_socket_t fd;
 #ifdef ENABLE_IPV4
 	sockaddr_in sAddr;
 #endif
@@ -66,9 +76,13 @@ private:
 	char lengthBuffer[sizeof(package_len_t)];
 	Package *currentPackage = NULL;
 
+
 	WriteStateType writeState = WRITESTATE_NONE;
 	size_t writtenLength;
 	queue<Package*> pendingPackages;
+
+	ManualEvent writtenEvent;
+	mutex readLock, writeLock;
 };
 
 package_len_t htonpacklen(package_len_t);

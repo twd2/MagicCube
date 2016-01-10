@@ -33,6 +33,9 @@
     <ClInclude Include="Session.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ManualEvent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -42,6 +45,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Session.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ManualEvent.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
