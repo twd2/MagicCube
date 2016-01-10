@@ -50,6 +50,7 @@ typedef int socklen_t;
 #include <event2/bufferevent.h>
 
 #include <iostream>
+#include <vector>
 #include <map>
 #include <thread>
 #include <sstream>

@@ -7,6 +7,8 @@
 
 void eventEntry(event_base*);
 
+void timer_cb(evutil_socket_t, short, void*);
+
 #ifdef ENABLE_IPV4
 void accept_cb(evutil_socket_t, short, void*);
 #endif

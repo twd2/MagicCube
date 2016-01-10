@@ -11,9 +11,7 @@ Session::Session(event_base *evbase, sockaddr_in addr, int fd)
 	RemotePort = ntohs(addr.sin_port);
 
 	evutil_make_socket_nonblocking(fd);
-
 	buffev = bufferevent_socket_new(evbase, fd, BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE | BEV_OPT_DEFER_CALLBACKS);
-	printf("buffev: %p\n", buffev);
 }
 #endif
 
@@ -88,6 +86,9 @@ void Session::ClearCallbacks()
 void Session::ReadCallback()
 {
 	if (!Alive) return;
+	
+	SendPackage();
+
 	unique_lock<mutex> lck(readLock);
 	printf("%d, entering read\n", fd);
 	while (Alive)
@@ -121,7 +122,7 @@ void Session::ReadCallback()
 				if (dataLength == 0 || dataLength > PACKAGE_MAXLENGTH)
 				{
 					// package is zero or too long
-					printf("%d, == 0 || too long\n", fd);
+					printf("%d, %d == 0 || too long\n", fd, dataLength);
 					readState = READSTATE_ERROR;
 					continue;
 				}
@@ -166,8 +167,8 @@ void Session::ReadCallback()
 			}
 			break;
 		case READSTATE_ERROR:
-			SendPackage("{\"error\": \"unknown error\"}");
-			Close();
+			//SendPackage("{\"error\": \"unknown error\"}");
+			//Close();
 			break;
 		}
 		break;
@@ -178,7 +179,21 @@ void Session::ReadCallback()
 void Session::WriteCallback()
 {
 	if (!Alive) return;
+
+	{
+		unique_lock<mutex> lck(writeLock);
+		if (fisrtWriteCallback)
+		{
+			// drop first write callback calling
+			fisrtWriteCallback = false;
+			return;
+		}
+	}
+
 	printf("%d, write cb\n", fd);
+
+	// TODO: fix
+	Close();
 }
 
 void Session::ErrorCallback(short event)
@@ -205,15 +220,28 @@ void Session::ErrorCallback(short event)
 void Session::DoQueue()
 {
 	if (!Alive) return;
+
 	unique_lock<mutex> lck(writeLock);
+	fisrtWriteCallback = false;
 	printf("%d, entering write\n", fd);
 	while (!pendingPackages.empty())
 	{
 		Package *&pack = pendingPackages.front();
-		size_t toSendLength = sizeof(Package) + ntohpacklen(pack->length);
-		char *packdata = (char *)pack;
+		if (pack->length > 0)
+		{
+			size_t toSendLength = sizeof(Package) + ntohpacklen(pack->length);
+			char *packdata = (char *)pack;
 
-		bufferevent_write(buffev, packdata, toSendLength);
+			bufferevent_write(buffev, packdata, toSendLength);
+		}
+		else
+		{
+			string content = "<h1>It really works!</h1><p>" + to_string(rand()) + "</p>";
+			string header = "HTTP/1.0 200 OK\r\nServer: Wandai\r\nContent-Type: text/html\r\nContent-Length: " + to_string(content.length()) + "\r\n\r\n";
+			string data = header + content;
+
+			bufferevent_write(buffev, data.c_str(), data.length());
+		}
 		delete pack;
 		pack = NULL;
 
@@ -287,6 +315,7 @@ void Session::SendPackage(Package *&pack)
 	pack->length = htonpacklen(pack->length);
 	writtenEvent.Reset();
 	pendingPackages.push(pack);
+
 	DoQueue();
 }
 
@@ -296,13 +325,22 @@ void Session::SendPackage(string str)
 	SendPackage(pack);
 }
 
+#ifndef NDEBUG
+void Session::SendPackage()
+{
+	Package *pack = new Package;
+	pack->length = 0;
+	SendPackage(pack);
+}
+#endif
+
 void Session::FlushQueue()
 {
 	while (!pendingPackages.empty())
 	{
-		printf("fd: %d, FlushQueue waiting\n", fd);
+		//printf("fd: %d, FlushQueue waiting\n", fd);
 		DoQueue();
-		writtenEvent.Wait();
+		//writtenEvent.Wait();
 	}
 }
 
@@ -313,6 +351,7 @@ void Session::Close()
 	printf("fd: %d, closing\n", fd);
 	if (buffev)
 	{
+		bufferevent_lock(buffev);
 		ClearCallbacks(); // need clear callbacks BEFORE shutdown.
 	}
 	writtenEvent.Set();
@@ -325,6 +364,7 @@ void Session::Close()
 	if (buffev)
 	{
 		bufferevent_free(buffev);
+		//bufferevent_unlock(buffev);
 		buffev = NULL;
 	}
 	if (currentPackage)

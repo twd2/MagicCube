@@ -7,6 +7,8 @@ void libeventError(int errcode)
 	exit(1);
 }
 
+vector<Session*> Sessions;
+
 int main(int argc, char *argv[])
 {
 #ifndef NDEBUG
@@ -14,6 +16,7 @@ int main(int argc, char *argv[])
 #endif
 
 	event_set_fatal_callback(libeventError);
+
 #ifdef _WIN32
 	WSADATA data;
 	int err = WSAStartup(0, &data);
@@ -50,7 +53,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	printf("Listening...\n");
+	normal("Listening %s:%d...\n", LISTEN_ADDR, LISTEN_PORT);
 
 	evutil_make_socket_nonblocking(listener);
 #endif
@@ -82,7 +85,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	printf("Listening6...\n");
+	normal("Listening [%s]:%d...\n", LISTEN_ADDR6, LISTEN_PORT6);
 
 	evutil_make_socket_nonblocking(listener6);
 #endif
@@ -93,6 +96,14 @@ int main(int argc, char *argv[])
 		_perror("event_base_new");
 		return 1;
 	}
+
+	timeval *timerInterval = new timeval;
+	evutil_timerclear(timerInterval);
+	timerInterval->tv_sec = CHECK_INTERVAL;
+
+	event *timer = event_new(base, -1, EV_PERSIST, timer_cb, (void *)base);
+	evtimer_add(timer, timerInterval);
+	event_add(timer, NULL);
 
 #ifdef ENABLE_IPV4
 	event *listen_event;
@@ -107,9 +118,6 @@ int main(int argc, char *argv[])
 #endif
 	
 	thread th(eventEntry, base);
-
-	printf("Press Enter to stop.\n");
-
 	getchar();
 
 #ifdef ENABLE_IPV4
@@ -125,15 +133,21 @@ int main(int argc, char *argv[])
 
 	th.join();
 
-	printf("bye\n");
+	normal("%s", "Stopped.");
+	event_free(timer);
+	delete timerInterval;
+	timerInterval = NULL;
 #ifdef ENABLE_IPV4
 	event_free(listen_event);
+	listen_event = NULL;
 #endif
 
 #ifdef ENABLE_IPV6
 	event_free(listen6_event);
+	listen6_event = NULL;
 #endif
 	event_base_free(base);
+	base = NULL;
 	return 0;
 }
 
@@ -144,11 +158,43 @@ void eventEntry(event_base *base)
 
 void wtf(Session *sess)
 {
-	//sess->SendPackage(string("{\"type\": \"hello\"}"));
-	//sess->FlushQueue();
+	sess->SendPackage(string("{\"type\": \"hello\"}"));
+	sess->FlushQueue();
 	sess->Close();
 	delete sess;
-	printf("%p deleted\n", sess);
+	normal("Session at %p has been deleted.", sess);
+}
+
+void timer_cb(evutil_socket_t listener, short event, void *arg)
+{
+	normal("%s", "Timer tick.");
+
+	for (auto &sess : Sessions)
+	{
+		//sess->SendPackage("server_heartbeat");
+		//sess->Close();
+	}
+	
+	if (Sessions.size() > 0)
+	{
+		for (auto iter = Sessions.end() - 1; iter >= Sessions.begin(); --iter)
+		{
+			Session *&sess = *iter;
+			normal("Checking %p", sess);
+			if (sess)
+			{
+				if (!sess->Alive)
+				{
+					delete sess;
+					sess = NULL;
+				}
+			}
+			if (!sess)
+			{
+				Sessions.erase(iter);
+			}
+		}
+	}
 }
 
 #ifdef ENABLE_IPV4
@@ -169,11 +215,9 @@ void accept_cb(evutil_socket_t listener, short event, void *arg)
 	close(fd);
 	return;*/
 	Session *sess = new Session(base, sin, fd);
-	printf("accept fd = %u, addr = %s:%d\n", fd, sess->RemoteAddress.c_str(), sess->RemotePort);
+	normal("accept fd = %u from %s:%d", fd, sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
-	//wtf(sess);
-	thread *th = new thread(wtf, sess);
-	// TODO: maintain sessions.
+	Sessions.push_back(sess);
 }
 #endif
 
@@ -192,8 +236,8 @@ void accept6_cb(evutil_socket_t listener, short event, void *arg)
 	}
 
 	Session *sess = new Session(base, sin6, fd);
-	printf("accept fd = %u, addr = [%s]:%d\n", fd, sess->RemoteAddress.c_str(), sess->RemotePort);
+	normal("accept fd = %u from [%s]:%d", fd, sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
-	// TODO: maintain sessions.
+	Sessions.push_back(sess);
 }
 #endif

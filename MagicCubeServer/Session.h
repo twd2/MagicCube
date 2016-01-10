@@ -52,6 +52,10 @@ public:
 	void OnPackage(Package*&);
 	void SendPackage(Package*&);
 	void SendPackage(string);
+#ifndef NDEBUG
+	// dummy package, http response
+	void SendPackage();
+#endif
 
 	// sync, block
 	void FlushQueue();
@@ -76,7 +80,7 @@ private:
 	char lengthBuffer[sizeof(package_len_t)];
 	Package *currentPackage = NULL;
 
-
+	bool fisrtWriteCallback = true;
 	WriteStateType writeState = WRITESTATE_NONE;
 	size_t writtenLength;
 	queue<Package*> pendingPackages;
