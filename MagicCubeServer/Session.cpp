@@ -66,7 +66,7 @@ void Session::SetCallbacks(bool read, bool write, bool event)
 	bufferevent_setcb(buffev, 
 		readCB,
 		writeCB,
-		eventCB, this);
+		eventCB, (void*)this);
 
 	if (read || write || event)
 	{
@@ -85,13 +85,13 @@ void Session::ClearCallbacks()
 
 void Session::ReadCallback()
 {
-	if (!Alive) return;
+	if (!IsAlive) return;
 	
 	SendPackage();
 
 	unique_lock<mutex> lck(readLock);
-	printf("%d, entering read\n", fd);
-	while (Alive)
+	debug("%d, entering read\n", fd);
+	while (IsAlive)
 	{
 		size_t currentLength;
 		switch (readState)
@@ -122,7 +122,7 @@ void Session::ReadCallback()
 				if (dataLength == 0 || dataLength > PACKAGE_MAXLENGTH)
 				{
 					// package is zero or too long
-					printf("%d, %d == 0 || too long\n", fd, dataLength);
+					debug("%d, data length: %d == 0 || too long\n", fd, dataLength);
 					readState = READSTATE_ERROR;
 					continue;
 				}
@@ -140,7 +140,7 @@ void Session::ReadCallback()
 			}
 			break;
 		case READSTATE_READING_DATA:
-			printf("recv %d\n", currentPackage->length);
+			debug("recv %d\n", currentPackage->length);
 			while (readLength < currentPackage->length &&
 				(currentLength =
 					bufferevent_read(
@@ -173,12 +173,12 @@ void Session::ReadCallback()
 		}
 		break;
 	}
-	printf("%d, exitting read\n", fd);
+	debug("%d, exitting read\n", fd);
 }
 
 void Session::WriteCallback()
 {
-	if (!Alive) return;
+	if (!IsAlive) return;
 
 	{
 		unique_lock<mutex> lck(writeLock);
@@ -190,7 +190,7 @@ void Session::WriteCallback()
 		}
 	}
 
-	printf("%d, write cb\n", fd);
+	debug("%d, write callback called\n", fd);
 
 	// TODO: fix
 	Close();
@@ -198,39 +198,42 @@ void Session::WriteCallback()
 
 void Session::ErrorCallback(short event)
 {
-	if (!Alive) return;
-	printf("fd = %u, ", fd);
+	if (!IsAlive) return;
+
+	const char *msg = NULL;
 	if (event & BEV_EVENT_TIMEOUT)
 	{
-		printf("timed out\n"); // if bufferevent_set_timeouts() called
+		msg = "timed out"; // if bufferevent_set_timeouts() called
 	}
 	else if (event & BEV_EVENT_EOF)
 	{
-		printf("connection closed\n");
+		msg = "connection closed";
 	}
 	else if (event & BEV_EVENT_ERROR)
 	{
-		printf("some other error\n");
-		_perror("error");
+		msg = "some other error";
+		__perror("error");
 	}
+
+	debug("fd = %u, %s", fd, msg);
 	
 	Close();
 }
 
 void Session::DoQueue()
 {
-	if (!Alive) return;
+	if (!IsAlive) return;
 
 	unique_lock<mutex> lck(writeLock);
 	fisrtWriteCallback = false;
-	printf("%d, entering write\n", fd);
+	debug("%d, entering write", fd);
 	while (!pendingPackages.empty())
 	{
 		Package *&pack = pendingPackages.front();
 		if (pack->length > 0)
 		{
 			size_t toSendLength = sizeof(Package) + ntohpacklen(pack->length);
-			char *packdata = (char *)pack;
+			char *packdata = (char*)pack;
 
 			bufferevent_write(buffev, packdata, toSendLength);
 		}
@@ -247,7 +250,7 @@ void Session::DoQueue()
 
 		pendingPackages.pop();
 	}
-	/*while (Alive)
+	/*while (IsAlive)
 	{
 		switch (writeState)
 		{
@@ -296,14 +299,14 @@ void Session::DoQueue()
 		}
 		break;
 	}*/
-	printf("%d, exitting write\n", fd);
+	debug("%d, exitting write", fd);
 }
 
 void Session::OnPackage(Package *&pack)
 {
 	if (!pack) return;
 	pack->data[pack->length - 1] = 0;
-	printf("on package %d: %s\n", fd, pack->data);
+	debug("on package %d: %s", fd, pack->data);
 	// TODO: process received package
 	delete pack;
 	pack = NULL;
@@ -346,12 +349,11 @@ void Session::FlushQueue()
 
 void Session::Close()
 {
-	if (!Alive) return;
-	Alive = false;
-	printf("fd: %d, closing\n", fd);
+	if (!IsAlive) return;
+	IsAlive = false;
+	debug("fd: %d, closing", fd);
 	if (buffev)
 	{
-		bufferevent_lock(buffev);
 		ClearCallbacks(); // need clear callbacks BEFORE shutdown.
 	}
 	writtenEvent.Set();
@@ -364,7 +366,6 @@ void Session::Close()
 	if (buffev)
 	{
 		bufferevent_free(buffev);
-		//bufferevent_unlock(buffev);
 		buffev = NULL;
 	}
 	if (currentPackage)
@@ -429,6 +430,6 @@ void writeCallbackDispatcher(bufferevent *buffev, void *arg)
 
 void errorCallbackDispatcher(bufferevent *buffev, short event, void *arg)
 {
-	printf("error, arg=%p\n", arg);
+	debug("error, arg = %p", arg);
 	((Session*)arg)->ErrorCallback(event);
 }

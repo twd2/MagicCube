@@ -17,29 +17,46 @@ typedef int socklen_t;
 		// undefining ENABLE_IPV6
 		#undef ENABLE_IPV6
 	#endif
-#define _perror(s) printf("%s: Win32 Error %d(0x%08x)\n", s, GetLastError(), GetLastError())
+#define __perror(s) printf("%s: Win32 Error %d(0x%08x)\n", s, GetLastError(), GetLastError())
+#ifdef MEM_DEBUG
+	#define _CRTDBG_MAP_ALLOC
+	#include <stdlib.h>
+	#include <crtdbg.h>
+#endif
 #endif
 
 #ifdef linux
-#define _perror(s) perror(s)
+#define __perror(s) perror(s)
 #endif
 
 #if defined(__APPLE__) && defined(__MACH__)
-#define _perror(s) perror(s)
+#define __perror(s) perror(s)
 #endif
 
 #ifdef _UNIX
-#define _perror(s) perror(s)
+#define __perror(s) perror(s)
+#endif
+
+#ifndef NDEBUG
+#define _perror(s) {__perror(s); /*abort();*/}
+#else
+#define _perror(s) __perror(s)
 #endif
 
 #if (!defined(ENABLE_IPV4) && !defined(ENABLE_IPV6))
 #error Cannot disable ipv4 and ipv6 at the same time.
 #endif
 
-#define _log(type, format, ...) {printf("[%s] ", type); printf(format, __VA_ARGS__); printf("\n");}
+#define _log(type, format, ...) {printTime(stdout); printf("[%s] ", type); printf(format, __VA_ARGS__); printf("\n");}
 #define normal(format, ...) _log("normal", format, __VA_ARGS__)
+#define debug(format, ...) _log("debug", format, __VA_ARGS__)
 #define error(format, ...) _log("ERROR", format, __VA_ARGS__)
 #define fatal(format, ...) _log("FATAL", format, __VA_ARGS__)
+
+#ifdef NDEBUG
+#undef debug
+#define debug(format, ...)
+#endif
 
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
@@ -61,3 +78,4 @@ using rapidjson::Document;
 using rapidjson::Writer;
 using rapidjson::StringBuffer;
 
+#include "MagicCubeServer.h"

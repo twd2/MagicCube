@@ -29,7 +29,7 @@ struct Package
 class Session
 {
 public:
-	bool Alive = true;
+	bool IsAlive = true;
 	bool IsIPv6 = false;
 	string RemoteAddress;
 	unsigned short RemotePort;

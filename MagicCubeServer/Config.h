@@ -1,5 +1,7 @@
 #pragma once
 
+#define MEM_DEBUG
+
 typedef unsigned int package_len_t;
 
 #define ENABLE_IPV4
