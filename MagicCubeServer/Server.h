@@ -23,7 +23,9 @@ public:
 	void Stop6();
 #endif
 
+	// sync, block
 	void Start();
+
 	void EnableTimer(long);
 	void TimerCallback(short);
 
@@ -31,16 +33,17 @@ public:
 
 private:
 
-	Server(Server&);
+	// prevent copy
+	DISALLOW_COPY_AND_ASSIGN(Server);
 
 #ifdef ENABLE_IPV4
 	event *listener_event;
-	evutil_socket_t listener = NULL;
+	evutil_socket_t listener = (evutil_socket_t)0;
 #endif
 
 #ifdef ENABLE_IPV6
 	event *listener6_event;
-	evutil_socket_t listener6 = NULL;
+	evutil_socket_t listener6 = (evutil_socket_t)0;
 #endif
 
 	timeval *timerInterval = NULL;

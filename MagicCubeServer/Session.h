@@ -8,6 +8,8 @@ enum ReadStateType
 	READSTATE_NONE,
 	READSTATE_READING_LENGTH,
 	READSTATE_READING_DATA,
+	READSTATE_DROPPING_DATA,
+	READSTATE_READING_LINE,
 	READSTATE_ERROR
 };
 
@@ -34,6 +36,8 @@ public:
 	string RemoteAddress;
 	unsigned short RemotePort;
 
+	bool CloseOnWritten = false;
+
 #ifdef ENABLE_IPV4
 	Session(event_base*, sockaddr_in, int);
 #endif
@@ -52,25 +56,24 @@ public:
 	void OnPackage(Package*&);
 	void SendPackage(Package*&);
 	void SendPackage(string);
-#ifndef NDEBUG
-	// dummy package, http response
-	void SendPackage();
-#endif
-
-	// sync, block
-	void FlushQueue();
 
 	void Close();
 
 	static Package *MakePackage(string&);
 
 private:
+
+	// prevent copying
+	DISALLOW_COPY_AND_ASSIGN(Session);
+
 	event_base *evbase;
 	bufferevent *buffev;
 	evutil_socket_t fd;
+
 #ifdef ENABLE_IPV4
 	sockaddr_in sAddr;
 #endif
+
 #ifdef ENABLE_IPV6
 	sockaddr_in6 sAddr6;
 #endif
@@ -78,14 +81,12 @@ private:
 	ReadStateType readState = READSTATE_NONE;
 	size_t readLength;
 	char lengthBuffer[sizeof(package_len_t)];
+	string lineBuffer;
 	Package *currentPackage = NULL;
 
-	bool fisrtWriteCallback = true;
-	WriteStateType writeState = WRITESTATE_NONE;
-	size_t writtenLength;
+	bool writeBufferHasData = false;
 	queue<Package*> pendingPackages;
 
-	ManualEvent writtenEvent;
 	mutex readLock, writeLock;
 };
 

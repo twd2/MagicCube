@@ -55,7 +55,7 @@ void Server::AcceptCallback(short event)
 	}
 
 	Session *sess = new Session(Base, sin, fd);
-	normal("accept fd = %u from %s:%d", fd, sess->RemoteAddress.c_str(), sess->RemotePort);
+	normal("accept fd = %u from %s:%d", (unsigned int)fd, sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
 	Sessions.push_back(sess);
 }
@@ -111,7 +111,7 @@ void Server::Accept6Callback(short event)
 	}
 
 	Session *sess = new Session(Base, sin6, fd);
-	normal("accept fd = %u from [%s]:%d", fd, sess->RemoteAddress.c_str(), sess->RemotePort);
+	normal("accept fd = %u from [%s]:%d", (unsigned int)fd, sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
 	Sessions.push_back(sess);
 }
@@ -140,6 +140,16 @@ void Server::Start()
 
 void Server::EnableTimer(long interval)
 {
+	if (timer)
+	{
+		event_del(timer);
+		event_free(timer);
+		timer = NULL;
+	
+		delete timerInterval;
+		timerInterval = NULL;
+	}
+
 	timerInterval = new timeval;
 	evutil_timerclear(timerInterval);
 	timerInterval->tv_sec = interval;

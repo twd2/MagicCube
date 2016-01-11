@@ -50,8 +50,15 @@ typedef int socklen_t;
 #define _log(type, format, ...) {printTime(stdout); printf("[%s] ", type); printf(format, __VA_ARGS__); printf("\n");}
 #define normal(format, ...) _log("normal", format, __VA_ARGS__)
 #define debug(format, ...) _log("debug", format, __VA_ARGS__)
-#define error(format, ...) _log("ERROR", format, __VA_ARGS__)
-#define fatal(format, ...) _log("FATAL", format, __VA_ARGS__)
+#define error(format, ...) {_log("ERROR", format, __VA_ARGS__); abort();}
+#define fatal(format, ...) {_log("FATAL", format, __VA_ARGS__); abort();}
+
+#define SYNC_LOCK(mtx) { unique_lock<mutex> lck(mtx);
+#define END_SYNC_LOCK }
+
+#define DISALLOW_COPY_AND_ASSIGN(T) \
+	T(const T&) = delete;    \
+	T& operator=(const T&) = delete;
 
 #ifdef NDEBUG
 #undef debug

@@ -7,6 +7,18 @@ void libeventError(int errcode)
 	exit(1);
 }
 
+bool endwith(const string &fullString, const string &ending)
+{
+	if (fullString.length() >= ending.length())
+	{
+		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void init()
 {
 #ifndef NDEBUG
@@ -43,7 +55,6 @@ void printTime(FILE *fd)
 
 int main(int argc, char *argv[])
 {
-	printTime(stderr);
 	init();
 
 	// while (true)
@@ -61,7 +72,7 @@ int main(int argc, char *argv[])
 		server.Listen6(LISTEN_ADDR6, LISTEN_PORT6, LISTEN_BACKLOG6);
 		normal("Listening [%s]:%d...", LISTEN_ADDR6, LISTEN_PORT6);
 #endif
-		server.Start();
+
 		thread th(eventEntry, &server);
 		getchar();
 

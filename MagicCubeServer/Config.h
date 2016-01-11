@@ -14,7 +14,7 @@ typedef unsigned int package_len_t;
 #define LISTEN_PORT6 2333
 #define LISTEN_BACKLOG6 1024
 
-#define CHECK_INTERVAL 1 // 10 
+#define CHECK_INTERVAL 0 // 10 
 #define TIMEOUT_S 30
 
 #define PACKAGE_MAXLENGTH (package_len_t)1024
