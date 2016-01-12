@@ -29,7 +29,8 @@ typedef int socklen_t;
 #endif
 #endif
 
-#ifdef linux
+#ifdef __linux
+#include <unistd.h>
 #define __perror(s) perror(s)
 #endif
 
@@ -38,6 +39,7 @@ typedef int socklen_t;
 #endif
 
 #ifdef _UNIX
+#include <unistd.h>
 #define __perror(s) perror(s)
 #endif
 

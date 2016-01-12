@@ -2,15 +2,34 @@ PROJECT = MagicCubeServer
 
 SOURCES := $(shell ls *.cpp)
 OBJECTS := $(patsubst %.cpp, build/%.o, $(SOURCES))
+ifeq ($(shell uname),Linux)
+	# compiler
+	CC = g++
+	INC_DIR = ../include/osx
+	CC_FLAGS = -O2 -Wall -std=c++11 -I $(INC_DIR) -I ../include
 
+	# linker
+	LD = g++
+	LIB_DIR = lib/linux
+	LIBS = -lCubeCommon -lstdc++ -lc -lm -ldl -levent -lpthread
+	LINKER_FLAGS = -L $(LIB_DIR) -L ../CubeCommon/build
+else
+
+ifeq ($(shell uname),Darwin)
 # compiler
 INC_DIR = ../include/osx
 CC_FLAGS = -g -O2 -Wall -std=c++11 -I $(INC_DIR) -I ../include
 
 # linker
 LIB_DIR = lib/osx
-LIBS = -lc++ -lm -lSystem -levent
-LINKER_FLAGS = -L $(LIB_DIR)
+LIBS = -lCubeCommon -lc++ -lm -lSystem -levent
+LINKER_FLAGS = -L $(LIB_DIR) -L ../CubeCommon/build
+else
+	# Unsupported operating system.
+	CC = echo && echo "******** Unsupported operating system! ********" && echo && exit 1 ||
+endif
+
+endif
 
 .PHONY: all
 all:

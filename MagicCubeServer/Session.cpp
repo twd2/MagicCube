@@ -129,7 +129,7 @@ void Session::ReadCallback()
 				PackageHeader header = *(PackageHeader*)headerBuffer;
 				header.length = ntohpacklen(header.length);
 
-				if (memcmp(headerBuffer, "GET ", min(headerLength, 4)) == 0)
+				if (memcmp(headerBuffer, "GET ", min(headerLength, (size_t)4)) == 0)
 				{
 					// http request!
 					char buff[sizeof(PackageHeader) + 1];
@@ -254,7 +254,9 @@ void Session::WriteCallback()
 			debug("fd = %u, dropping first write callback calling", (unsigned int)fd);
 			// drop first write callback calling
 			isFirstCall = false;
+#ifndef __linux
 			return;
+#endif
 		}
 	}
 
