@@ -24,7 +24,7 @@ bool endsWith(const string &fullString, const string &ending)
 void init()
 {
 #ifndef NDEBUG
-	event_enable_debug_mode(); // may cause memory leak
+	//event_enable_debug_mode(); // may cause memory leak
 #endif
 	event_set_fatal_callback(libeventError);
 
