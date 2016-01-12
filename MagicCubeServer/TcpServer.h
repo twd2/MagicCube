@@ -2,14 +2,14 @@
 
 #include "Session.h"
 
-class Server
+class TcpServer
 {
 public:
 	event_base *Base;
 
 	vector<Session*> Sessions;
 
-	Server();
+	TcpServer();
 
 #ifdef ENABLE_IPV4
 	bool Listen(string, unsigned short, int);
@@ -28,13 +28,15 @@ public:
 
 	void EnableTimer(long);
 	void TimerCallback(short);
+	void CleanSession(Session*);
+	void CleanSessions();
 
-	~Server();
+	~TcpServer();
 
 private:
 
 	// prevent copy
-	DISALLOW_COPY_AND_ASSIGN(Server);
+	DISALLOW_COPY_AND_ASSIGN(TcpServer);
 
 #ifdef ENABLE_IPV4
 	event *listener_event;

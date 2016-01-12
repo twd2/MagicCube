@@ -2,8 +2,8 @@
 #include "Session.h"
 
 #ifdef ENABLE_IPV4
-Session::Session(event_base *evbase, sockaddr_in addr, int fd) 
-	: evbase(evbase), fd(fd), sAddr(addr)//, writtenEvent(false)
+Session::Session(TcpServer &server, sockaddr_in addr, int fd)
+	: server(server), fd(fd), sAddr(addr)//, writtenEvent(false)
 {
 	char buffer[INET6_ADDRSTRLEN + 1] = { 0 };
 	evutil_inet_ntop(addr.sin_family, &(addr.sin_addr), buffer, sizeof(buffer));
@@ -11,13 +11,13 @@ Session::Session(event_base *evbase, sockaddr_in addr, int fd)
 	RemotePort = ntohs(addr.sin_port);
 
 	evutil_make_socket_nonblocking(fd);
-	buffev = bufferevent_socket_new(evbase, fd, BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE | BEV_OPT_DEFER_CALLBACKS);
+	buffev = bufferevent_socket_new(server.Base, fd, BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE | BEV_OPT_DEFER_CALLBACKS);
 }
 #endif
 
 #ifdef ENABLE_IPV6
-Session::Session(event_base *evbase, sockaddr_in6 addr, int fd)
-	: evbase(evbase), IsIPv6(true), fd(fd), sAddr6(addr)//, writtenEvent(false)
+Session::Session(TcpServer &server, sockaddr_in6 addr, int fd)
+	: server(server), IsIPv6(true), fd(fd), sAddr6(addr)//, writtenEvent(false)
 {
 	char buffer[INET6_ADDRSTRLEN + 1] = { 0 };
 	evutil_inet_ntop(addr.sin6_family, &(addr.sin6_addr), buffer, sizeof(buffer));
@@ -25,7 +25,7 @@ Session::Session(event_base *evbase, sockaddr_in6 addr, int fd)
 	RemotePort = ntohs(addr.sin6_port);
 
 	evutil_make_socket_nonblocking(fd);
-	buffev = bufferevent_socket_new(evbase, fd, BEV_OPT_CLOSE_ON_FREE);
+	buffev = bufferevent_socket_new(server.Base, fd, BEV_OPT_CLOSE_ON_FREE);
 }
 #endif
 
@@ -227,6 +227,7 @@ void Session::WriteCallback()
 		{
 			debug("fd = %u, dropping first write callback calling", (unsigned int)fd);
 			// drop first write callback calling
+			writeBufferHasData = true;
 			return;
 		}
 	}
@@ -309,9 +310,9 @@ void Session::OnPackage(Package *&pack)
 			string header = "HTTP/1.0 200 OK\r\nServer: Wandai\r\nConnection: close\r\nContent-Type: text/html\r\nContent-Length: " + to_string(content.length()) + "\r\n\r\n";
 			string data = header + content;
 
-			writeBufferHasData = true;
-			CloseOnWritten = true;
+			//writeBufferHasData = true;
 			bufferevent_write(buffev, data.c_str(), data.length());
+			CloseOnWritten = true;
 		}
 	}
 	
@@ -382,7 +383,7 @@ void Session::Close()
 
 Package *Session::MakePackage(string &strdata)
 {
-	package_len_t len = (strdata.length() + 1) * sizeof(char);
+	package_len_t len = (package_len_t)((strdata.length() + 1) * sizeof(char));
 	Package *pack = (Package*)malloc(sizeof(Package) + len);
 	pack->length = len;
 	memcpy(pack->data, strdata.c_str(), len);
@@ -416,14 +417,17 @@ package_len_t ntohpacklen(package_len_t len)
 void readCallbackDispatcher(bufferevent *buffev, void *arg)
 {
 	((Session*)arg)->ReadCallback();
+	((Session*)arg)->server.CleanSession((Session*)arg);
 }
 
 void writeCallbackDispatcher(bufferevent *buffev, void *arg)
 {
 	((Session*)arg)->WriteCallback();
+	((Session*)arg)->server.CleanSession((Session*)arg);
 }
 
 void errorCallbackDispatcher(bufferevent *buffev, short event, void *arg)
 {
 	((Session*)arg)->ErrorCallback(event);
+	((Session*)arg)->server.CleanSession((Session*)arg);
 }

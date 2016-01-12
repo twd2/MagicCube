@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 
 	// while (true)
 	{
-		Server server;
+		TcpServer server;
 
 		server.EnableTimer(CHECK_INTERVAL);
 
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 
 		normal("%s", "Stopped.");
 
-		//server.~Server();
+		//server.~TcpServer();
 	}
 
 #ifdef MEM_DEBUG
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-void eventEntry(Server *server)
+void eventEntry(TcpServer *server)
 {
 	server->Start();
 }

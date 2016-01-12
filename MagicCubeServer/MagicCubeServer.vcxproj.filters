@@ -36,10 +36,10 @@
     <ClInclude Include="ManualEvent.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Server.h">
+    <ClInclude Include="SyncBool.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SyncBool.h">
+    <ClInclude Include="TcpServer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,10 +56,10 @@
     <ClCompile Include="ManualEvent.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Server.cpp">
+    <ClCompile Include="SyncBool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SyncBool.cpp">
+    <ClCompile Include="TcpServer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -3,6 +3,8 @@
 #include <queue>
 #include "ManualEvent.h"
 
+extern class TcpServer;
+
 enum ReadStateType
 {
 	READSTATE_NONE,
@@ -36,13 +38,15 @@ public:
 	string RemoteAddress;
 	unsigned short RemotePort;
 
+	TcpServer &server;
+
 	bool CloseOnWritten = false;
 
 #ifdef ENABLE_IPV4
-	Session(event_base*, sockaddr_in, int);
+	Session(TcpServer&, sockaddr_in, int);
 #endif
 #ifdef ENABLE_IPV6
-	Session(event_base*, sockaddr_in6, int);
+	Session(TcpServer&, sockaddr_in6, int);
 #endif
 	~Session();
 
@@ -66,7 +70,6 @@ private:
 	// prevent copying
 	DISALLOW_COPY_AND_ASSIGN(Session);
 
-	event_base *evbase;
 	bufferevent *buffev;
 	evutil_socket_t fd;
 

@@ -2,6 +2,10 @@
 
 #include "Config.h"
 
+#ifdef NDEBUG
+#undef MEM_DEBUG
+#endif
+
 #ifdef _WIN32
 #ifndef WIN32
 #define WIN32
@@ -38,7 +42,7 @@ typedef int socklen_t;
 #endif
 
 #ifndef NDEBUG
-#define _perror(s) {__perror(s); /*abort();*/}
+#define _perror(s) do {__perror(s); /*abort();*/} while (false)
 #else
 #define _perror(s) __perror(s)
 #endif
@@ -47,14 +51,11 @@ typedef int socklen_t;
 #error Cannot disable ipv4 and ipv6 at the same time.
 #endif
 
-#define _log(type, format, ...) {printTime(stdout); printf("[%s] ", type); printf(format, __VA_ARGS__); printf("\n");}
-#define normal(format, ...) _log("normal", format, __VA_ARGS__)
-#define debug(format, ...) _log("debug", format, __VA_ARGS__)
-#define error(format, ...) {_log("ERROR", format, __VA_ARGS__); abort();}
-#define fatal(format, ...) {_log("FATAL", format, __VA_ARGS__); abort();}
-
-#define SYNC_LOCK(mtx) { unique_lock<mutex> lck(mtx);
-#define END_SYNC_LOCK }
+#define _log(type, format, ...) do {printTime(stdout); printf("[%s] ", type); printf(format, ##__VA_ARGS__); printf("\n");} while (false)
+#define normal(format, ...) _log("normal", format, ##__VA_ARGS__)
+#define debug(format, ...) _log("debug", format, ##__VA_ARGS__)
+#define error(format, ...) do {_log("ERROR", format, ##__VA_ARGS__); abort();} while (false)
+#define fatal(format, ...) do {_log("FATAL", format, ##__VA_ARGS__); abort();} while (false)
 
 #define DISALLOW_COPY_AND_ASSIGN(T) \
 	T(const T&) = delete;    \
