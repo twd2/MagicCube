@@ -6,7 +6,7 @@ ifeq ($(shell uname),Linux)
 	# compiler
 	CC = g++
 	INC_DIR = ../include/osx
-	CC_FLAGS = -O2 -Wall -std=c++11 -I $(INC_DIR) -I ../include
+	CC_FLAGS = -g -O2 -Wall -std=c++11 -I $(INC_DIR) -I ../include
 
 	# linker
 	LD = g++

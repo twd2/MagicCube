@@ -16,6 +16,7 @@ bool TcpServer::Listen(string address, unsigned short port, int backlog)
 	listener = socket(AF_INET, SOCK_STREAM, 0);
 	if (listener <= 0)
 	{
+		listener = (evutil_socket_t)0;
 		_perror("socket");
 		return false;
 	}
@@ -28,12 +29,14 @@ bool TcpServer::Listen(string address, unsigned short port, int backlog)
 
 	if (::bind(listener, (sockaddr *)&sin, sizeof(sin)) < 0)
 	{
+		listener = (evutil_socket_t)0;
 		_perror("bind");
 		return false;
 	}
 
 	if (listen(listener, backlog) < 0)
 	{
+		listener = (evutil_socket_t)0;
 		_perror("listen");
 		return false;
 	}
@@ -50,7 +53,7 @@ void TcpServer::AcceptCallback(short event)
 	fd = accept(listener, (sockaddr *)&sin, &slen);
 	if (fd < 0)
 	{
-		//_perror("accept");
+		_perror("accept");
 		return;
 	}
 
@@ -75,6 +78,7 @@ bool TcpServer::Listen6(string address, unsigned short port, int backlog)
 	listener6 = socket(AF_INET6, SOCK_STREAM, 0);
 	if (listener6 <= 0)
 	{
+		listener6 = (evutil_socket_t)0;
 		_perror("socket6");
 		return false;
 	}
@@ -87,12 +91,14 @@ bool TcpServer::Listen6(string address, unsigned short port, int backlog)
 
 	if (::bind(listener6, (sockaddr *)&sin6, sizeof(sin6)) < 0)
 	{
+		listener6 = (evutil_socket_t)0;
 		_perror("bind6");
 		return false;
 	}
 
 	if (listen(listener6, backlog) < 0)
 	{
+		listener6 = (evutil_socket_t)0;
 		_perror("listen6");
 		return false;
 	}
@@ -108,7 +114,7 @@ void TcpServer::Accept6Callback(short event)
 	fd = accept(listener, (sockaddr *)&sin6, &slen);
 	if (fd < 0)
 	{
-		//_perror("accept");
+		_perror("accept");
 		return;
 	}
 
@@ -130,13 +136,19 @@ void TcpServer::Stop6()
 void TcpServer::Start()
 {
 #ifdef ENABLE_IPV4
-	listener_event = event_new(Base, listener, EV_READ | EV_PERSIST, acceptCallbackDispatcher, (void*)this);
-	event_add(listener_event, NULL);
+	if (listener)
+	{
+		listener_event = event_new(Base, listener, EV_READ | EV_PERSIST, acceptCallbackDispatcher, (void*)this);
+		event_add(listener_event, NULL);
+	}
 #endif
 
 #ifdef ENABLE_IPV6
-	listener6_event = event_new(Base, listener6, EV_READ | EV_PERSIST, accept6CallbackDispatcher, (void*)this);
-	event_add(listener6_event, NULL);
+	if (listener6)
+	{
+		listener6_event = event_new(Base, listener6, EV_READ | EV_PERSIST, accept6CallbackDispatcher, (void*)this);
+		event_add(listener6_event, NULL);
+	}
 #endif
 
 	event_base_dispatch(Base);
