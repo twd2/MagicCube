@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "Server.h"
+#include "TcpServer.h"
 
-Server::Server()
+TcpServer::TcpServer()
 {
 	Base = event_base_new();
 	if (!Base)
@@ -11,7 +11,7 @@ Server::Server()
 }
 
 #ifdef ENABLE_IPV4
-bool Server::Listen(string address, unsigned short port, int backlog)
+bool TcpServer::Listen(string address, unsigned short port, int backlog)
 {
 	listener = socket(AF_INET, SOCK_STREAM, 0);
 	if (listener <= 0)
@@ -42,7 +42,7 @@ bool Server::Listen(string address, unsigned short port, int backlog)
 	return true;
 }
 
-void Server::AcceptCallback(short event)
+void TcpServer::AcceptCallback(short event)
 {
 	evutil_socket_t fd;
 	sockaddr_in sin;
@@ -54,13 +54,13 @@ void Server::AcceptCallback(short event)
 		return;
 	}
 
-	Session *sess = new Session(Base, sin, fd);
-	normal("accept fd = %u from %s:%d", fd, sess->RemoteAddress.c_str(), sess->RemotePort);
+	Session *sess = new Session(*this, sin, fd);
+	normal("accept fd = %u from %s:%d", (unsigned int)fd, sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
 	Sessions.push_back(sess);
 }
 
-void Server::Stop()
+void TcpServer::Stop()
 {
 	shutdown(listener, SHUT_RDWR);
 	close(listener);
@@ -68,7 +68,7 @@ void Server::Stop()
 #endif
 
 #ifdef ENABLE_IPV6
-bool Server::Listen6(string address, unsigned short port, int backlog)
+bool TcpServer::Listen6(string address, unsigned short port, int backlog)
 {
 	listener6 = socket(AF_INET6, SOCK_STREAM, 0);
 	if (listener6 <= 0)
@@ -98,7 +98,7 @@ bool Server::Listen6(string address, unsigned short port, int backlog)
 	return true;
 }
 
-void Server::Accept6Callback(short event)
+void TcpServer::Accept6Callback(short event)
 {
 	evutil_socket_t fd;
 	sockaddr_in6 sin6;
@@ -110,20 +110,20 @@ void Server::Accept6Callback(short event)
 		return;
 	}
 
-	Session *sess = new Session(Base, sin6, fd);
-	normal("accept fd = %u from [%s]:%d", fd, sess->RemoteAddress.c_str(), sess->RemotePort);
+	Session *sess = new Session(*this, sin6, fd);
+	normal("accept fd = %u from [%s]:%d", (unsigned int)fd, sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
 	Sessions.push_back(sess);
 }
 
-void Server::Stop6()
+void TcpServer::Stop6()
 {
 	shutdown(listener6, SHUT_RDWR);
 	close(listener6);
 }
 #endif
 
-void Server::Start()
+void TcpServer::Start()
 {
 #ifdef ENABLE_IPV4
 	listener_event = event_new(Base, listener, EV_READ | EV_PERSIST, acceptCallbackDispatcher, (void*)this);
@@ -138,8 +138,18 @@ void Server::Start()
 	event_base_dispatch(Base);
 }
 
-void Server::EnableTimer(long interval)
+void TcpServer::EnableTimer(long interval)
 {
+	if (timer)
+	{
+		event_del(timer);
+		event_free(timer);
+		timer = NULL;
+	
+		delete timerInterval;
+		timerInterval = NULL;
+	}
+
 	timerInterval = new timeval;
 	evutil_timerclear(timerInterval);
 	timerInterval->tv_sec = interval;
@@ -149,20 +159,53 @@ void Server::EnableTimer(long interval)
 	event_add(timer, NULL);
 }
 
-void Server::TimerCallback(short event)
+void TcpServer::TimerCallback(short event)
 {
 	normal("%s", "Timer tick.");
 
+	time_t now = time(NULL);
+
 	for (auto &sess : Sessions)
 	{
-		//sess->SendPackage("server_heartbeat");
-		//sess->Close();
+		if (difftime(now, sess->LastAlive) > TIMEOUT_S)
+		{
+			sess->SendPackage("Timed out, good bye~");
+			sess->FlushAndClose();
+			normal("Cleaning %p", sess);
+		}
 	}
 
+	CleanSessions();
+}
+
+void TcpServer::CleanSession(Session *sess)
+{
+	if (!sess) return;
+
+	//normal("Checking %p", sess);
+
+	if (!sess->IsAlive)
+	{
+		delete sess;
+
+		// TODO: performance improve
+		for (ptrdiff_t i = Sessions.size() - 1; i >= 0; --i)
+		{
+			if (sess == Sessions[i])
+			{
+				Sessions.erase(Sessions.begin() + i);
+				break;
+			}
+		}
+	}
+}
+
+void TcpServer::CleanSessions()
+{
 	for (ptrdiff_t i = Sessions.size() - 1; i >= 0; --i)
 	{
 		Session *&sess = Sessions[i];
-		normal("Checking %p", sess);
+		//normal("Checking %p", sess);
 		if (sess)
 		{
 			if (!sess->IsAlive)
@@ -178,7 +221,7 @@ void Server::TimerCallback(short event)
 	}
 }
 
-Server::~Server()
+TcpServer::~TcpServer()
 {
 	if (timer)
 	{
@@ -223,18 +266,18 @@ Server::~Server()
 #ifdef ENABLE_IPV4
 void acceptCallbackDispatcher(evutil_socket_t listener, short event, void *arg)
 {
-	((Server*)arg)->AcceptCallback(event);
+	((TcpServer*)arg)->AcceptCallback(event);
 }
 #endif
 
 #ifdef ENABLE_IPV6
 void accept6CallbackDispatcher(evutil_socket_t listener, short event, void *arg)
 {
-	((Server*)arg)->Accept6Callback(event);
+	((TcpServer*)arg)->Accept6Callback(event);
 }
 #endif
 
 void timerCallbackDispatcher(evutil_socket_t listener, short event, void *arg)
 {
-	((Server*)arg)->TimerCallback(event);
+	((TcpServer*)arg)->TimerCallback(event);
 }

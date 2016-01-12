@@ -1,10 +1,24 @@
 #include "stdafx.h"
 #include "MagicCubeServer.h"
 
+FILE *logfile = stdout;
+
 void libeventError(int errcode)
 {
 	fatal("libevent fatal error occurred, error code: %d\n", errcode);
 	exit(1);
+}
+
+bool endsWith(const string &fullString, const string &ending)
+{
+	if (fullString.length() >= ending.length())
+	{
+		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void init()
@@ -43,12 +57,21 @@ void printTime(FILE *fd)
 
 int main(int argc, char *argv[])
 {
-	printTime(stderr);
+//#ifdef _WIN32
+//	logfile = NULL;
+//	fopen_s(&logfile, "log.txt", "wb");
+//	if (!logfile) logfile = stdout;
+//#else
+//	logfile = fopen("log.txt", "wb");
+//	if (!logfile) logfile = stdout;
+//#endif
+	
+
 	init();
 
 	// while (true)
 	{
-		Server server;
+		TcpServer server;
 
 		server.EnableTimer(CHECK_INTERVAL);
 
@@ -61,7 +84,7 @@ int main(int argc, char *argv[])
 		server.Listen6(LISTEN_ADDR6, LISTEN_PORT6, LISTEN_BACKLOG6);
 		normal("Listening [%s]:%d...", LISTEN_ADDR6, LISTEN_PORT6);
 #endif
-		server.Start();
+
 		thread th(eventEntry, &server);
 		getchar();
 
@@ -78,7 +101,7 @@ int main(int argc, char *argv[])
 
 		normal("%s", "Stopped.");
 
-		//server.~Server();
+		//server.~TcpServer();
 	}
 
 #ifdef MEM_DEBUG
@@ -90,7 +113,7 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-void eventEntry(Server *server)
+void eventEntry(TcpServer *server)
 {
 	server->Start();
 }

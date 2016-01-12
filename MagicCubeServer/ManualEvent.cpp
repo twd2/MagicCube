@@ -21,7 +21,7 @@ ManualEvent::~ManualEvent()
 {
 	if (!mtx.try_lock())
 	{
-		throw "cannot destory while someone is waiting";
+		fatal("%s", "cannot destory while someone is waiting");
 	}
 	else
 	{

@@ -2,14 +2,14 @@
 
 #include "Session.h"
 
-class Server
+class TcpServer
 {
 public:
 	event_base *Base;
 
 	vector<Session*> Sessions;
 
-	Server();
+	TcpServer();
 
 #ifdef ENABLE_IPV4
 	bool Listen(string, unsigned short, int);
@@ -23,24 +23,30 @@ public:
 	void Stop6();
 #endif
 
+	// sync, block
 	void Start();
-	void EnableTimer(long);
-	void TimerCallback(short);
 
-	~Server();
+	void EnableTimer(long);
+
+	void TimerCallback(short);
+	void CleanSession(Session*);
+	void CleanSessions();
+
+	~TcpServer();
 
 private:
 
-	Server(Server&);
+	// prevent copy
+	DISALLOW_COPY_AND_ASSIGN(TcpServer);
 
 #ifdef ENABLE_IPV4
 	event *listener_event;
-	evutil_socket_t listener = NULL;
+	evutil_socket_t listener = (evutil_socket_t)0;
 #endif
 
 #ifdef ENABLE_IPV6
 	event *listener6_event;
-	evutil_socket_t listener6 = NULL;
+	evutil_socket_t listener6 = (evutil_socket_t)0;
 #endif
 
 	timeval *timerInterval = NULL;

@@ -1,9 +1,17 @@
 #include "stdafx.h"
 #include "Session.h"
 
+map<ReadErrorType, string> ReadErrorMessage = 
+{
+	{ READERROR_PROTOCOL_MISMATCH,  "protocol mismatch"   },
+	{ READERROR_PACKAGE_TOO_LONG,   "package is too long" },
+	{ READERROR_PACKAGE_EMPTY,      "package is empty"    },
+	{ READERROR_UNKNOWN,            "unknown"             }
+};
+
 #ifdef ENABLE_IPV4
-Session::Session(event_base *evbase, sockaddr_in addr, int fd) 
-	: evbase(evbase), fd(fd), sAddr(addr), writtenEvent(false)
+Session::Session(TcpServer &server, sockaddr_in addr, int fd)
+	: server(server), fd(fd), sAddr(addr)//, writtenEvent(false)
 {
 	char buffer[INET6_ADDRSTRLEN + 1] = { 0 };
 	evutil_inet_ntop(addr.sin_family, &(addr.sin_addr), buffer, sizeof(buffer));
@@ -11,13 +19,13 @@ Session::Session(event_base *evbase, sockaddr_in addr, int fd)
 	RemotePort = ntohs(addr.sin_port);
 
 	evutil_make_socket_nonblocking(fd);
-	buffev = bufferevent_socket_new(evbase, fd, BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE | BEV_OPT_DEFER_CALLBACKS);
+	buffev = bufferevent_socket_new(server.Base, fd, BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE | BEV_OPT_DEFER_CALLBACKS);
 }
 #endif
 
 #ifdef ENABLE_IPV6
-Session::Session(event_base *evbase, sockaddr_in6 addr, int fd)
-	: evbase(evbase), IsIPv6(true), fd(fd), sAddr6(addr), writtenEvent(false)
+Session::Session(TcpServer &server, sockaddr_in6 addr, int fd)
+	: server(server), IsIPv6(true), fd(fd), sAddr6(addr)//, writtenEvent(false)
 {
 	char buffer[INET6_ADDRSTRLEN + 1] = { 0 };
 	evutil_inet_ntop(addr.sin6_family, &(addr.sin6_addr), buffer, sizeof(buffer));
@@ -25,7 +33,7 @@ Session::Session(event_base *evbase, sockaddr_in6 addr, int fd)
 	RemotePort = ntohs(addr.sin6_port);
 
 	evutil_make_socket_nonblocking(fd);
-	buffev = bufferevent_socket_new(evbase, fd, BEV_OPT_CLOSE_ON_FREE);
+	buffev = bufferevent_socket_new(server.Base, fd, BEV_OPT_CLOSE_ON_FREE);
 }
 #endif
 
@@ -36,6 +44,11 @@ Session::~Session()
 	readLock.unlock();
 	writeLock.lock();
 	writeLock.unlock();
+}
+
+void Session::KeepAlive()
+{
+	LastAlive = time(NULL);
 }
 
 void Session::SetCallbacks()
@@ -86,74 +99,96 @@ void Session::ClearCallbacks()
 void Session::ReadCallback()
 {
 	if (!IsAlive) return;
-	
-	SendPackage();
 
 	unique_lock<mutex> lck(readLock);
-	debug("%d, entering read\n", fd);
+	debug("fd = %u, entering read", (unsigned int)fd);
 	while (IsAlive)
 	{
-		size_t currentLength;
+		KeepAlive();
 		switch (readState)
 		{
 		case READSTATE_NONE:
 			readLength = 0;
-			readState = READSTATE_READING_LENGTH;
+			readState = READSTATE_READING_HEADER;
 			continue;
 			break;
-		case READSTATE_READING_LENGTH:
-			while (readLength < sizeof(package_len_t) &&
-				(currentLength =
-					bufferevent_read(
-						buffev,
-						lengthBuffer + readLength,
-						sizeof(package_len_t) - readLength
-						)
-					) > 0)
+		case READSTATE_READING_HEADER:
+		{
+			const size_t headerLength = sizeof(PackageHeader);
+
+			while (readLength < headerLength)
 			{
+				size_t currentLength = bufferevent_read(buffev, headerBuffer + readLength, headerLength - readLength);
+				if (currentLength <= 0) break;
+
 				readLength += currentLength;
 			}
 
-			if (readLength == sizeof(package_len_t))
+			if (readLength == headerLength)
 			{
-				package_len_t dataLength = *(package_len_t *)lengthBuffer;
-				dataLength = ntohpacklen(dataLength);
+				PackageHeader header = *(PackageHeader*)headerBuffer;
+				header.length = ntohpacklen(header.length);
 
-				if (dataLength == 0 || dataLength > PACKAGE_MAXLENGTH)
+				if (memcmp(headerBuffer, "GET ", min(headerLength, 4)) == 0)
+				{
+					// http request!
+					char buff[sizeof(PackageHeader) + 1];
+					memcpy(buff, headerBuffer, sizeof(PackageHeader));
+					buff[sizeof(PackageHeader)] = '\0';
+
+					lineBuffer = buff;
+
+					readState = READSTATE_READING_LINE;
+					continue;
+				}
+				else if (memcmp(headerBuffer, MAGIC_MARK, min(headerLength, sizeof(MAGIC_MARK) - 1)) != 0)
+				{
+					readErrorCode = READERROR_PROTOCOL_MISMATCH;
+					readState = READSTATE_ERROR;
+					continue;
+				}
+				
+				if (header.length == 0 || header.length > PACKAGE_MAXLENGTH)
 				{
 					// package is zero or too long
-					debug("%d, data length: %d == 0 || too long\n", fd, dataLength);
+					debug("fd = %u, data length: %d == 0 || too long", (unsigned int)fd, header.length);
+					
+					if (header.length == 0)
+						readErrorCode = READERROR_PACKAGE_EMPTY;
+					else
+						readErrorCode = READERROR_PACKAGE_TOO_LONG;
+					
 					readState = READSTATE_ERROR;
 					continue;
 				}
 
-				currentPackage = (Package*)malloc(sizeof(Package) + dataLength);
+				currentPackage = (Package*)malloc(sizeof(PackageHeader) + header.length);
 				if (!currentPackage)
 				{
 					throw bad_alloc();
 				}
-				currentPackage->length = dataLength;
+				currentPackage->header = header; // copy
+
+				memset(currentPackage->data, 0x00, header.length); // ensure
 
 				readLength = 0;
 				readState = READSTATE_READING_DATA;
 				continue;
 			}
 			break;
+		}
 		case READSTATE_READING_DATA:
-			debug("recv %d\n", currentPackage->length);
-			while (readLength < currentPackage->length &&
-				(currentLength =
-					bufferevent_read(
-						buffev,
-						currentPackage->data + readLength,
-						currentPackage->length - readLength
-						)
-					) > 0)
+		{
+			debug("fd = %u, recv %d", (unsigned int)fd, currentPackage->header.length);
+			while (readLength < currentPackage->header.length)
 			{
+				size_t currentLength = bufferevent_read(buffev, currentPackage->data + readLength, currentPackage->header.length - readLength);
+				if (currentLength <= 0) break;
+
 				readLength += currentLength;
 			}
 
-			if (readLength == currentPackage->length)
+			if (readLength == currentPackage->header.length)
 			{
 				OnPackage(currentPackage); // TODO: sync or async?
 				if (currentPackage)
@@ -166,14 +201,46 @@ void Session::ReadCallback()
 				continue;
 			}
 			break;
-		case READSTATE_ERROR:
-			//SendPackage("{\"error\": \"unknown error\"}");
-			//Close();
+		}
+		case READSTATE_READING_LINE:
+		{
+			char ch;
+			if (bufferevent_read(buffev, &ch, 1) > 0)
+			{
+				lineBuffer += ch;
+				if (lineBuffer.length() > 16384)
+				{
+					// http header is too long
+					readErrorCode = READERROR_PACKAGE_TOO_LONG;
+					readState = READSTATE_ERROR;
+					continue;
+				}
+				if (endsWith(lineBuffer, "\r\n\r\n"))
+				{
+					Package *pack = MakePackage(lineBuffer);
+					OnPackage(pack);
+					if (pack)
+					{
+						delete pack;
+						pack = NULL;
+					}
+					readState = READSTATE_NONE;
+					continue;
+				}
+				continue;
+			}
 			break;
+		}
+		case READSTATE_ERROR:
+		{
+			SendPackage("{\"error\": \"" + ReadErrorMessage[readErrorCode] + "\"}");
+			FlushAndClose();
+			break;
+		}
 		}
 		break;
 	}
-	debug("%d, exitting read\n", fd);
+	debug("fd = %u, exitting read", (unsigned int)fd);
 }
 
 void Session::WriteCallback()
@@ -182,18 +249,22 @@ void Session::WriteCallback()
 
 	{
 		unique_lock<mutex> lck(writeLock);
-		if (fisrtWriteCallback)
+		if (isFirstCall)
 		{
+			debug("fd = %u, dropping first write callback calling", (unsigned int)fd);
 			// drop first write callback calling
-			fisrtWriteCallback = false;
+			isFirstCall = false;
 			return;
 		}
 	}
 
-	debug("%d, write callback called\n", fd);
+	debug("fd = %u, write callback called", (unsigned int)fd);
 
-	// TODO: fix
-	Close();
+	if (closeAfterWritten)
+	{
+		debug("fd = %u, closeAfterWritten is set, closing", (unsigned int)fd);
+		Close();
+	}
 }
 
 void Session::ErrorCallback(short event)
@@ -215,7 +286,7 @@ void Session::ErrorCallback(short event)
 		__perror("error");
 	}
 
-	debug("fd = %u, %s", fd, msg);
+	debug("fd = %u, %s", (unsigned int)fd, msg);
 	
 	Close();
 }
@@ -225,98 +296,61 @@ void Session::DoQueue()
 	if (!IsAlive) return;
 
 	unique_lock<mutex> lck(writeLock);
-	fisrtWriteCallback = false;
-	debug("%d, entering write", fd);
+	debug("fd = %u, dequeuing", (unsigned int)fd);
+
 	while (!pendingPackages.empty())
 	{
 		Package *&pack = pendingPackages.front();
-		if (pack->length > 0)
+		if (pack->header.length > 0)
 		{
-			size_t toSendLength = sizeof(Package) + ntohpacklen(pack->length);
+			size_t toSendLength = sizeof(PackageHeader) + ntohpacklen(pack->header.length);
 			char *packdata = (char*)pack;
 
 			bufferevent_write(buffev, packdata, toSendLength);
-		}
-		else
-		{
-			string content = "<h1>It really works!</h1><p>" + to_string(rand()) + "</p>";
-			string header = "HTTP/1.0 200 OK\r\nServer: Wandai\r\nContent-Type: text/html\r\nContent-Length: " + to_string(content.length()) + "\r\n\r\n";
-			string data = header + content;
-
-			bufferevent_write(buffev, data.c_str(), data.length());
 		}
 		delete pack;
 		pack = NULL;
 
 		pendingPackages.pop();
 	}
-	/*while (IsAlive)
-	{
-		switch (writeState)
-		{
-		case WRITESTATE_NONE:
-			if (!pendingPackages.empty())
-			{
-				writtenLength = 0;
-				writeState = WRITESTATE_WRITING;
-				writtenEvent.Reset();
-				printf("%d, changing state to WRITING\n", fd);
-				continue;
-			}
-			else
-			{
-				writtenEvent.Set();
-			}
-			break;
-		case WRITESTATE_WRITING:
-		{
-			Package *&pack = pendingPackages.front();
-			size_t toSendLength = sizeof(Package) + ntohpacklen(pack->length);
-			char *packdata = (char *)pack;
 
-			if (writtenLength == toSendLength)
-			{
-				delete pack;
-				pack = NULL;
-				pendingPackages.pop();
-				writeState = WRITESTATE_NONE;
-				printf("%d, changing state to NONE\n", fd);
-				continue;
-			}
-			else
-			{
-				printf("%d, writing\n", fd);
-				size_t currentLength = toSendLength - writtenLength;//min(toSendLength - writtenLength, (size_t)2);
-				bufferevent_write(buffev, packdata + writtenLength, currentLength);
-				writtenLength += currentLength;
-				printf("%d, wrote %u/%u\n", fd, writtenLength, toSendLength);
-			}
-		}
-		break;
-		case WRITESTATE_ERROR:
-			Close();
-			break;
-		}
-		break;
-	}*/
-	debug("%d, exitting write", fd);
+	debug("fd = %u, dequeued", (unsigned int)fd);
 }
 
 void Session::OnPackage(Package *&pack)
 {
-	if (!pack) return;
-	pack->data[pack->length - 1] = 0;
-	debug("on package %d: %s", fd, pack->data);
+	if (!pack || pack->header.length == 0) return;
+	pack->data[pack->header.length - 1] = '\0';
+	debug("on package (fd = %u): %c%c, %s", (unsigned int)fd, pack->header.magic[0], pack->header.magic[1], pack->data);
+
 	// TODO: process received package
+	{
+		string str = pack->data;
+		if (str.substr(0, 4) == "GET ")
+		{
+			unique_lock<mutex> lck(writeLock);
+
+			string content = "<h1>It really works!</h1><p>" /*+ to_string(rand()) +*/ "</p>";
+			string header = "HTTP/1.0 200 OK\r\nServer: Wandai/0.1\r\nConnection: close\r\nContent-Type: text/html\r\nContent-Length: " + to_string(content.length()) + "\r\n\r\n";
+			string data = header + content;
+
+			bufferevent_write(buffev, data.c_str(), data.length());
+			/*Package *pack = (Package*)malloc(sizeof(PackageHeader) + 1024 * 1024 * 1024);
+			pack->header.length = 1024 * 1024 * 1024;
+			SendPackage(pack);*/
+			FlushAndClose();
+		}
+	}
+	
 	delete pack;
 	pack = NULL;
 }
 
 void Session::SendPackage(Package *&pack)
 {
-	if (!pack) return;
-	pack->length = htonpacklen(pack->length);
-	writtenEvent.Reset();
+	if (!pack || pack->header.length == 0) return;
+	pack->header.length = htonpacklen(pack->header.length);
+	//writtenEvent.Reset();
 	pendingPackages.push(pack);
 
 	DoQueue();
@@ -328,51 +362,44 @@ void Session::SendPackage(string str)
 	SendPackage(pack);
 }
 
-#ifndef NDEBUG
-void Session::SendPackage()
+void Session::FlushAndClose()
 {
-	Package *pack = new Package;
-	pack->length = 0;
-	SendPackage(pack);
-}
-#endif
-
-void Session::FlushQueue()
-{
-	while (!pendingPackages.empty())
-	{
-		//printf("fd: %d, FlushQueue waiting\n", fd);
-		DoQueue();
-		//writtenEvent.Wait();
-	}
+	closeAfterWritten = true;
 }
 
 void Session::Close()
 {
 	if (!IsAlive) return;
 	IsAlive = false;
-	debug("fd: %d, closing", fd);
+
+	debug("fd = %u, closing", (unsigned int)fd);
+	
 	if (buffev)
 	{
 		ClearCallbacks(); // need clear callbacks BEFORE shutdown.
 	}
-	writtenEvent.Set();
+	
+	//writtenEvent.Set();
+	
 	if (fd)
 	{
 		shutdown(fd, SHUT_RDWR);
 		close(fd);
 		fd = NULL;
 	}
+	
 	if (buffev)
 	{
 		bufferevent_free(buffev);
 		buffev = NULL;
 	}
+	
 	if (currentPackage)
 	{
 		delete currentPackage;
 		currentPackage = NULL;
 	}
+	
 	while (!pendingPackages.empty())
 	{
 		Package *&pack = pendingPackages.front();
@@ -387,9 +414,10 @@ void Session::Close()
 
 Package *Session::MakePackage(string &strdata)
 {
-	package_len_t len = (strdata.length() + 1) * sizeof(char);
-	Package *pack = (Package*)malloc(sizeof(Package) + len);
-	pack->length = len;
+	package_len_t len = (package_len_t)((strdata.length() + 1) * sizeof(char));
+	Package *pack = (Package*)malloc(sizeof(PackageHeader) + len);
+	memcpy(pack->header.magic, MAGIC_MARK, sizeof(MAGIC_MARK) - 1);
+	pack->header.length = len;
 	memcpy(pack->data, strdata.c_str(), len);
 	return pack;
 }
@@ -421,15 +449,17 @@ package_len_t ntohpacklen(package_len_t len)
 void readCallbackDispatcher(bufferevent *buffev, void *arg)
 {
 	((Session*)arg)->ReadCallback();
+	((Session*)arg)->server.CleanSession((Session*)arg);
 }
 
 void writeCallbackDispatcher(bufferevent *buffev, void *arg)
 {
 	((Session*)arg)->WriteCallback();
+	((Session*)arg)->server.CleanSession((Session*)arg);
 }
 
 void errorCallbackDispatcher(bufferevent *buffev, short event, void *arg)
 {
-	debug("error, arg = %p", arg);
 	((Session*)arg)->ErrorCallback(event);
+	((Session*)arg)->server.CleanSession((Session*)arg);
 }
