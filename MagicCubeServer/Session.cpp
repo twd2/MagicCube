@@ -327,7 +327,7 @@ void Session::OnPackage(Package *&pack)
 
 	// TODO: process received package
 
-	if (memcmp(pack->data, "GET ", min(pack->header.length, (size_t)4)) == 0)
+	if (memcmp(pack->data, "GET ", min(pack->header.length, (package_len_t)4)) == 0)
 	{
 		unique_lock<mutex> lck(writeLock);
 
