@@ -1,5 +1,7 @@
 #pragma once
 
+#include <list>
+#include <iterator>
 #include <queue>
 #include "Package.h"
 #include "ManualEvent.h"
@@ -28,10 +30,12 @@ extern map<ReadErrorType, string> ReadErrorMessage;
 class Session
 {
 public:
+	list<Session*>::iterator Iter;
+
 	bool IsAlive = true;
 	bool IsIPv6 = false;
 	time_t LastAlive = time(NULL);
-
+	
 	string RemoteAddress;
 	unsigned short RemotePort;
 

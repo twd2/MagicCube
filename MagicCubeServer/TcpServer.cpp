@@ -58,6 +58,8 @@ void TcpServer::AcceptCallback(short event)
 	normal("accept fd = %u from %s:%d", (unsigned int)fd, sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
 	Sessions.push_back(sess);
+	sess->Iter = Sessions.end();
+	--sess->Iter;
 }
 
 void TcpServer::Stop()
@@ -114,6 +116,8 @@ void TcpServer::Accept6Callback(short event)
 	normal("accept fd = %u from [%s]:%d", (unsigned int)fd, sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
 	Sessions.push_back(sess);
+	sess->Iter = Sessions.end();
+	--sess->Iter;
 }
 
 void TcpServer::Stop6()
@@ -186,25 +190,18 @@ void TcpServer::CleanSession(Session *sess)
 
 	if (!sess->IsAlive)
 	{
+		list<Session*>::iterator iter = sess->Iter;
 		delete sess;
 
-		// TODO: performance improve
-		for (ptrdiff_t i = Sessions.size() - 1; i >= 0; --i)
-		{
-			if (sess == Sessions[i])
-			{
-				Sessions.erase(Sessions.begin() + i);
-				break;
-			}
-		}
+		Sessions.erase(iter);
 	}
 }
 
 void TcpServer::CleanSessions()
 {
-	for (ptrdiff_t i = Sessions.size() - 1; i >= 0; --i)
+	for (list<Session*>::iterator iter = Sessions.begin(); iter != Sessions.end(); ++iter)
 	{
-		Session *&sess = Sessions[i];
+		Session *&sess = *iter;
 		//normal("Checking %p", sess);
 		if (sess)
 		{
@@ -216,7 +213,7 @@ void TcpServer::CleanSessions()
 		}
 		if (!sess)
 		{
-			Sessions.erase(Sessions.begin() + i);
+			Sessions.erase(iter);
 		}
 	}
 }
