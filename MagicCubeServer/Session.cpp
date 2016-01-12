@@ -327,23 +327,19 @@ void Session::OnPackage(Package *&pack)
 
 	// TODO: process received package
 
-	if (pack->header.length <= HTTP_HEADER_MAXLENGTH)
+	if (memcmp(pack->data, "GET ", min(pack->header.length, (size_t)4)) == 0)
 	{
-		string str = pack->data;
-		if (str.substr(0, 4) == "GET ")
-		{
-			unique_lock<mutex> lck(writeLock);
+		unique_lock<mutex> lck(writeLock);
 
-			string content = "<h1>It really works!</h1><p>" /*+ to_string(rand()) +*/ "</p>";
-			string header = "HTTP/1.0 200 OK\r\nServer: Wandai/0.1\r\nConnection: close\r\nContent-Type: text/html\r\nContent-Length: " + to_string(content.length()) + "\r\n\r\n";
-			string data = header + content;
+		string content = "<h1>It really works!</h1><p>" /*+ to_string(rand()) +*/ "</p>";
+		string header = "HTTP/1.0 200 OK\r\nServer: Wandai/0.1\r\nConnection: close\r\nContent-Type: text/html\r\nContent-Length: " + to_string(content.length()) + "\r\n\r\n";
+		string data = header + content;
 
-			bufferevent_write(buffev, data.c_str(), data.length());
-			/*Package *pack = (Package*)malloc(sizeof(PackageHeader) + 1024 * 1024 * 1024);
-			pack->header.length = 1024 * 1024 * 1024;
-			SendPackage(pack);*/
-			FlushAndClose();
-		}
+		bufferevent_write(buffev, data.c_str(), data.length());
+		/*Package *pack = (Package*)malloc(sizeof(PackageHeader) + 1024 * 1024 * 1024);
+		pack->header.length = 1024 * 1024 * 1024;
+		SendPackage(pack);*/
+		FlushAndClose();
 	}
 	
 	delete pack;
