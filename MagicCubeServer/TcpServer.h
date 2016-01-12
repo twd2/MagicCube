@@ -1,5 +1,7 @@
 #pragma once
 
+#include <list>
+#include <iterator>
 #include "Session.h"
 
 class TcpServer
@@ -7,8 +9,8 @@ class TcpServer
 public:
 	event_base *Base;
 
-	vector<Session*> Sessions;
-
+	list<Session*> Sessions;
+	
 	TcpServer();
 
 #ifdef ENABLE_IPV4
