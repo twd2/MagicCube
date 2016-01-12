@@ -208,7 +208,7 @@ void Session::ReadCallback()
 			if (bufferevent_read(buffev, &ch, 1) > 0)
 			{
 				lineBuffer += ch;
-				if (lineBuffer.length() > 16384)
+				if (lineBuffer.length() > HTTP_HEADER_MAXLENGTH)
 				{
 					// http header is too long
 					readErrorCode = READERROR_PACKAGE_TOO_LONG;
@@ -271,7 +271,7 @@ void Session::ErrorCallback(short event)
 {
 	if (!IsAlive) return;
 
-	const char *msg = NULL;
+	const char *msg = "";
 	if (event & BEV_EVENT_TIMEOUT)
 	{
 		msg = "timed out"; // if bufferevent_set_timeouts() called
@@ -324,6 +324,8 @@ void Session::OnPackage(Package *&pack)
 	debug("on package (fd = %u): %c%c, %s", (unsigned int)fd, pack->header.magic[0], pack->header.magic[1], pack->data);
 
 	// TODO: process received package
+
+	if (pack->header.length <= HTTP_HEADER_MAXLENGTH)
 	{
 		string str = pack->data;
 		if (str.substr(0, 4) == "GET ")

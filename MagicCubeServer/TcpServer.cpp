@@ -239,6 +239,7 @@ TcpServer::~TcpServer()
 		delete sess;
 		sess = NULL;
 	}
+	Sessions.clear();
 
 #ifdef ENABLE_IPV4
 	if (listener_event)
