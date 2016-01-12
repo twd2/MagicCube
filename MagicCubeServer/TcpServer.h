@@ -27,6 +27,7 @@ public:
 	void Start();
 
 	void EnableTimer(long);
+
 	void TimerCallback(short);
 	void CleanSession(Session*);
 	void CleanSessions();

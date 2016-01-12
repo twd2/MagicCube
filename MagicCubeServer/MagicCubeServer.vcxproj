@@ -160,6 +160,7 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="MagicCubeServer.h" />
     <ClInclude Include="ManualEvent.h" />
+    <ClInclude Include="Package.h" />
     <ClInclude Include="TcpServer.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="stdafx.h" />
@@ -169,6 +170,7 @@
   <ItemGroup>
     <ClCompile Include="MagicCubeServer.cpp" />
     <ClCompile Include="ManualEvent.cpp" />
+    <ClCompile Include="Package.cpp" />
     <ClCompile Include="TcpServer.cpp" />
     <ClCompile Include="Session.cpp" />
     <ClCompile Include="stdafx.cpp">

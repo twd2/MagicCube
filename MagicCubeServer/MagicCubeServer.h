@@ -6,6 +6,8 @@
 #include "Session.h"
 #include "ManualEvent.h"
 
-bool endwith(const string&, const string&);
+extern FILE *logfile;
+
+bool endsWith(const string&, const string&);
 void printTime(FILE*);
 void eventEntry(TcpServer*);

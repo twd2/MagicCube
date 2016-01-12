@@ -55,7 +55,7 @@ void TcpServer::AcceptCallback(short event)
 	}
 
 	Session *sess = new Session(*this, sin, fd);
-	//normal("accept fd = %u from %s:%d", (unsigned int)fd, sess->RemoteAddress.c_str(), sess->RemotePort);
+	normal("accept fd = %u from %s:%d", (unsigned int)fd, sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
 	Sessions.push_back(sess);
 }
@@ -163,10 +163,16 @@ void TcpServer::TimerCallback(short event)
 {
 	normal("%s", "Timer tick.");
 
+	time_t now = time(NULL);
+
 	for (auto &sess : Sessions)
 	{
-		//sess->SendPackage("server_heartbeat");
-		//sess->Close();
+		if (difftime(now, sess->LastAlive) > TIMEOUT_S)
+		{
+			sess->SendPackage("Timed out, good bye~");
+			sess->FlushAndClose();
+			normal("Cleaning %p", sess);
+		}
 	}
 
 	CleanSessions();

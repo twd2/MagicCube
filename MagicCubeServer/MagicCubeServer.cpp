@@ -1,13 +1,15 @@
 #include "stdafx.h"
 #include "MagicCubeServer.h"
 
+FILE *logfile = stdout;
+
 void libeventError(int errcode)
 {
 	fatal("libevent fatal error occurred, error code: %d\n", errcode);
 	exit(1);
 }
 
-bool endwith(const string &fullString, const string &ending)
+bool endsWith(const string &fullString, const string &ending)
 {
 	if (fullString.length() >= ending.length())
 	{
@@ -55,6 +57,16 @@ void printTime(FILE *fd)
 
 int main(int argc, char *argv[])
 {
+//#ifdef _WIN32
+//	logfile = NULL;
+//	fopen_s(&logfile, "log.txt", "wb");
+//	if (!logfile) logfile = stdout;
+//#else
+//	logfile = fopen("log.txt", "wb");
+//	if (!logfile) logfile = stdout;
+//#endif
+	
+
 	init();
 
 	// while (true)

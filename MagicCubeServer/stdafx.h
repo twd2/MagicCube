@@ -21,7 +21,7 @@ typedef int socklen_t;
 		// undefining ENABLE_IPV6
 		#undef ENABLE_IPV6
 	#endif
-#define __perror(s) printf("%s: Win32 Error %d(0x%08x)\n", s, GetLastError(), GetLastError())
+#define __perror(s) fprintf(stderr, "%s: Win32 Error %d(0x%08x)\n", s, GetLastError(), GetLastError())
 #ifdef MEM_DEBUG
 	#define _CRTDBG_MAP_ALLOC
 	#include <stdlib.h>
@@ -51,7 +51,7 @@ typedef int socklen_t;
 #error Cannot disable ipv4 and ipv6 at the same time.
 #endif
 
-#define _log(type, format, ...) do {printTime(stdout); printf("[%s] ", type); printf(format, ##__VA_ARGS__); printf("\n");} while (false)
+#define _log(type, format, ...) do {FILE *__fd = logfile; printTime(__fd); fprintf(__fd, "[%s] ", type); fprintf(__fd, format, ##__VA_ARGS__); fprintf(__fd, "\n");} while (false)
 #define normal(format, ...) _log("normal", format, ##__VA_ARGS__)
 #define debug(format, ...) _log("debug", format, ##__VA_ARGS__)
 #define error(format, ...) do {_log("ERROR", format, ##__VA_ARGS__); abort();} while (false)
@@ -63,7 +63,7 @@ typedef int socklen_t;
 
 #ifdef NDEBUG
 #undef debug
-#define debug(format, ...)
+#define debug(format, ...) (int)0
 #endif
 
 #include <rapidjson/document.h>
@@ -85,5 +85,7 @@ using namespace std;
 using rapidjson::Document;
 using rapidjson::Writer;
 using rapidjson::StringBuffer;
+
+extern FILE *logfile;
 
 #include "MagicCubeServer.h"
