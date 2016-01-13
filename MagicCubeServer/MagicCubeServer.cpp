@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MagicCubeServer.h"
 
-FILE *logfile = stdout;
+FILE *logFile = stdout;
 
 void libeventError(int errcode)
 {
@@ -23,7 +23,7 @@ bool endsWith(const string &fullString, const string &ending)
 
 void init()
 {
-#ifndef NDEBUG
+#ifdef _DEBUG
 	//event_enable_debug_mode(); // may cause memory leak
 #endif
 	event_set_fatal_callback(libeventError);
@@ -58,12 +58,12 @@ void printTime(FILE *fd)
 int main(int argc, char *argv[])
 {
 //#ifdef _WIN32
-//	logfile = NULL;
-//	fopen_s(&logfile, "log.txt", "wb");
-//	if (!logfile) logfile = stdout;
+//	logFile = NULL;
+//	fopen_s(&logFile, "log.txt", "wb");
+//	if (!logFile) logFile = stdout;
 //#else
-//	logfile = fopen("log.txt", "wb");
-//	if (!logfile) logfile = stdout;
+//	logFile = fopen("log.txt", "wb");
+//	if (!logFile) logFile = stdout;
 //#endif
 	
 

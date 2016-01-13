@@ -6,7 +6,7 @@
 #include "Session.h"
 #include "ManualEvent.h"
 
-extern FILE *logfile;
+extern FILE *logFile;
 
 bool endsWith(const string&, const string&);
 void printTime(FILE*);

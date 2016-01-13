@@ -5,13 +5,16 @@
 #pragma pack(push, 1)
 struct PackageHeader
 {
-	char magic[sizeof(MAGIC_MARK) - 1]; // always 'M', 'C'
-	package_len_t length;
+	char Magic[sizeof(MAGIC_MARK) - 1]; // always MAGIC_MARK without '\0'
+	package_len_t DataLength;
 };
 
 struct Package
 {
-	PackageHeader header;
-	char data[0];
+	PackageHeader Header;
+	char Data[0];
+
+	// suger for variable data size
+	void *operator new(size_t, package_len_t);
 };
 #pragma pack(pop)

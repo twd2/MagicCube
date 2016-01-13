@@ -2,13 +2,17 @@
 
 #include "Config.h"
 
+#if !defined(_DEBUG) && !defined(NDEBUG)
+#define NDEBUG
+#endif
+
 #ifdef NDEBUG
 #undef MEM_DEBUG
 #endif
 
 #ifdef _WIN32
 #ifndef WIN32
-#define WIN32
+#define WIN32 // for libevent
 #endif
 #include "targetver.h"
 typedef int socklen_t;
@@ -43,7 +47,7 @@ typedef int socklen_t;
 #define __perror(s) perror(s)
 #endif
 
-#ifndef NDEBUG
+#ifdef _DEBUG
 #define _perror(s) do {__perror(s); /*abort();*/} while (false)
 #else
 #define _perror(s) __perror(s)
@@ -53,7 +57,7 @@ typedef int socklen_t;
 #error Cannot disable ipv4 and ipv6 at the same time.
 #endif
 
-#define _log(type, format, ...) do {FILE *__fd = logfile; printTime(__fd); fprintf(__fd, "[%s] ", type); fprintf(__fd, format, ##__VA_ARGS__); fprintf(__fd, "\n");} while (false)
+#define _log(type, format, ...) do {FILE *__fd = logFile; printTime(__fd); fprintf(__fd, "[%s] ", type); fprintf(__fd, format, ##__VA_ARGS__); fprintf(__fd, "\n");} while (false)
 #define normal(format, ...) _log("normal", format, ##__VA_ARGS__)
 #define debug(format, ...) _log("debug", format, ##__VA_ARGS__)
 #define error(format, ...) do {_log("ERROR", format, ##__VA_ARGS__); abort();} while (false)
@@ -88,6 +92,6 @@ using rapidjson::Document;
 using rapidjson::Writer;
 using rapidjson::StringBuffer;
 
-extern FILE *logfile;
+extern FILE *logFile;
 
 #include "MagicCubeServer.h"

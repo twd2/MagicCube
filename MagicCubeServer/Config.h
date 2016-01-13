@@ -20,5 +20,5 @@ typedef unsigned int package_len_t;
 #define CHECK_INTERVAL 1 // 10 
 #define TIMEOUT_S 30
 
-#define PACKAGE_MAXLENGTH ((package_len_t)(-1)) //(1024)
-#define HTTP_HEADER_MAXLENGTH ((size_t)(16384))
+#define PACKAGE_MAXLENGTH (static_cast<package_len_t>(-1)) //(1024)
+#define HTTP_HEADER_MAXLENGTH (static_cast<size_t>(16384))

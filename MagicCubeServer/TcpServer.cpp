@@ -16,7 +16,7 @@ bool TcpServer::Listen(string address, unsigned short port, int backlog)
 	listener = socket(AF_INET, SOCK_STREAM, 0);
 	if (listener <= 0)
 	{
-		listener = (evutil_socket_t)0;
+		listener = static_cast<evutil_socket_t>(0);
 		_perror("socket");
 		return false;
 	}
@@ -29,14 +29,14 @@ bool TcpServer::Listen(string address, unsigned short port, int backlog)
 
 	if (::bind(listener, (sockaddr *)&sin, sizeof(sin)) < 0)
 	{
-		listener = (evutil_socket_t)0;
+		listener = static_cast<evutil_socket_t>(0);
 		_perror("bind");
 		return false;
 	}
 
 	if (listen(listener, backlog) < 0)
 	{
-		listener = (evutil_socket_t)0;
+		listener = static_cast<evutil_socket_t>(0);
 		_perror("listen");
 		return false;
 	}
@@ -58,7 +58,7 @@ void TcpServer::AcceptCallback(short event)
 	}
 
 	Session *sess = new Session(*this, sin, fd);
-	normal("accept fd = %u from %s:%d", (unsigned int)fd, sess->RemoteAddress.c_str(), sess->RemotePort);
+	normal("accept fd = %u from %s:%d", static_cast<unsigned int>(fd), sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
 	Sessions.push_back(sess);
 	sess->Iter = Sessions.end();
@@ -78,7 +78,7 @@ bool TcpServer::Listen6(string address, unsigned short port, int backlog)
 	listener6 = socket(AF_INET6, SOCK_STREAM, 0);
 	if (listener6 <= 0)
 	{
-		listener6 = (evutil_socket_t)0;
+		listener6 = static_cast<evutil_socket_t>(0);
 		_perror("socket6");
 		return false;
 	}
@@ -91,14 +91,14 @@ bool TcpServer::Listen6(string address, unsigned short port, int backlog)
 
 	if (::bind(listener6, (sockaddr *)&sin6, sizeof(sin6)) < 0)
 	{
-		listener6 = (evutil_socket_t)0;
+		listener6 = static_cast<evutil_socket_t>(0);
 		_perror("bind6");
 		return false;
 	}
 
 	if (listen(listener6, backlog) < 0)
 	{
-		listener6 = (evutil_socket_t)0;
+		listener6 = static_cast<evutil_socket_t>(0);
 		_perror("listen6");
 		return false;
 	}
@@ -119,7 +119,7 @@ void TcpServer::Accept6Callback(short event)
 	}
 
 	Session *sess = new Session(*this, sin6, fd);
-	normal("accept fd = %u from [%s]:%d", (unsigned int)fd, sess->RemoteAddress.c_str(), sess->RemotePort);
+	normal("accept fd = %u from [%s]:%d", static_cast<unsigned int>(fd), sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
 	Sessions.push_back(sess);
 	sess->Iter = Sessions.end();
@@ -276,18 +276,18 @@ TcpServer::~TcpServer()
 #ifdef ENABLE_IPV4
 void acceptCallbackDispatcher(evutil_socket_t listener, short event, void *arg)
 {
-	((TcpServer*)arg)->AcceptCallback(event);
+	(reinterpret_cast<TcpServer*>(arg))->AcceptCallback(event);
 }
 #endif
 
 #ifdef ENABLE_IPV6
 void accept6CallbackDispatcher(evutil_socket_t listener, short event, void *arg)
 {
-	((TcpServer*)arg)->Accept6Callback(event);
+	(reinterpret_cast<TcpServer*>(arg))->Accept6Callback(event);
 }
 #endif
 
 void timerCallbackDispatcher(evutil_socket_t listener, short event, void *arg)
 {
-	((TcpServer*)arg)->TimerCallback(event);
+	(reinterpret_cast<TcpServer*>(arg))->TimerCallback(event);
 }

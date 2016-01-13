@@ -101,7 +101,7 @@ void Session::ReadCallback()
 	if (!IsAlive) return;
 
 	unique_lock<mutex> lck(readLock);
-	debug("fd = %u, entering read", (unsigned int)fd);
+	debug("fd = %u, entering read", static_cast<unsigned int>(fd));
 	while (IsAlive)
 	{
 		KeepAlive();
@@ -127,7 +127,7 @@ void Session::ReadCallback()
 			if (readLength == headerLength)
 			{
 				PackageHeader header = *reinterpret_cast<PackageHeader*>(headerBuffer);
-				header.length = ntohpacklen(header.length);
+				header.DataLength = ntohpacklen(header.DataLength);
 
 				if (memcmp(headerBuffer, "GET ", min(headerLength, (size_t)4)) == 0)
 				{
@@ -148,12 +148,12 @@ void Session::ReadCallback()
 					continue;
 				}
 				
-				if (header.length == 0 || header.length > PACKAGE_MAXLENGTH)
+				if (header.DataLength == 0 || header.DataLength > PACKAGE_MAXLENGTH)
 				{
 					// package is zero or too long
-					debug("fd = %u, data length: %d == 0 || too long", (unsigned int)fd, header.length);
+					debug("fd = %u, data length: %d == 0 || too long", static_cast<unsigned int>(fd), header.DataLength);
 					
-					if (header.length == 0)
+					if (header.DataLength == 0)
 						readErrorCode = READERROR_PACKAGE_EMPTY;
 					else
 						readErrorCode = READERROR_PACKAGE_TOO_LONG;
@@ -162,14 +162,14 @@ void Session::ReadCallback()
 					continue;
 				}
 
-				currentPackage = (Package*)malloc(sizeof(PackageHeader) + header.length);
+				currentPackage = new (header.DataLength) Package;
 				if (!currentPackage)
 				{
 					throw bad_alloc();
 				}
-				currentPackage->header = header; // copy
+				currentPackage->Header = header; // copy
 
-				memset(currentPackage->data, 0x00, header.length); // ensure
+				memset(currentPackage->Data, 0x00, header.DataLength); // ensure
 
 				readLength = 0;
 				readState = READSTATE_READING_DATA;
@@ -179,16 +179,16 @@ void Session::ReadCallback()
 		}
 		case READSTATE_READING_DATA:
 		{
-			debug("fd = %u, recv %d", (unsigned int)fd, currentPackage->header.length);
-			while (readLength < currentPackage->header.length)
+			debug("fd = %u, recv %d", static_cast<unsigned int>(fd), currentPackage->Header.DataLength);
+			while (readLength < currentPackage->Header.DataLength)
 			{
-				size_t currentLength = bufferevent_read(buffev, currentPackage->data + readLength, currentPackage->header.length - readLength);
+				size_t currentLength = bufferevent_read(buffev, currentPackage->Data + readLength, currentPackage->Header.DataLength - readLength);
 				if (currentLength <= 0) break;
 
 				readLength += currentLength;
 			}
 
-			if (readLength == currentPackage->header.length)
+			if (readLength == currentPackage->Header.DataLength)
 			{
 				OnPackage(currentPackage); // TODO: sync or async?
 				if (currentPackage)
@@ -241,7 +241,7 @@ void Session::ReadCallback()
 		}
 		break;
 	}
-	debug("fd = %u, exitting read", (unsigned int)fd);
+	debug("fd = %u, exitting read", static_cast<unsigned int>(fd));
 }
 
 void Session::WriteCallback()
@@ -252,7 +252,7 @@ void Session::WriteCallback()
 		unique_lock<mutex> lck(writeLock);
 		if (isFirstCall)
 		{
-			debug("fd = %u, dropping first write callback calling", (unsigned int)fd);
+			debug("fd = %u, dropping first write callback calling", static_cast<unsigned int>(fd));
 			// drop first write callback calling
 			isFirstCall = false;
 #ifndef __linux
@@ -261,11 +261,11 @@ void Session::WriteCallback()
 		}
 	}
 
-	debug("fd = %u, write callback called", (unsigned int)fd);
+	debug("fd = %u, write callback called", static_cast<unsigned int>(fd));
 
 	if (closeAfterWritten)
 	{
-		debug("fd = %u, closeAfterWritten is set, closing", (unsigned int)fd);
+		debug("fd = %u, closeAfterWritten is set, closing", static_cast<unsigned int>(fd));
 		Close();
 	}
 }
@@ -289,7 +289,7 @@ void Session::ErrorCallback(short event)
 		__perror("error");
 	}
 
-	debug("fd = %u, %s", (unsigned int)fd, msg);
+	debug("fd = %u, %s", static_cast<unsigned int>(fd), msg);
 	
 	Close();
 }
@@ -299,16 +299,16 @@ void Session::DoQueue()
 	if (!IsAlive) return;
 
 	unique_lock<mutex> lck(writeLock);
-	debug("fd = %u, dequeuing", (unsigned int)fd);
+	debug("fd = %u, dequeuing", static_cast<unsigned int>(fd));
 
 	while (!pendingPackages.empty())
 	{
 		Package *&pack = pendingPackages.front();
-		package_len_t packLen = ntohpacklen(pack->header.length);
+		package_len_t packLen = ntohpacklen(pack->Header.DataLength);
 		if (packLen > 0)
 		{
 			size_t toSendLength = sizeof(PackageHeader) + packLen;
-			char *packData = (char*)pack;
+			char *packData = reinterpret_cast<char*>(pack);
 
 			bufferevent_write(buffev, packData, toSendLength);
 		}
@@ -318,19 +318,21 @@ void Session::DoQueue()
 		pendingPackages.pop();
 	}
 
-	debug("fd = %u, dequeued", (unsigned int)fd);
+	debug("fd = %u, dequeued", static_cast<unsigned int>(fd));
 }
 
 void Session::OnPackage(Package *&pack)
 {
-	if (!pack || pack->header.length == 0) return;
-	pack->data[pack->header.length - 1] = '\0';
-	debug("on package (fd = %u): %c%c, %s", (unsigned int)fd, pack->header.magic[0], pack->header.magic[1], pack->data);
+	if (!pack || pack->Header.DataLength == 0) return;
+	pack->Data[pack->Header.DataLength - 1] = '\0';
+	debug("on package (fd = %u): %s", static_cast<unsigned int>(fd), pack->Data);
 
 	// TODO: process received package
 
-	if (memcmp(pack->data, "GET ", min(pack->header.length, (package_len_t)4)) == 0)
+	if (memcmp(pack->Data, "GET ", min(pack->Header.DataLength, static_cast<package_len_t>(4))) == 0)
 	{
+		debug("regarded as HTTP request (fd = %u)", static_cast<unsigned int>(fd));
+
 		unique_lock<mutex> lck(writeLock);
 
 		string content = "<h1>It really works!</h1><p>" /*+ to_string(rand()) +*/ "</p>";
@@ -338,9 +340,6 @@ void Session::OnPackage(Package *&pack)
 		string data = header + content;
 
 		bufferevent_write(buffev, data.c_str(), data.length());
-		/*Package *pack = (Package*)malloc(sizeof(PackageHeader) + 1024 * 1024 * 1024);
-		pack->header.length = 1024 * 1024 * 1024;
-		SendPackage(pack);*/
 		FlushAndClose();
 	}
 	
@@ -350,8 +349,8 @@ void Session::OnPackage(Package *&pack)
 
 void Session::SendPackage(Package *&pack)
 {
-	if (!pack || pack->header.length == 0) return;
-	pack->header.length = htonpacklen(pack->header.length);
+	if (!pack || pack->Header.DataLength == 0) return;
+	pack->Header.DataLength = htonpacklen(pack->Header.DataLength);
 	pendingPackages.push(pack);
 
 	DoQueue();
@@ -373,7 +372,7 @@ void Session::Close()
 	if (!IsAlive) return;
 	IsAlive = false;
 
-	debug("fd = %u, closing", (unsigned int)fd);
+	debug("fd = %u, closing", static_cast<unsigned int>(fd));
 	
 	if (buffev)
 	{
@@ -384,7 +383,7 @@ void Session::Close()
 	{
 		shutdown(fd, SHUT_RDWR);
 		close(fd);
-		fd = (evutil_socket_t)0;
+		fd = static_cast<evutil_socket_t>(0);
 	}
 	
 	if (buffev)
@@ -413,11 +412,11 @@ void Session::Close()
 
 Package *Session::MakePackage(string &strdata)
 {
-	package_len_t len = (package_len_t)((strdata.length() + 1) * sizeof(char));
-	Package *pack = (Package*)malloc(sizeof(PackageHeader) + len);
-	memcpy(pack->header.magic, MAGIC_MARK, sizeof(MAGIC_MARK) - 1);
-	pack->header.length = len;
-	memcpy(pack->data, strdata.c_str(), len);
+	package_len_t len = static_cast<package_len_t>((strdata.length() + 1) * sizeof(char));
+	Package *pack = new (len) Package;
+	memcpy(pack->Header.Magic, MAGIC_MARK, sizeof(MAGIC_MARK) - 1);
+	pack->Header.DataLength = len;
+	memcpy(pack->Data, strdata.c_str(), len);
 	return pack;
 }
 
@@ -425,11 +424,11 @@ package_len_t htonpacklen(package_len_t len)
 {
 	if (sizeof(package_len_t) == 2)
 	{
-		return (package_len_t)htons(len);
+		return static_cast<package_len_t>(htons(len));
 	}
 	else if (sizeof(package_len_t) == 4)
 	{
-		return (package_len_t)htonl(len);
+		return static_cast<package_len_t>(htonl(len));
 	}
 }
 
@@ -437,28 +436,34 @@ package_len_t ntohpacklen(package_len_t len)
 {
 	if (sizeof(package_len_t) == 2)
 	{
-		return (package_len_t)ntohs(len);
+		return static_cast<package_len_t>(ntohs(len));
 	}
 	else if (sizeof(package_len_t) == 4)
 	{
-		return (package_len_t)ntohl(len);
+		return static_cast<package_len_t>(ntohl(len));
 	}
 }
 
 void readCallbackDispatcher(bufferevent *buffev, void *arg)
 {
-	((Session*)arg)->ReadCallback();
-	((Session*)arg)->server.CleanSession((Session*)arg);
+	Session *sess = reinterpret_cast<Session*>(arg);
+
+	sess->ReadCallback();
+	sess->server.CleanSession((Session*)arg);
 }
 
 void writeCallbackDispatcher(bufferevent *buffev, void *arg)
 {
-	((Session*)arg)->WriteCallback();
-	((Session*)arg)->server.CleanSession((Session*)arg);
+	Session *sess = reinterpret_cast<Session*>(arg);
+
+	sess->WriteCallback();
+	sess->server.CleanSession(sess);
 }
 
 void errorCallbackDispatcher(bufferevent *buffev, short event, void *arg)
 {
-	((Session*)arg)->ErrorCallback(event);
-	((Session*)arg)->server.CleanSession((Session*)arg);
+	Session *sess = reinterpret_cast<Session*>(arg);
+
+	sess->ErrorCallback(event);
+	sess->server.CleanSession(sess);
 }
