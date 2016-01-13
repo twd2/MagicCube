@@ -64,12 +64,6 @@ void TcpServer::AcceptCallback(short event)
 	sess->Iter = Sessions.end();
 	--sess->Iter;
 }
-
-void TcpServer::Stop()
-{
-	shutdown(listener, SHUT_RDWR);
-	close(listener);
-}
 #endif
 
 #ifdef ENABLE_IPV6
@@ -125,12 +119,6 @@ void TcpServer::Accept6Callback(short event)
 	sess->Iter = Sessions.end();
 	--sess->Iter;
 }
-
-void TcpServer::Stop6()
-{
-	shutdown(listener6, SHUT_RDWR);
-	close(listener6);
-}
 #endif
 
 void TcpServer::Start()
@@ -152,6 +140,26 @@ void TcpServer::Start()
 #endif
 
 	event_base_dispatch(Base);
+}
+
+void TcpServer::Stop()
+{
+#ifdef ENABLE_IPV4
+	if (listener)
+	{
+		shutdown(listener, SHUT_RDWR);
+		close(listener);
+		listener = static_cast<evutil_socket_t>(0);
+	}
+#endif
+#ifdef ENABLE_IPV6
+	if (listener6)
+	{
+		shutdown(listener6, SHUT_RDWR);
+		close(listener6);
+		listener6 = static_cast<evutil_socket_t>(0);
+	}
+#endif
 }
 
 void TcpServer::EnableTimer(long interval)
@@ -232,6 +240,8 @@ void TcpServer::CleanSessions()
 
 TcpServer::~TcpServer()
 {
+	Stop();
+
 	if (timer)
 	{
 		event_free(timer);

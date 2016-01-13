@@ -16,17 +16,16 @@ public:
 #ifdef ENABLE_IPV4
 	bool Listen(string, unsigned short, int);
 	void AcceptCallback(short);
-	void Stop();
 #endif
 
 #ifdef ENABLE_IPV6
 	bool Listen6(string, unsigned short, int);
 	void Accept6Callback(short);
-	void Stop6();
 #endif
 
 	// sync, block
 	void Start();
+	void Stop();
 
 	void EnableTimer(long);
 
