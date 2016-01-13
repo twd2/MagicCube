@@ -16,7 +16,7 @@ typedef unsigned int package_len_t;
 #define LISTEN_PORT6 2333
 #define LISTEN_BACKLOG6 1024
 
-// CHECK_INTERVAL should be less then TIMEOUT_S
+// CHECK_INTERVAL should be less than TIMEOUT_S
 #define CHECK_INTERVAL 1 // 10 
 #define TIMEOUT_S 30
 
