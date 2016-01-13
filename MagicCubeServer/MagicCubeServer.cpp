@@ -88,14 +88,7 @@ int main(int argc, char *argv[])
 		thread th(eventEntry, &server);
 		getchar();
 
-#ifdef ENABLE_IPV4
 		server.Stop();
-#endif
-#ifdef ENABLE_IPV6
-		server.Stop6();
-#endif
-
-		event_base_loopbreak(server.Base);
 
 		th.join();
 

@@ -160,6 +160,8 @@ void TcpServer::Stop()
 		listener6 = static_cast<evutil_socket_t>(0);
 	}
 #endif
+
+	event_base_loopbreak(Base);
 }
 
 void TcpServer::EnableTimer(long interval)
