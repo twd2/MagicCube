@@ -179,10 +179,10 @@ void Session::ReadCallback()
 		}
 		case READSTATE_READING_DATA:
 		{
-			debug("fd = %u, recv %d", static_cast<unsigned int>(fd), currentPackage->Header.DataLength);
 			while (readLength < currentPackage->Header.DataLength)
 			{
 				size_t currentLength = bufferevent_read(buffev, currentPackage->Data + readLength, currentPackage->Header.DataLength - readLength);
+				debug("fd = %u, recv %u", static_cast<unsigned int>(fd), currentLength);
 				if (currentLength <= 0) break;
 
 				readLength += currentLength;
@@ -255,9 +255,7 @@ void Session::WriteCallback()
 			debug("fd = %u, dropping first write callback calling", static_cast<unsigned int>(fd));
 			// drop first write callback calling
 			isFirstCall = false;
-#ifndef __linux
 			return;
-#endif
 		}
 	}
 

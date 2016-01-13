@@ -42,12 +42,12 @@ private:
 	DISALLOW_COPY_AND_ASSIGN(TcpServer);
 
 #ifdef ENABLE_IPV4
-	event *listener_event;
+	event *listener_event = NULL;
 	evutil_socket_t listener = static_cast<evutil_socket_t>(0);
 #endif
 
 #ifdef ENABLE_IPV6
-	event *listener6_event;
+	event *listener6_event = NULL;
 	evutil_socket_t listener6 = static_cast<evutil_socket_t>(0);
 #endif
 
