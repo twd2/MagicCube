@@ -52,6 +52,8 @@ common:
 
 .PHONY: server
 server: 
+	-mkdir build
+	make common
 	cd MagicCubeServer && make
 
 $(PROJECT): $(OBJECTS)

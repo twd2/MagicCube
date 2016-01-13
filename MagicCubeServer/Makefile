@@ -6,7 +6,7 @@ ifeq ($(shell uname),Linux)
 	# compiler
 	CC = g++
 	INC_DIR = ../include/osx
-	CC_FLAGS = -g -O2 -Wall -std=c++11 -I $(INC_DIR) -I ../include
+	CC_FLAGS = -O2 -Wall -fno-strict-aliasing -std=c++11 -I $(INC_DIR) -I ../include
 
 	# linker
 	LD = g++
@@ -16,14 +16,14 @@ ifeq ($(shell uname),Linux)
 else
 
 ifeq ($(shell uname),Darwin)
-# compiler
-INC_DIR = ../include/osx
-CC_FLAGS = -g -O2 -Wall -std=c++11 -I $(INC_DIR) -I ../include
+	# compiler
+	INC_DIR = ../include/osx
+	CC_FLAGS = -O2 -Wall -fno-strict-aliasing -std=c++11 -I $(INC_DIR) -I ../include
 
-# linker
-LIB_DIR = lib/osx
-LIBS = -lCubeCommon -lc++ -lm -lSystem -levent
-LINKER_FLAGS = -L $(LIB_DIR) -L ../CubeCommon/build
+	# linker
+	LIB_DIR = lib/osx
+	LIBS = -lCubeCommon -lc++ -lm -lSystem -levent
+	LINKER_FLAGS = -L $(LIB_DIR) -L ../CubeCommon/build
 else
 	# Unsupported operating system.
 	CC = echo && echo "******** Unsupported operating system! ********" && echo && exit 1 ||

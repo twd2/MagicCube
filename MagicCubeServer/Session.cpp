@@ -11,7 +11,7 @@ map<ReadErrorType, string> ReadErrorMessage =
 
 #ifdef ENABLE_IPV4
 Session::Session(TcpServer &server, sockaddr_in addr, int fd)
-	: server(server), fd(fd), sAddr(addr)//, writtenEvent(false)
+	: server(server), fd(fd), sAddr(addr)
 {
 	char buffer[INET6_ADDRSTRLEN + 1] = { 0 };
 	evutil_inet_ntop(addr.sin_family, &(addr.sin_addr), buffer, sizeof(buffer));
@@ -25,7 +25,7 @@ Session::Session(TcpServer &server, sockaddr_in addr, int fd)
 
 #ifdef ENABLE_IPV6
 Session::Session(TcpServer &server, sockaddr_in6 addr, int fd)
-	: server(server), IsIPv6(true), fd(fd), sAddr6(addr)//, writtenEvent(false)
+	: IsIPv6(true), server(server), fd(fd), sAddr6(addr)
 {
 	char buffer[INET6_ADDRSTRLEN + 1] = { 0 };
 	evutil_inet_ntop(addr.sin6_family, &(addr.sin6_addr), buffer, sizeof(buffer));
@@ -126,7 +126,7 @@ void Session::ReadCallback()
 
 			if (readLength == headerLength)
 			{
-				PackageHeader header = *(PackageHeader*)headerBuffer;
+				PackageHeader header = *reinterpret_cast<PackageHeader*>(headerBuffer);
 				header.length = ntohpacklen(header.length);
 
 				if (memcmp(headerBuffer, "GET ", min(headerLength, (size_t)4)) == 0)
@@ -235,6 +235,7 @@ void Session::ReadCallback()
 		{
 			SendPackage("{\"error\": \"" + ReadErrorMessage[readErrorCode] + "\"}");
 			FlushAndClose();
+			readErrorCode = READERROR_UNKNOWN;
 			break;
 		}
 		}
@@ -303,12 +304,13 @@ void Session::DoQueue()
 	while (!pendingPackages.empty())
 	{
 		Package *&pack = pendingPackages.front();
-		if (pack->header.length > 0)
+		package_len_t packLen = ntohpacklen(pack->header.length);
+		if (packLen > 0)
 		{
-			size_t toSendLength = sizeof(PackageHeader) + ntohpacklen(pack->header.length);
-			char *packdata = (char*)pack;
+			size_t toSendLength = sizeof(PackageHeader) + packLen;
+			char *packData = (char*)pack;
 
-			bufferevent_write(buffev, packdata, toSendLength);
+			bufferevent_write(buffev, packData, toSendLength);
 		}
 		delete pack;
 		pack = NULL;
@@ -350,7 +352,6 @@ void Session::SendPackage(Package *&pack)
 {
 	if (!pack || pack->header.length == 0) return;
 	pack->header.length = htonpacklen(pack->header.length);
-	//writtenEvent.Reset();
 	pendingPackages.push(pack);
 
 	DoQueue();
@@ -379,13 +380,11 @@ void Session::Close()
 		ClearCallbacks(); // need clear callbacks BEFORE shutdown.
 	}
 	
-	//writtenEvent.Set();
-	
 	if (fd)
 	{
 		shutdown(fd, SHUT_RDWR);
 		close(fd);
-		fd = NULL;
+		fd = (evutil_socket_t)0;
 	}
 	
 	if (buffev)

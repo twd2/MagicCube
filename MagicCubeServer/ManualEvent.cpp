@@ -12,7 +12,7 @@ ManualEvent::ManualEvent(bool set) : set(set)
 
 }
 
-ManualEvent::ManualEvent(bool set, bool autoReset) : set(set), AutoReset(autoReset)
+ManualEvent::ManualEvent(bool set, bool autoReset) : AutoReset(autoReset), set(set)
 {
 
 }
