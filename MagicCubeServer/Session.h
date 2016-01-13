@@ -57,6 +57,7 @@ public:
 	void WriteCallback();
 	void ErrorCallback(short);
 	void DoQueue();
+	void OnHTTPRequest(const string&);
 	void OnPackage(Package*&);
 	void SendPackage(Package*&);
 	void SendPackage(string);

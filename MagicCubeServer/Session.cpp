@@ -217,13 +217,7 @@ void Session::ReadCallback()
 				}
 				if (endsWith(lineBuffer, "\r\n\r\n"))
 				{
-					Package *pack = MakePackage(lineBuffer);
-					OnPackage(pack);
-					if (pack)
-					{
-						delete pack;
-						pack = NULL;
-					}
+					OnHTTPRequest(lineBuffer);
 					readState = READSTATE_NONE;
 					continue;
 				}
@@ -319,6 +313,20 @@ void Session::DoQueue()
 	debug("fd = %u, dequeued", static_cast<unsigned int>(fd));
 }
 
+void Session::OnHTTPRequest(const string &req)
+{
+	debug("regarded as HTTP request (fd = %u)", static_cast<unsigned int>(fd));
+
+	unique_lock<mutex> lck(writeLock);
+
+	string content = "<h1>It really works!</h1><p>" /*+ to_string(rand()) +*/ "</p>";
+	string header = "HTTP/1.0 200 OK\r\nServer: Wandai/0.1\r\nConnection: close\r\nContent-Type: text/html\r\nContent-Length: " + to_string(content.length()) + "\r\n\r\n";
+	string data = header + content;
+
+	bufferevent_write(buffev, data.c_str(), data.length());
+	FlushAndClose();
+}
+
 void Session::OnPackage(Package *&pack)
 {
 	if (!pack || pack->Header.DataLength == 0) return;
@@ -326,20 +334,6 @@ void Session::OnPackage(Package *&pack)
 	debug("on package (fd = %u): %s", static_cast<unsigned int>(fd), pack->Data);
 
 	// TODO: process received package
-
-	if (memcmp(pack->Data, "GET ", min(pack->Header.DataLength, static_cast<package_len_t>(4))) == 0)
-	{
-		debug("regarded as HTTP request (fd = %u)", static_cast<unsigned int>(fd));
-
-		unique_lock<mutex> lck(writeLock);
-
-		string content = "<h1>It really works!</h1><p>" /*+ to_string(rand()) +*/ "</p>";
-		string header = "HTTP/1.0 200 OK\r\nServer: Wandai/0.1\r\nConnection: close\r\nContent-Type: text/html\r\nContent-Length: " + to_string(content.length()) + "\r\n\r\n";
-		string data = header + content;
-
-		bufferevent_write(buffev, data.c_str(), data.length());
-		FlushAndClose();
-	}
 	
 	delete pack;
 	pack = NULL;
