@@ -43,7 +43,7 @@ See #Building.
 
 1. Build libevent 2.0+.
 2. Put `libevent.a` into `MagicCubeServer/lib/osx` or `MagicCubeServer/lib/linux` (you may need create this directory before).
-3. Execute `make -j8` and `MagicCubeServer/build/MagicCubeServer` is the binary.
+3. Execute `make -j8 server` and `MagicCubeServer/build/MagicCubeServer` is the binary.
 
 # Data Format
 
