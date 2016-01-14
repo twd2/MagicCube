@@ -9,6 +9,7 @@ class TcpServer
 public:
 	event_base *Base;
 
+	size_t MaxConnections = static_cast<size_t>(-1);
 	list<Session*> Sessions;
 	
 	TcpServer();

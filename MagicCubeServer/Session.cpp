@@ -374,7 +374,11 @@ void Session::Close()
 	if (fd)
 	{
 		shutdown(fd, SHUT_RDWR);
+#ifdef _WIN32
+		closesocket(fd);
+#else
 		close(fd);
+#endif
 		fd = static_cast<evutil_socket_t>(0);
 	}
 	

@@ -1,0 +1,24 @@
+{
+    "Server": 
+    {
+        "IPv4": 
+        {
+            "Enable": true,
+            "Address": "0.0.0.0",
+            "Port": 2333,
+            "Backlog": 1024
+        },
+        "IPv6":
+        {
+            "Enable": true,
+            "Address": "::",
+            "Port": 2333,
+            "Backlog": 1024
+        },
+        "MaxConnections": -1
+    },
+    "Rooms":
+    [
+        
+    ]
+}

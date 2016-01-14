@@ -1,13 +1,15 @@
 #pragma once
 
 #include "stdafx.h"
+#include <fstream>
+
+#ifndef _WIN32
+#include <cmdline/cmdline.h>
+#endif
+
 #include "Config.h"
 #include "TcpServer.h"
 #include "Session.h"
 #include "ManualEvent.h"
 
-extern FILE *logFile;
-
-bool endsWith(const string&, const string&);
-void printTime(FILE*);
 void eventEntry(TcpServer*);

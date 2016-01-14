@@ -20,7 +20,6 @@ typedef int socklen_t;
 #define SHUT_RD SD_RECEIVE
 #define SHUT_WR SD_SEND
 #define SHUT_RDWR SD_BOTH
-#define close closesocket
 	#ifdef ENABLE_IPV6
 		// undefining ENABLE_IPV6
 		#undef ENABLE_IPV6
@@ -83,15 +82,20 @@ typedef int socklen_t;
 #include <iostream>
 #include <vector>
 #include <map>
+#include <queue>
 #include <thread>
 #include <sstream>
 #include <mutex>
 
 using namespace std;
 using rapidjson::Document;
+using rapidjson::Value;
 using rapidjson::Writer;
 using rapidjson::StringBuffer;
 
-extern FILE *logFile;
+extern FILE *logFile; // defined in MagicCubeServer.cpp
 
+#include "../CubeCommon/CubeCommon.h"
+
+#include "utilities.h"
 #include "MagicCubeServer.h"

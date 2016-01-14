@@ -27,9 +27,6 @@
     <ClInclude Include="MagicCubeServer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Config.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Session.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -43,6 +40,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Package.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -66,6 +69,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Package.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Config.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

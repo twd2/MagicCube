@@ -9,7 +9,9 @@
 
 1. Your interest.
 2. [GLFW](http://www.glfw.org/) if compile without NOGL option.
-3. libevent 2.0+ (for server)
+3. [libevent](https://github.com/libevent/libevent) 2.0+ (for server)
+4. [RapidJSON](https://github.com/miloyip/rapidjson) (for server)
+5. [cmdline](https://github.com/tanakh/cmdline) (for server)
 
 # Solvers
 

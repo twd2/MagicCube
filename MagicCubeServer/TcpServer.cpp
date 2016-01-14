@@ -148,7 +148,11 @@ void TcpServer::Stop()
 	if (listener)
 	{
 		shutdown(listener, SHUT_RDWR);
+#ifdef _WIN32
+		closesocket(listener);
+#else
 		close(listener);
+#endif
 		listener = static_cast<evutil_socket_t>(0);
 	}
 #endif
@@ -156,7 +160,11 @@ void TcpServer::Stop()
 	if (listener6)
 	{
 		shutdown(listener6, SHUT_RDWR);
+#ifdef _WIN32
+		closesocket(listener6);
+#else
 		close(listener6);
+#endif
 		listener6 = static_cast<evutil_socket_t>(0);
 	}
 #endif

@@ -9,65 +9,133 @@ void libeventError(int errcode)
 	exit(1);
 }
 
-bool endsWith(const string &fullString, const string &ending)
-{
-	if (fullString.length() >= ending.length())
-	{
-		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
-	}
-	else
-	{
-		return false;
-	}
-}
-
-void init()
+void initLib()
 {
 #ifdef _DEBUG
-	//event_enable_debug_mode(); // may cause memory leak
+	event_enable_debug_mode(); // may cause memory leak
 #endif
+
 	event_set_fatal_callback(libeventError);
 
 #ifdef _WIN32
-	WSADATA data;
-	int err = WSAStartup(0, &data);
-	err = WSAStartup(data.wVersion, &data);
-	evthread_use_windows_threads(); // may cause memory leak
+
 #ifdef MEM_DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
-#else
+
+	WSADATA data;
+	int err = WSAStartup(0, &data);
+	err = WSAStartup(data.wVersion, &data);
+#endif
+
+#ifdef EVTHREAD_USE_WINDOWS_THREADS_IMPLEMENTED
+	evthread_use_windows_threads(); // may cause memory leak
+#endif
+
+#ifdef EVTHREAD_USE_PTHREADS_IMPLEMENTED
 	evthread_use_pthreads();
 #endif
 }
 
-void printTime(FILE *fd)
+void setLogFile(string filename)
 {
-	time_t now = time(NULL);
-	char tmpBuf[256];
-	tm t;
+	if (filename != "-")
+	{
 #ifdef _WIN32
-	localtime_s(&t, &now);
+		logFile = NULL;
+		fopen_s(&logFile, filename.c_str(), "w+");
+		if (!logFile) logFile = stdout;
 #else
-	t = *localtime(&now);
+		logFile = NULL;
+		logFile = fopen(filename.c_str(), "w+");
+		if (!logFile) logFile = stdout;
+#endif 
+	}
+}
+
+Document loadConfigObj(string filename)
+{
+	string configJson = "", line;
+	ifstream configFile(filename);
+	while (getline(configFile, line))
+	{
+		configJson += line + "\n";
+	}
+	configFile.close();
+
+	Document configDoc;
+	configDoc.Parse(configJson.c_str());
+	assert(configDoc.IsObject());
+
+	return move(configDoc);
+}
+
+void configServer(TcpServer &server, Value &config)
+{
+	if (sizeof(size_t) == sizeof(unsigned int))
+	{
+		server.MaxConnections =
+			static_cast<size_t>(config["MaxConnections"].GetInt());
+	}
+	else if (sizeof(size_t) == sizeof(unsigned long long))
+	{
+		server.MaxConnections =
+			static_cast<size_t>(config["MaxConnections"].GetInt64());
+	}
+
+#ifdef ENABLE_IPV4
+	{
+		Value &IPVal = config["IPv4"];
+		if (IPVal["Enable"].GetBool())
+		{
+			normal("Listening %s:%d...", IPVal["Address"].GetString(), IPVal["Port"].GetUint());
+			server.Listen(IPVal["Address"].GetString(), IPVal["Port"].GetUint(), IPVal["Backlog"].GetInt());
+		}
+	}
 #endif
-	strftime(tmpBuf, sizeof(tmpBuf), "%Y-%m-%d %H:%M:%S", &t);
-	fprintf(fd, "[%s]", tmpBuf);
+
+#ifdef ENABLE_IPV6
+	{
+		Value &IPVal = config["IPv6"];
+		if (IPVal["Enable"].GetBool())
+		{
+			normal("Listening [%s]:%d...", IPVal["Address"].GetString(), IPVal["Port"].GetUint());
+			server.Listen6(IPVal["Address"].GetString(), IPVal["Port"].GetUint(), IPVal["Backlog"].GetInt());
+		}
+	}
+#endif
+}
+
+void loadRooms(Value &rooms)
+{
+	// TODO: loadRooms
 }
 
 int main(int argc, char *argv[])
 {
-//#ifdef _WIN32
-//	logFile = NULL;
-//	fopen_s(&logFile, "log.txt", "wb");
-//	if (!logFile) logFile = stdout;
-//#else
-//	logFile = fopen("log.txt", "wb");
-//	if (!logFile) logFile = stdout;
-//#endif
-	
+	string configFilename = "Config.json";
+	string logFilename = "-";
 
-	init();
+#ifndef _WIN32
+	cmdline::parser arg;
+	arg.add<string>("config", 'c', "configuration file", false, "Config.json");
+	arg.add<string>("log", 'l', "log file", false, "-");
+	arg.parse_check(argc, argv);
+	configFilename = arg.get<string>("config");
+	logFilename = arg.get<string>("log")
+#endif 
+
+	normal("Using configuration file: %s", configFilename.c_str());
+	normal("Log file: %s", logFilename.c_str());
+
+	setLogFile(logFilename);
+
+	Document configDoc = loadConfigObj(configFilename);
+	Value &roomsVal = configDoc["Rooms"];
+	assert(roomsVal.IsArray());
+	loadRooms(roomsVal);
+	
+	initLib();
 
 	// while (true)
 	{
@@ -75,26 +143,15 @@ int main(int argc, char *argv[])
 
 		server.EnableTimer(CHECK_INTERVAL);
 
-#ifdef ENABLE_IPV4
-		server.Listen(LISTEN_ADDR, LISTEN_PORT, LISTEN_BACKLOG);
-		normal("Listening %s:%d...", LISTEN_ADDR, LISTEN_PORT);
-#endif
-
-#ifdef ENABLE_IPV6
-		server.Listen6(LISTEN_ADDR6, LISTEN_PORT6, LISTEN_BACKLOG6);
-		normal("Listening [%s]:%d...", LISTEN_ADDR6, LISTEN_PORT6);
-#endif
+		configServer(server, configDoc["Server"]);
 
 		thread th(eventEntry, &server);
 		getchar();
 
 		server.Stop();
-
 		th.join();
 
 		normal("%s", "Stopped.");
-
-		//server.~TcpServer();
 	}
 
 #ifdef MEM_DEBUG
