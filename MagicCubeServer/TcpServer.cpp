@@ -78,9 +78,14 @@ bool TcpServer::Listen6(string address, unsigned short port, int backlog)
 	}
 	evutil_make_listen_socket_reuseable(listener6);
 
+#ifndef _WIN32
+	int yes = 1;     
+	setsockopt(listener6, IPPROTO_IPV6, IPV6_V6ONLY, (void *)&yes, sizeof(yes));
+#endif
+
 	sockaddr_in6 sin6;
 	sin6.sin6_family = AF_INET6;
-	evutil_inet_pton(AF_INET6, address.c_str(), &(sin6.sin6_addr.s6_addr));
+	evutil_inet_pton(AF_INET6, address.c_str(), sin6.sin6_addr.s6_addr);
 	sin6.sin6_port = htons(port);
 
 	if (::bind(listener6, (sockaddr *)&sin6, sizeof(sin6)) < 0)
@@ -97,6 +102,7 @@ bool TcpServer::Listen6(string address, unsigned short port, int backlog)
 		return false;
 	}
 
+	evutil_make_socket_nonblocking(listener6);
 	return true;
 }
 
@@ -105,15 +111,15 @@ void TcpServer::Accept6Callback(short event)
 	evutil_socket_t fd;
 	sockaddr_in6 sin6;
 	socklen_t slen = (socklen_t)sizeof(sin6);
-	fd = accept(listener, (sockaddr *)&sin6, &slen);
+	fd = accept(listener6, (sockaddr *)&sin6, &slen);
 	if (fd < 0)
 	{
-		_perror("accept");
+		_perror("accept6");
 		return;
 	}
 
 	Session *sess = new Session(*this, sin6, fd);
-	log_normal("accept fd = %u from [%s]:%d", static_cast<unsigned int>(fd), sess->RemoteAddress.c_str(), sess->RemotePort);
+	log_normal("accept6 fd = %u from [%s]:%d", static_cast<unsigned int>(fd), sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
 	Sessions.push_back(sess);
 	sess->Iter = Sessions.end();

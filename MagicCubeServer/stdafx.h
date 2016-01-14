@@ -54,6 +54,7 @@ typedef int socklen_t;
 #define _log(type, format, ...) do {FILE *__fd = logFile; printTime(__fd); fprintf(__fd, "[%s] ", type); fprintf(__fd, format, ##__VA_ARGS__); fprintf(__fd, "\n");} while (false)
 #define log_normal(format, ...) _log("normal", format, ##__VA_ARGS__)
 #define log_debug(format, ...) _log("debug", format, ##__VA_ARGS__)
+#define log_warn(format, ...) _log("WARN", format, ##__VA_ARGS__)
 #define log_error(format, ...) do {_log("ERROR", format, ##__VA_ARGS__); abort();} while (false)
 #define log_fatal(format, ...) do {_log("FATAL", format, ##__VA_ARGS__); abort();} while (false)
 

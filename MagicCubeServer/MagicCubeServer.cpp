@@ -41,15 +41,18 @@ void setLogFile(string filename)
 {
 	if (filename != "-")
 	{
+		logFile = NULL;
 #ifdef _WIN32
-		logFile = NULL;
 		fopen_s(&logFile, filename.c_str(), "w+");
-		if (!logFile) logFile = stdout;
 #else
-		logFile = NULL;
 		logFile = fopen(filename.c_str(), "w+");
-		if (!logFile) logFile = stdout;
 #endif 
+		if (!logFile)
+		{
+			logFile = stdout;
+			_perror("fopen");
+			log_warn("%s", "open log file error");
+		}
 	}
 }
 
