@@ -9,12 +9,12 @@
 
 #ifdef USE_GL
 
-typedef void(*ptrCommandHandler)(string);
+typedef void(*CommandHandler)(string);
 
 void initCommandHandlers();
-void addCommandHandler(string, ptrCommandHandler);
+void addCommandHandler(string, CommandHandler);
 void execCommand(string);
 
-extern map<string, ptrCommandHandler> commandHandler;
+extern map<string, CommandHandler> commandHandler;
 
 #endif

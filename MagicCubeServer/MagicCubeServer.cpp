@@ -146,6 +146,8 @@ int main(int argc, char *argv[])
 		configServer(server, configDoc["Server"]);
 
 		thread th(eventEntry, &server);
+
+		initHandlers();
 		handleCommand(server);
 
 		server.Stop();

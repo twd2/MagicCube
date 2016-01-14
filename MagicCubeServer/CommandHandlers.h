@@ -2,7 +2,7 @@
 
 #include "TcpServer.h"
 
-typedef void(*ptrCommandHandler)(TcpServer&, string);
+typedef void(*CommandHandler)(TcpServer&, string&);
 
 void initHandlers();
 void handleCommand(TcpServer&);

@@ -3,7 +3,7 @@
 
 #ifdef USE_GL
 
-map<string, ptrCommandHandler> commandHandler;
+map<string, CommandHandler> commandHandler;
 
 void rotateHandler(string value)
 {
@@ -210,7 +210,7 @@ void echoHandler(string value)
 	printf("%s\n", value.c_str());
 }
 
-void setSolverHandler(string value)
+void set_solverHandler(string value)
 {
 	value = toLowerString(value);
 	if (value == "" || value == "general")
@@ -227,13 +227,13 @@ void setSolverHandler(string value)
 	}
 }
 
-void getSolverHandler(string value)
+void get_solverHandler(string value)
 {
 	printf("%s\n", currentSolver.c_str());
 }
 
 
-void addCommandHandler(string cmd, ptrCommandHandler handler)
+void addCommandHandler(string cmd, CommandHandler handler)
 {
 	commandHandler[cmd] = handler;
 }
@@ -249,10 +249,10 @@ void execCommand(string cmd)
 			value = cmd.substr(index + 1);
 			cmd = cmd.substr(0, index);
 		}
-		cmd = toUpperString(cmd);
+		cmd = toLowerString(cmd);
 
 		// other commands
-		ptrCommandHandler handler = commandHandler[cmd];
+		CommandHandler handler = commandHandler[cmd];
 		if (handler != NULL)
 		{
 			handler(value);
@@ -260,7 +260,7 @@ void execCommand(string cmd)
 		else
 		{
 			// rotate
-			handler = commandHandler["ROTATE"];
+			handler = commandHandler["rotate"];
 			if (handler != NULL)
 			{
 				handler(cmd);
@@ -283,24 +283,26 @@ void execCommand(string cmd)
 
 void initCommandHandlers()
 {
-	addCommandHandler("ROTATE", rotateHandler);
-	addCommandHandler("CHECK", checkHandler);
-	addCommandHandler("HELP", helpHandler);
-	addCommandHandler("ABOUT", aboutHandler);
-	addCommandHandler("RESET", resetHandler);
-	addCommandHandler("SOLVE", solveHandler);
-	addCommandHandler("PLAY", playHandler);
-	addCommandHandler("STOP", stopHandler);
-	addCommandHandler("RANDOM", randomHandler);
-	addCommandHandler("FILE", fileHandler);
-	addCommandHandler("LOAD", loadHandler);
-	addCommandHandler("SAVE", saveHandler);
-	addCommandHandler("TEST", testHandler);
-	addCommandHandler("TRAN", tranHandler);
-	addCommandHandler("AXIS", axisHandler);
-	addCommandHandler("ECHO", echoHandler);
-	addCommandHandler("SET_SOLVER", setSolverHandler);
-	addCommandHandler("GET_SOLVER", getSolverHandler);
+#define HAND(x) addCommandHandler(#x, x##Handler)
+	HAND(rotate);
+	HAND(check);
+	HAND(help);
+	HAND(about);
+	HAND(reset);
+	HAND(solve);
+	HAND(play);
+	HAND(stop);
+	HAND(random);
+	HAND(file);
+	HAND(load);
+	HAND(save);
+	HAND(test);
+	HAND(tran);
+	HAND(axis);
+	HAND(echo);
+	HAND(set_solver);
+	HAND(get_solver);
+#undef HAND
 }
 
 #endif

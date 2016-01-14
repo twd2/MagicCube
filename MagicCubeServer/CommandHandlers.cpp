@@ -1,16 +1,16 @@
 #include "stdafx.h"
 #include "CommandHandlers.h"
 
-map<string, ptrCommandHandler> handlers;
+map<string, CommandHandler> handlers;
 
-void addHandler(string cmd, ptrCommandHandler handler)
+void addHandler(string cmd, CommandHandler handler)
 {
 	handlers[cmd] = handler;
 }
 
-ptrCommandHandler delHandler(string cmd)
+CommandHandler delHandler(string cmd)
 {
-	ptrCommandHandler oldHandler = handlers[cmd];
+	CommandHandler oldHandler = handlers[cmd];
 	handlers[cmd] = NULL;
 	return oldHandler;
 }
@@ -18,7 +18,9 @@ ptrCommandHandler delHandler(string cmd)
 void handleCommand(TcpServer &server)
 {
 	string cmd, args;
-	while (getline(cin, cmd) && server.IsRunning)
+
+	printf("Server> ");
+	while (server.IsRunning && getline(cin, cmd))
 	{
 		size_t i = cmd.find(' ');
 		args = "";
@@ -36,12 +38,20 @@ void handleCommand(TcpServer &server)
 		}
 		else
 		{
-			log_normal("Unhandled command %s", cmd.c_str());
+			printf("Unhandled command %s\n", cmd.c_str());
 		}
+		printf("Server> ");
 	}
+}
+
+void exitHandler(TcpServer &server, string &args)
+{
+	server.Stop();
 }
 
 void initHandlers()
 {
-
+#define HAND(x) addHandler(#x, x##Handler)
+	HAND(exit);
+#undef HAND
 }
