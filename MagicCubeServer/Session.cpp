@@ -319,7 +319,7 @@ void Session::OnHTTPRequest(const string &req)
 
 	unique_lock<mutex> lck(writeLock);
 
-	string content = "<h1>It really works!</h1><p>" /*+ to_string(rand()) +*/ "</p>";
+	string content = "<h1>It really works!</h1>\n<p>But... this isn't a HTTP service.</p>";
 	string header = "HTTP/1.0 200 OK\r\nServer: Wandai/0.1\r\nConnection: close\r\nContent-Type: text/html\r\nContent-Length: " + to_string(content.length()) + "\r\n\r\n";
 	string data = header + content;
 
