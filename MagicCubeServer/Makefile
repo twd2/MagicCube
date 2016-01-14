@@ -11,7 +11,7 @@ ifeq ($(shell uname),Linux)
 	# linker
 	LD = g++
 	LIB_DIR = lib/linux
-	LIBS = -lCubeCommon -lstdc++ -lc -lm -ldl -levent -lpthread
+	LIBS = -lCubeCommon -levent -lm -ldl -lpthread -lstdc++ -lc
 	LINKER_FLAGS = -L $(LIB_DIR) -L ../CubeCommon/build
 else
 
