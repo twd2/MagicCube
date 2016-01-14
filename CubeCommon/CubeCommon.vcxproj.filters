@@ -21,22 +21,19 @@
     <ClInclude Include="stdafx.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Cube.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="CubeError.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="types.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="utilities.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="CubeCommon.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeTypes.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,10 +47,10 @@
     <ClCompile Include="CubeError.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="types.cpp">
+    <ClCompile Include="utilities.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="utilities.cpp">
+    <ClCompile Include="CubeTypes.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

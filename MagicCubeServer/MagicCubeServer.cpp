@@ -5,7 +5,7 @@ FILE *logFile = stdout;
 
 void libeventError(int errcode)
 {
-	fatal("libevent fatal error occurred, error code: %d\n", errcode);
+	log_fatal("libevent fatal error occurred, error code: %d\n", errcode);
 	exit(1);
 }
 
@@ -88,7 +88,7 @@ void configServer(TcpServer &server, Value &config)
 		Value &IPVal = config["IPv4"];
 		if (IPVal["Enable"].GetBool())
 		{
-			normal("Listening %s:%d...", IPVal["Address"].GetString(), IPVal["Port"].GetUint());
+			log_normal("Listening %s:%d...", IPVal["Address"].GetString(), IPVal["Port"].GetUint());
 			server.Listen(IPVal["Address"].GetString(), IPVal["Port"].GetUint(), IPVal["Backlog"].GetInt());
 		}
 	}
@@ -122,11 +122,11 @@ int main(int argc, char *argv[])
 	arg.add<string>("log", 'l', "log file", false, "-");
 	arg.parse_check(argc, argv);
 	configFilename = arg.get<string>("config");
-	logFilename = arg.get<string>("log")
+	logFilename = arg.get<string>("log");
 #endif 
 
-	normal("Using configuration file: %s", configFilename.c_str());
-	normal("Log file: %s", logFilename.c_str());
+	log_normal("Using configuration file: %s", configFilename.c_str());
+	log_normal("Log file: %s", logFilename.c_str());
 
 	setLogFile(logFilename);
 
@@ -146,12 +146,12 @@ int main(int argc, char *argv[])
 		configServer(server, configDoc["Server"]);
 
 		thread th(eventEntry, &server);
-		getchar();
+		handleCommand(server);
 
 		server.Stop();
 		th.join();
 
-		normal("%s", "Stopped.");
+		log_normal("%s", "Stopped.");
 	}
 
 #ifdef MEM_DEBUG

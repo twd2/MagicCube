@@ -110,6 +110,7 @@ bool isWholeRotate(CubeRotateMethod m)
 	return (m >= ROTATE_WHOLEX && m <= ROTATE_WHOLEZ) || (m >= ROTATE_WHOLEXi && m <= ROTATE_WHOLEZi);
 }
 
+// This table was written by hand, so if you find any mistake, just let me know :)
 int format1ToFormat2Table[FORMAT1_LENGTH] = {
 	-1, 17, 24, -1, -1, 51, -1, 16, -1, -1, -1, 52, -1, 15, -1, 35, -1, 53, //(0, 0, 0) ~ (2, 0, 0)
 	-1, 14, 21, -1, -1, -1, -1, 13, -1, -1, -1, -1, -1, 12, -1, 32, -1, -1, //(0, 1, 0) ~ (2, 1, 0)

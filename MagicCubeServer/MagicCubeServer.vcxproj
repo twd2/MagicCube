@@ -157,6 +157,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommandHandlers.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="MagicCubeServer.h" />
     <ClInclude Include="ManualEvent.h" />
@@ -165,10 +166,10 @@
     <ClInclude Include="Session.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SyncBool.h" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="utilities.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CommandHandlers.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="MagicCubeServer.cpp" />
     <ClCompile Include="ManualEvent.cpp" />

@@ -58,7 +58,7 @@ void TcpServer::AcceptCallback(short event)
 	}
 
 	Session *sess = new Session(*this, sin, fd);
-	normal("accept fd = %u from %s:%d", static_cast<unsigned int>(fd), sess->RemoteAddress.c_str(), sess->RemotePort);
+	log_normal("accept fd = %u from %s:%d", static_cast<unsigned int>(fd), sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
 	Sessions.push_back(sess);
 	sess->Iter = Sessions.end();
@@ -139,6 +139,7 @@ void TcpServer::Start()
 	}
 #endif
 
+	IsRunning = true;
 	event_base_dispatch(Base);
 }
 
@@ -170,6 +171,7 @@ void TcpServer::Stop()
 #endif
 
 	event_base_loopbreak(Base);
+	IsRunning = false;
 }
 
 void TcpServer::EnableTimer(long interval)
@@ -195,7 +197,7 @@ void TcpServer::EnableTimer(long interval)
 
 void TcpServer::TimerCallback(short event)
 {
-	normal("%s", "Timer tick.");
+	log_normal("%s", "Timer tick.");
 
 	time_t now = time(NULL);
 
@@ -205,7 +207,7 @@ void TcpServer::TimerCallback(short event)
 		{
 			sess->SendPackage("Timed out, good bye~");
 			sess->FlushAndClose();
-			normal("Cleaning %p", sess);
+			log_normal("Cleaning %p", sess);
 		}
 	}
 

@@ -21,9 +21,6 @@
     <ClInclude Include="stdafx.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="include\GLFW\glfw3.h">
       <Filter>Headers</Filter>
     </ClInclude>

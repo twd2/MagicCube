@@ -101,7 +101,7 @@ void Session::ReadCallback()
 	if (!IsAlive) return;
 
 	unique_lock<mutex> lck(readLock);
-	debug("fd = %u, entering read", static_cast<unsigned int>(fd));
+	log_debug("fd = %u, entering read", static_cast<unsigned int>(fd));
 	while (IsAlive)
 	{
 		KeepAlive();
@@ -151,7 +151,7 @@ void Session::ReadCallback()
 				if (header.DataLength == 0 || header.DataLength > PACKAGE_MAXLENGTH)
 				{
 					// package is zero or too long
-					debug("fd = %u, data length: %d == 0 || too long", static_cast<unsigned int>(fd), header.DataLength);
+					log_debug("fd = %u, data length: %d == 0 || too long", static_cast<unsigned int>(fd), header.DataLength);
 					
 					if (header.DataLength == 0)
 						readErrorCode = READERROR_PACKAGE_EMPTY;
@@ -182,7 +182,7 @@ void Session::ReadCallback()
 			while (readLength < currentPackage->Header.DataLength)
 			{
 				size_t currentLength = bufferevent_read(buffev, currentPackage->Data + readLength, currentPackage->Header.DataLength - readLength);
-				debug("fd = %u, recv %u", static_cast<unsigned int>(fd), currentLength);
+				log_debug("fd = %u, recv %u", static_cast<unsigned int>(fd), currentLength);
 				if (currentLength <= 0) break;
 
 				readLength += currentLength;
@@ -235,7 +235,7 @@ void Session::ReadCallback()
 		}
 		break;
 	}
-	debug("fd = %u, exitting read", static_cast<unsigned int>(fd));
+	log_debug("fd = %u, exitting read", static_cast<unsigned int>(fd));
 }
 
 void Session::WriteCallback()
@@ -246,18 +246,18 @@ void Session::WriteCallback()
 		unique_lock<mutex> lck(writeLock);
 		if (isFirstCall)
 		{
-			debug("fd = %u, dropping first write callback calling", static_cast<unsigned int>(fd));
+			log_debug("fd = %u, dropping first write callback calling", static_cast<unsigned int>(fd));
 			// drop first write callback calling
 			isFirstCall = false;
 			return;
 		}
 	}
 
-	debug("fd = %u, write callback called", static_cast<unsigned int>(fd));
+	log_debug("fd = %u, write callback called", static_cast<unsigned int>(fd));
 
 	if (closeAfterWritten)
 	{
-		debug("fd = %u, closeAfterWritten is set, closing", static_cast<unsigned int>(fd));
+		log_debug("fd = %u, closeAfterWritten is set, closing", static_cast<unsigned int>(fd));
 		Close();
 	}
 }
@@ -281,7 +281,7 @@ void Session::ErrorCallback(short event)
 		__perror("error");
 	}
 
-	debug("fd = %u, %s", static_cast<unsigned int>(fd), msg);
+	log_debug("fd = %u, %s", static_cast<unsigned int>(fd), msg);
 	
 	Close();
 }
@@ -291,7 +291,7 @@ void Session::DoQueue()
 	if (!IsAlive) return;
 
 	unique_lock<mutex> lck(writeLock);
-	debug("fd = %u, dequeuing", static_cast<unsigned int>(fd));
+	log_debug("fd = %u, dequeuing", static_cast<unsigned int>(fd));
 
 	while (!pendingPackages.empty())
 	{
@@ -310,12 +310,12 @@ void Session::DoQueue()
 		pendingPackages.pop();
 	}
 
-	debug("fd = %u, dequeued", static_cast<unsigned int>(fd));
+	log_debug("fd = %u, dequeued", static_cast<unsigned int>(fd));
 }
 
 void Session::OnHTTPRequest(const string &req)
 {
-	debug("regarded as HTTP request (fd = %u)", static_cast<unsigned int>(fd));
+	log_debug("regarded as HTTP request (fd = %u)", static_cast<unsigned int>(fd));
 
 	unique_lock<mutex> lck(writeLock);
 
@@ -331,7 +331,7 @@ void Session::OnPackage(Package *&pack)
 {
 	if (!pack || pack->Header.DataLength == 0) return;
 	pack->Data[pack->Header.DataLength - 1] = '\0';
-	debug("on package (fd = %u): %s", static_cast<unsigned int>(fd), pack->Data);
+	log_debug("on package (fd = %u): %s", static_cast<unsigned int>(fd), pack->Data);
 
 	// TODO: process received package
 	
@@ -364,7 +364,7 @@ void Session::Close()
 	if (!IsAlive) return;
 	IsAlive = false;
 
-	debug("fd = %u, closing", static_cast<unsigned int>(fd));
+	log_debug("fd = %u, closing", static_cast<unsigned int>(fd));
 	
 	if (buffev)
 	{

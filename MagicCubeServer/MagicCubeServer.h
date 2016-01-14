@@ -8,6 +8,7 @@
 #endif
 
 #include "Config.h"
+#include "CommandHandlers.h"
 #include "TcpServer.h"
 #include "Session.h"
 #include "ManualEvent.h"

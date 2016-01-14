@@ -258,7 +258,6 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StepFilter.h" />
     <ClInclude Include="ReduceFilter.h" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="utilities.h" />
     <ClInclude Include="Vertices.h" />
   </ItemGroup>

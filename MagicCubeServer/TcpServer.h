@@ -7,6 +7,8 @@
 class TcpServer
 {
 public:
+	bool IsRunning = false;
+
 	event_base *Base;
 
 	size_t MaxConnections = static_cast<size_t>(-1);

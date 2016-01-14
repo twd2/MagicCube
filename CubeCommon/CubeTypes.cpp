@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "types.h"
+#include "CubeTypes.h"
 
 map<CubeRotateMethod, string> CubeRotateMethodName = 
 {

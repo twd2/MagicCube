@@ -2,23 +2,23 @@
 #include "Cube.h"
 
 map<char, CubeColor> CharColorMap = {
-		{'-', COLOR_UNUSED},
-		{'W', COLOR_WHITE },
-		{'O', COLOR_ORANGE},
-		{'B', COLOR_BLUE  },
-		{'R', COLOR_RED   },
-		{'G', COLOR_GREEN },
-		{'Y', COLOR_YELLOW}
+	{'-', COLOR_UNUSED},
+	{'W', COLOR_WHITE },
+	{'O', COLOR_ORANGE},
+	{'B', COLOR_BLUE  },
+	{'R', COLOR_RED   },
+	{'G', COLOR_GREEN },
+	{'Y', COLOR_YELLOW}
 };
 
 map<CubeColor, char> ColorCharMap = {
-		{COLOR_UNUSED, '-'},
-		{COLOR_WHITE , 'W'},
-		{COLOR_ORANGE, 'O'},
-		{COLOR_BLUE  , 'B'},
-		{COLOR_RED   , 'R'},
-		{COLOR_GREEN , 'G'},
-		{COLOR_YELLOW, 'Y'}
+	{COLOR_UNUSED, '-'},
+	{COLOR_WHITE , 'W'},
+	{COLOR_ORANGE, 'O'},
+	{COLOR_BLUE  , 'B'},
+	{COLOR_RED   , 'R'},
+	{COLOR_GREEN , 'G'},
+	{COLOR_YELLOW, 'Y'}
 };
 
 Cube::Cube()

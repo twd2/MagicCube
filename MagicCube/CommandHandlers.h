@@ -9,6 +9,8 @@
 
 #ifdef USE_GL
 
+typedef void(*ptrCommandHandler)(string);
+
 void initCommandHandlers();
 void addCommandHandler(string, ptrCommandHandler);
 void execCommand(string);
