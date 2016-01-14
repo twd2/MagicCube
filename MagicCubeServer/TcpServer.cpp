@@ -113,7 +113,7 @@ void TcpServer::Accept6Callback(short event)
 	}
 
 	Session *sess = new Session(*this, sin6, fd);
-	normal("accept fd = %u from [%s]:%d", static_cast<unsigned int>(fd), sess->RemoteAddress.c_str(), sess->RemotePort);
+	log_normal("accept fd = %u from [%s]:%d", static_cast<unsigned int>(fd), sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
 	Sessions.push_back(sess);
 	sess->Iter = Sessions.end();

@@ -12,7 +12,7 @@ all:
 	-mkdir build
 	make lib$(PROJECT).a
 
-build/%.o: %.cpp %.h types.h utilities.h
+build/%.o: %.cpp %.h CubeTypes.h utilities.h
 	$(CC) -c $(CC_FLAGS) -o $@ $<
 
 lib$(PROJECT).a: $(OBJECTS)

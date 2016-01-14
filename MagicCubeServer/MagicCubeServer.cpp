@@ -63,6 +63,11 @@ Document loadConfigObj(string filename)
 	}
 	configFile.close();
 
+	if (configJson == "")
+	{
+		log_error("config file is not found or empty");
+	}
+
 	Document configDoc;
 	configDoc.Parse(configJson.c_str());
 	assert(configDoc.IsObject());
@@ -99,7 +104,7 @@ void configServer(TcpServer &server, Value &config)
 		Value &IPVal = config["IPv6"];
 		if (IPVal["Enable"].GetBool())
 		{
-			normal("Listening [%s]:%d...", IPVal["Address"].GetString(), IPVal["Port"].GetUint());
+			log_normal("Listening [%s]:%d...", IPVal["Address"].GetString(), IPVal["Port"].GetUint());
 			server.Listen6(IPVal["Address"].GetString(), IPVal["Port"].GetUint(), IPVal["Backlog"].GetInt());
 		}
 	}
@@ -145,6 +150,7 @@ int main(int argc, char *argv[])
 
 		configServer(server, configDoc["Server"]);
 
+		server.IsRunning = true;
 		thread th(eventEntry, &server);
 
 		initHandlers();
