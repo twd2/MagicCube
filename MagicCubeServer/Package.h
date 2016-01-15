@@ -14,6 +14,8 @@ struct Package
 	PackageHeader Header;
 	char Data[0];
 
+	void *operator new(size_t, void*) = delete;
+
 	// suger for variable data size
 	void *operator new(size_t, package_len_t);
 };

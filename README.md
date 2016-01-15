@@ -9,9 +9,13 @@
 
 1. Your interest.
 2. [GLFW](http://www.glfw.org/) if compile without NOGL option.
-3. [libevent](https://github.com/libevent/libevent) 2.0+ (for server)
-4. [RapidJSON](https://github.com/miloyip/rapidjson) (for server)
+3. [libevent](https://github.com/libevent/libevent) 2.0+
+4. [RapidJSON](https://github.com/miloyip/rapidjson)
 5. [cmdline](https://github.com/tanakh/cmdline) (for server)
+
+## Head Files And Precompiled Libraries
+
+TODO
 
 # Solvers
 
@@ -23,16 +27,15 @@
 
 ## Windows - Visual Studio
 
+0. Put downloaded head files directory (`include`) and precompiled libraries directory (`lib`) into the root of the project directory.
 1. Open `MagicCube.sln`.
-2. Configure the include directories and libraries directories.
-3. Put `glu32.lib;opengl32.lib;glfw3dll.lib` into the libraries directories that you configured.
-4. Build!
+2. Build!
 
 ## OS X & Linux
 
-0. If the OS is Linux, install `xorg-dev`, `libgl1-mesa-dev` and `libglu1-mesa-dev` packages.
-1. Build glfw (BUILD\_SHARED\_LIBS=OFF).
-2. Put `libglfw3.a` into `lib/osx` or `lib/linux` (you may need create this directory before).
+0. If you are using Linux, install `xorg-dev`, `libgl1-mesa-dev` and `libglu1-mesa-dev` packages.
+1. Build glfw and libevent, and make static libraries.
+2. Put `libglfw3.a` and `libevent.a` into `lib/osx` or `lib/linux` (you may need create this directory before).
 3. Execute `make -j8` and `build/MagicCube` is the binary.
 
 # Building - Server
@@ -43,8 +46,8 @@ See #Building.
 
 ## OS X & Linux
 
-1. Build libevent 2.0+.
-2. Put `libevent.a` into `MagicCubeServer/lib/osx` or `MagicCubeServer/lib/linux` (you may need create this directory before).
+1. Build libevent, and make a static library.
+2. Put `libevent.a` into `lib/osx/` or `lib/linux/` (you may need create this directory before).
 3. Execute `make -j8 server` and `MagicCubeServer/build/MagicCubeServer` is the binary.
 
 # Data Format

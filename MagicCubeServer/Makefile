@@ -10,7 +10,7 @@ ifeq ($(shell uname),Linux)
 
 	# linker
 	LD = g++
-	LIB_DIR = lib/linux
+	LIB_DIR = ../lib/linux
 	LIBS = -lCubeCommon -levent -lm -ldl -lpthread -lstdc++ -lc
 	LINKER_FLAGS = -L $(LIB_DIR) -L ../CubeCommon/build
 else
@@ -21,7 +21,7 @@ ifeq ($(shell uname),Darwin)
 	CC_FLAGS = -O2 -Wall -fno-strict-aliasing -std=c++11 -I $(INC_DIR) -I ../include
 
 	# linker
-	LIB_DIR = lib/osx
+	LIB_DIR = ../lib/osx
 	LIBS = -lCubeCommon -lc++ -lm -lSystem -levent
 	LINKER_FLAGS = -L $(LIB_DIR) -L ../CubeCommon/build
 else
