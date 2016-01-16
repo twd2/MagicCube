@@ -180,25 +180,34 @@ void TcpServer::Stop()
 	IsRunning = false;
 }
 
-void TcpServer::EnableTimer(long interval)
+void TcpServer::SetTimer(event *&timer, long interval)
+{
+	ClearTimer(timer);
+
+	timeval *timerInterval = new timeval;
+	evutil_timerclear(timerInterval);
+	timerInterval->tv_sec = interval;
+
+	timer = event_new(Base, -1, EV_PERSIST, timerCallbackDispatcher, (void *)this);
+	evtimer_add(timer, timerInterval);
+
+	delete timerInterval;
+	timerInterval = NULL;
+}
+
+void TcpServer::ClearTimer(event *&timer)
 {
 	if (timer)
 	{
 		event_del(timer);
 		event_free(timer);
 		timer = NULL;
-	
-		delete timerInterval;
-		timerInterval = NULL;
 	}
+}
 
-	timerInterval = new timeval;
-	evutil_timerclear(timerInterval);
-	timerInterval->tv_sec = interval;
-
-	timer = event_new(Base, -1, EV_PERSIST, timerCallbackDispatcher, (void *)this);
-	evtimer_add(timer, timerInterval);
-	event_add(timer, NULL);
+void TcpServer::EnableTimer(long interval)
+{
+	SetTimer(defaultTimer, interval);
 }
 
 void TcpServer::TimerCallback(short event)
@@ -240,7 +249,7 @@ void TcpServer::CleanSessions()
 	for (list<Session*>::iterator iter = Sessions.begin(); iter != Sessions.end(); ++iter)
 	{
 		Session *&sess = *iter;
-		//normal("Checking %p", sess);
+		log_debug("Checking %p", sess);
 		if (sess)
 		{
 			if (!sess->IsAlive)
@@ -260,16 +269,7 @@ TcpServer::~TcpServer()
 {
 	Stop();
 
-	if (timer)
-	{
-		event_free(timer);
-		timer = NULL;
-	}
-	if (timerInterval)
-	{
-		delete timerInterval;
-		timerInterval = NULL;
-	}
+	ClearTimer(defaultTimer);
 
 	for (auto &sess : Sessions)
 	{

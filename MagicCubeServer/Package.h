@@ -18,5 +18,6 @@ struct Package
 
 	// suger for variable data size
 	void *operator new(size_t, package_len_t);
+	void operator delete(void*);
 };
 #pragma pack(pop)

@@ -63,8 +63,8 @@ typedef int socklen_t;
 	T& operator=(const T&) = delete;
 
 #ifdef NDEBUG
-#undef debug
-#define debug(format, ...) (int)0
+#undef log_debug
+#define log_debug(format, ...) (int)0
 #endif
 
 #include <rapidjson/document.h>

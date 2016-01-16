@@ -30,11 +30,13 @@ public:
 	void Start();
 	void Stop();
 
+	void SetTimer(event*&, long);
+	void ClearTimer(event*&);
 	void EnableTimer(long);
 
-	void TimerCallback(short);
-	void CleanSession(Session*);
-	void CleanSessions();
+	virtual void TimerCallback(short);
+	virtual void CleanSession(Session*);
+	virtual void CleanSessions();
 
 	~TcpServer();
 
@@ -53,8 +55,7 @@ private:
 	evutil_socket_t listener6 = static_cast<evutil_socket_t>(0);
 #endif
 
-	timeval *timerInterval = NULL;
-	event *timer = NULL;
+	event *defaultTimer = NULL;
 };
 
 #ifdef ENABLE_IPV4
