@@ -51,7 +51,10 @@ void exitHandler(TcpServer &server, string &args)
 			sess->SendPackage("Server is closing."); // TODO: change message
 			sess->FlushAndClose();
 	}
-	while (server.Sessions.size() > 0);
+	while (server.Sessions.size() > 0)
+	{
+		usleep(100000);
+	}
 	server.Stop();
 }
 

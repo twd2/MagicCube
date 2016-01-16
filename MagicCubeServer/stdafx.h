@@ -24,6 +24,8 @@ typedef int socklen_t;
 		#undef ENABLE_IPV6
 	#endif
 #define __perror(s) fprintf(stderr, "%s: Win32 Error %d(0x%08x)\n", s, GetLastError(), GetLastError())
+#define sleep(t) Sleep((t) * 1000)
+#define usleep(t) Sleep((t) / 1000)
 #ifdef MEM_DEBUG
 	#define _CRTDBG_MAP_ALLOC
 	#include <stdlib.h>
