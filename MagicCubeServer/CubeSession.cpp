@@ -1,13 +1,6 @@
 #include "stdafx.h"
 #include "CubeSession.h"
 
-map<UserFacingError, string> UserFacingErrorMessage =
-{
-	{ ERROR_AUTH_FAILED,  "authorization failed" },
-	{ ERROR_AUTH,         "authorization needed" },
-	{ ERROR_KICKED,       "kicked by server" }
-};
-
 #ifdef ENABLE_IPV4
 CubeSession::CubeSession(TcpServer &server, sockaddr_in addr, evutil_socket_t fd)
 	: Session(server, addr, fd)

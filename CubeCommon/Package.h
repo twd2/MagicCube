@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Config.h"
+#include "NetworkConfig.h"
 
 #pragma pack(push, 1)
 struct PackageHeader

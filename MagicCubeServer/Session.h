@@ -3,8 +3,6 @@
 #include <list>
 #include <iterator>
 #include <queue>
-#include "Package.h"
-#include "ManualEvent.h"
 
 class TcpServer;
 
@@ -16,17 +14,6 @@ enum ReadStateType
 	READSTATE_READING_LINE,
 	READSTATE_ERROR
 };
-
-enum SessionErrorType
-{
-	SESSIONERROR_PROTOCOL_MISMATCH,
-	SESSIONERROR_PACKAGE_EMPTY,
-	SESSIONERROR_PACKAGE_TOO_LONG,
-	SESSIONERROR_SERVER_CLOSE,
-	SESSIONERROR_SERVER_TIMEOUT,
-	SESSIONERROR_UNKNOWN
-};
-extern map<SessionErrorType, string> SessionErrorMessage;
 
 class Session
 {

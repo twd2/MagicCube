@@ -154,21 +154,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="CommandHandlers.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="CubeServer.h" />
     <ClInclude Include="CubeSession.h" />
     <ClInclude Include="MagicCubeServer.h" />
     <ClInclude Include="ManualEvent.h" />
-    <ClInclude Include="Package.h" />
     <ClInclude Include="RoomInfo.h" />
     <ClInclude Include="TcpServer.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="SyncBool.h" />
     <ClInclude Include="utilities.h" />
   </ItemGroup>
   <ItemGroup>
@@ -177,7 +172,6 @@
     <ClCompile Include="CubeSession.cpp" />
     <ClCompile Include="MagicCubeServer.cpp" />
     <ClCompile Include="ManualEvent.cpp" />
-    <ClCompile Include="Package.cpp" />
     <ClCompile Include="RoomInfo.cpp" />
     <ClCompile Include="TcpServer.cpp" />
     <ClCompile Include="Session.cpp" />
@@ -187,7 +181,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="SyncBool.cpp" />
     <ClCompile Include="utilities.cpp" />
   </ItemGroup>
   <ItemGroup>

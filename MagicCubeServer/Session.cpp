@@ -1,16 +1,6 @@
 #include "stdafx.h"
 #include "Session.h"
 
-map<SessionErrorType, string> SessionErrorMessage = 
-{
-	{ SESSIONERROR_PROTOCOL_MISMATCH,  "protocol mismatch"   },
-	{ SESSIONERROR_PACKAGE_EMPTY,      "package is empty"    },
-	{ SESSIONERROR_PACKAGE_TOO_LONG,   "package is too long" },
-	{ SESSIONERROR_SERVER_CLOSE,       "server is closing"   },
-	{ SESSIONERROR_SERVER_TIMEOUT,     "timed out"           },
-	{ SESSIONERROR_UNKNOWN,            "unknown"             }
-};
-
 #ifdef ENABLE_IPV4
 Session::Session(TcpServer &server, sockaddr_in addr, evutil_socket_t fd)
 	: server(server), fd(fd), sAddr(addr)

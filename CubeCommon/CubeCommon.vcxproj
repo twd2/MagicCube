@@ -211,13 +211,17 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="CubeCommon.h" />
     <ClInclude Include="CubeError.h" />
+    <ClInclude Include="NetworkConfig.h" />
+    <ClInclude Include="Package.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="CubeTypes.h" />
+    <ClInclude Include="NetworkTypes.h" />
     <ClInclude Include="utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="CubeError.cpp" />
+    <ClCompile Include="Package.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -227,6 +231,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Static_Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="CubeTypes.cpp" />
+    <ClCompile Include="NetworkTypes.cpp" />
     <ClCompile Include="utilities.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
