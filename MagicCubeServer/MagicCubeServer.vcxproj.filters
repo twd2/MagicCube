@@ -54,6 +54,9 @@
     <ClInclude Include="CubeSession.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="RoomInfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -77,9 +80,6 @@
     <ClCompile Include="Package.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Config.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="utilities.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -90,6 +90,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CubeSession.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RoomInfo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

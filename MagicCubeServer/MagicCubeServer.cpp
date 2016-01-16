@@ -9,7 +9,7 @@ void libeventError(int errcode)
 	exit(1);
 }
 
-void initLib()
+void initLibraries()
 {
 #ifdef _DEBUG
 	event_enable_debug_mode(); // may cause memory leak
@@ -37,88 +37,6 @@ void initLib()
 #endif
 }
 
-void setLogFile(string filename)
-{
-	if (filename != "-")
-	{
-		logFile = NULL;
-#ifdef _WIN32
-		fopen_s(&logFile, filename.c_str(), "w+");
-#else
-		logFile = fopen(filename.c_str(), "w+");
-#endif 
-		if (!logFile)
-		{
-			logFile = stdout;
-			_perror("fopen");
-			log_warn("%s", "open log file error");
-		}
-	}
-}
-
-Document loadConfigObj(string filename)
-{
-	string configJson = "", line;
-	ifstream configFile(filename);
-	while (getline(configFile, line))
-	{
-		configJson += line + "\n";
-	}
-	configFile.close();
-
-	if (configJson == "")
-	{
-		log_error("config file is not found or empty");
-	}
-
-	Document configDoc;
-	configDoc.Parse(configJson.c_str());
-	assert(configDoc.IsObject());
-
-	return move(configDoc);
-}
-
-void configServer(TcpServer &server, Value &config)
-{
-	if (sizeof(size_t) == sizeof(unsigned int))
-	{
-		server.MaxConnections =
-			static_cast<size_t>(config["MaxConnections"].GetInt());
-	}
-	else if (sizeof(size_t) == sizeof(unsigned long long))
-	{
-		server.MaxConnections =
-			static_cast<size_t>(config["MaxConnections"].GetInt64());
-	}
-
-#ifdef ENABLE_IPV4
-	{
-		Value &IPVal = config["IPv4"];
-		if (IPVal["Enable"].GetBool())
-		{
-			log_normal("Listening %s:%d...", IPVal["Address"].GetString(), IPVal["Port"].GetUint());
-			server.Listen(IPVal["Address"].GetString(), IPVal["Port"].GetUint(), IPVal["Backlog"].GetInt());
-		}
-	}
-#endif
-
-#ifdef ENABLE_IPV6
-	{
-		Value &IPVal = config["IPv6"];
-		if (IPVal["Enable"].GetBool())
-		{
-			log_normal("Listening [%s]:%d...", IPVal["Address"].GetString(), IPVal["Port"].GetUint());
-			server.Listen6(IPVal["Address"].GetString(), IPVal["Port"].GetUint(), IPVal["Backlog"].GetInt());
-		}
-	}
-#endif
-}
-
-void loadRooms(Value &rooms)
-{
-	// TODO: loadRooms
-}
-
 int main(int argc, char *argv[])
 {
 	string configFilename = "Config.json";
@@ -141,29 +59,27 @@ int main(int argc, char *argv[])
 	Document configDoc = loadConfigObj(configFilename);
 	Value &roomsVal = configDoc["Rooms"];
 	assert(roomsVal.IsArray());
-	loadRooms(roomsVal);
-	
-	initLib();
+	vector<RoomInfo> rooms = loadRooms(roomsVal);
 
-	// while (true)
-	{
-		CubeServer server;
+	initLibraries();
 
-		server.EnableTimer(CHECK_INTERVAL);
+	CubeServer server;
 
-		configServer(server, configDoc["Server"]);
 
-		server.IsRunning = true;
-		thread th(eventEntry, &server);
+	server.EnableTimer(CHECK_INTERVAL);
 
-		initHandlers();
-		handleCommand(server);
+	configServer(server, configDoc["Server"]);
 
-		server.Stop();
-		th.join();
+	server.IsRunning = true;
+	thread th(eventEntry, &server);
 
-		log_normal("%s", "Stopped.");
-	}
+	initHandlers();
+	handleCommand(server);
+
+	server.Stop();
+	th.join();
+
+	log_normal("%s", "Stopped.");
 
 #ifdef MEM_DEBUG
 #ifdef _WIN32

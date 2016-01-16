@@ -19,6 +19,10 @@
     },
     "Rooms":
     [
-        
+        {
+            "Name": "test",
+            "Key": "123456",
+            "Capacity": 2
+        }
     ]
 }

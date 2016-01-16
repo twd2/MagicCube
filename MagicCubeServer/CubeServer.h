@@ -7,6 +7,8 @@ class CubeServer :
 	public TcpServer
 {
 public:
+	vector<RoomInfo> Rooms;
+
 	CubeServer();
 	~CubeServer();
 

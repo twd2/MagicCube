@@ -12,6 +12,6 @@
 #include "TcpServer.h"
 #include "CubeServer.h"
 #include "Session.h"
-#include "ManualEvent.h"
+#include "RoomInfo.h"
 
 void eventEntry(TcpServer*);
