@@ -18,12 +18,14 @@ public:
 
 #ifdef ENABLE_IPV4
 	bool Listen(string, unsigned short, int);
-	void AcceptCallback(short);
+	virtual void AcceptCallback(short);
+	virtual void OnNewSession(sockaddr_in, evutil_socket_t);
 #endif
 
 #ifdef ENABLE_IPV6
 	bool Listen6(string, unsigned short, int);
-	void Accept6Callback(short);
+	virtual void Accept6Callback(short);
+	virtual void OnNewSession(sockaddr_in6, evutil_socket_t);
 #endif
 
 	// sync, block
@@ -40,10 +42,7 @@ public:
 
 	~TcpServer();
 
-private:
-
-	// prevent copy
-	DISALLOW_COPY_AND_ASSIGN(TcpServer);
+protected:
 
 #ifdef ENABLE_IPV4
 	event *listener_event = NULL;
@@ -56,6 +55,11 @@ private:
 #endif
 
 	event *defaultTimer = NULL;
+
+private:
+
+	// prevent copy
+	DISALLOW_COPY_AND_ASSIGN(TcpServer);
 };
 
 #ifdef ENABLE_IPV4

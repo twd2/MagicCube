@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
 
 	// while (true)
 	{
-		TcpServer server;
+		CubeServer server;
 
 		server.EnableTimer(CHECK_INTERVAL);
 

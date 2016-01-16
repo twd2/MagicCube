@@ -30,16 +30,20 @@ void handleCommand(TcpServer &server)
 			cmd = cmd.substr(0, i);
 		}
 
-		cmd = toLowerString(cmd);
+		if (cmd != "")
+		{
+			cmd = toLowerString(cmd);
 
-		if (handlers[cmd])
-		{
-			handlers[cmd](server, args);
+			if (handlers[cmd])
+			{
+				handlers[cmd](server, args);
+			}
+			else
+			{
+				printf("Unhandled command %s\n", cmd.c_str());
+			}
 		}
-		else
-		{
-			printf("Unhandled command %s\n", cmd.c_str());
-		}
+
 		printf("Server> ");
 	}
 }
@@ -48,8 +52,7 @@ void exitHandler(TcpServer &server, string &args)
 {
 	for (auto &sess : server.Sessions)
 	{
-			sess->SendPackage("Server is closing."); // TODO: change message
-			sess->FlushAndClose();
+		sess->SendError(SESSIONERROR_SERVER_CLOSE);
 	}
 	while (server.Sessions.size() > 0)
 	{

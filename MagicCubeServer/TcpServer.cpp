@@ -57,6 +57,11 @@ void TcpServer::AcceptCallback(short event)
 		return;
 	}
 
+	OnNewSession(sin, fd);
+}
+
+void TcpServer::OnNewSession(sockaddr_in sin, evutil_socket_t fd)
+{
 	Session *sess = new Session(*this, sin, fd);
 	log_normal("accept fd = %u from %s:%d", static_cast<unsigned int>(fd), sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
@@ -118,6 +123,11 @@ void TcpServer::Accept6Callback(short event)
 		return;
 	}
 
+	OnNewSession()
+}
+
+void TcpServer::OnNewSession(sockaddr_in6 sin6, evutil_socket_t fd)
+{
 	Session *sess = new Session(*this, sin6, fd);
 	log_normal("accept6 fd = %u from [%s]:%d", static_cast<unsigned int>(fd), sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();

@@ -10,6 +10,7 @@
 #include "Config.h"
 #include "CommandHandlers.h"
 #include "TcpServer.h"
+#include "CubeServer.h"
 #include "Session.h"
 #include "ManualEvent.h"
 

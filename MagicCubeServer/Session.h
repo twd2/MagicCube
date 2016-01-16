@@ -17,14 +17,16 @@ enum ReadStateType
 	READSTATE_ERROR
 };
 
-enum ReadErrorType
+enum SessionErrorType
 {
-	READERROR_PROTOCOL_MISMATCH,
-	READERROR_PACKAGE_EMPTY,
-	READERROR_PACKAGE_TOO_LONG,
-	READERROR_UNKNOWN = -1
+	SESSIONERROR_PROTOCOL_MISMATCH,
+	SESSIONERROR_PACKAGE_EMPTY,
+	SESSIONERROR_PACKAGE_TOO_LONG,
+	SESSIONERROR_SERVER_CLOSE,
+	SESSIONERROR_SERVER_TIMEOUT,
+	SESSIONERROR_UNKNOWN
 };
-extern map<ReadErrorType, string> ReadErrorMessage;
+extern map<SessionErrorType, string> SessionErrorMessage;
 
 class Session
 {
@@ -41,37 +43,40 @@ public:
 	TcpServer &server;
 
 #ifdef ENABLE_IPV4
-	Session(TcpServer&, sockaddr_in, int);
+	Session(TcpServer&, sockaddr_in, evutil_socket_t);
 #endif
 #ifdef ENABLE_IPV6
-	Session(TcpServer&, sockaddr_in6, int);
+	Session(TcpServer&, sockaddr_in6, evutil_socket_t);
 #endif
 	~Session();
 
 	// invoked again and again when doing complex calculation to avoid being cleaned
 	void KeepAlive();
+	
 	void SetCallbacks();
 	void SetCallbacks(bool, bool, bool);
 	void ClearCallbacks();
-	void ReadCallback();
-	void WriteCallback();
-	void ErrorCallback(short);
+	
+	virtual void ReadCallback();
+	virtual void WriteCallback();
+	virtual void ErrorCallback(short);
+	
 	void DoQueue();
+	
 	virtual void OnLine(const string&);
 	virtual void OnHTTPRequest(const string&);
 	virtual void OnPackage(Package*&);
+
 	void SendPackage(Package*&);
 	void SendPackage(string);
+	virtual void SendError(SessionErrorType);
 
 	void FlushAndClose();
 	void Close();
 
 	static Package *MakePackage(string&);
 
-private:
-
-	// prevent copying
-	DISALLOW_COPY_AND_ASSIGN(Session);
+protected:
 
 	bufferevent *buffev;
 	evutil_socket_t fd;
@@ -86,7 +91,7 @@ private:
 
 	mutex readLock;
 	ReadStateType readState = READSTATE_NONE;
-	ReadErrorType readErrorCode = READERROR_UNKNOWN;
+	SessionErrorType readErrorCode = SESSIONERROR_UNKNOWN;
 	size_t readLength;
 	char headerBuffer[sizeof(PackageHeader)];
 	string lineBuffer;
@@ -96,6 +101,11 @@ private:
 	queue<Package*> pendingPackages;
 	mutex writeLock, queueLock;
 	bool closeAfterWritten = false;
+
+private:
+
+	// prevent copying
+	DISALLOW_COPY_AND_ASSIGN(Session);
 };
 
 package_len_t htonpacklen(package_len_t);

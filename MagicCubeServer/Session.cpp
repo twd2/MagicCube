@@ -1,16 +1,18 @@
 #include "stdafx.h"
 #include "Session.h"
 
-map<ReadErrorType, string> ReadErrorMessage = 
+map<SessionErrorType, string> SessionErrorMessage = 
 {
-	{ READERROR_PROTOCOL_MISMATCH,  "protocol mismatch"   },
-	{ READERROR_PACKAGE_TOO_LONG,   "package is too long" },
-	{ READERROR_PACKAGE_EMPTY,      "package is empty"    },
-	{ READERROR_UNKNOWN,            "unknown"             }
+	{ SESSIONERROR_PROTOCOL_MISMATCH,  "protocol mismatch"   },
+	{ SESSIONERROR_PACKAGE_EMPTY,      "package is empty"    },
+	{ SESSIONERROR_PACKAGE_TOO_LONG,   "package is too long" },
+	{ SESSIONERROR_SERVER_CLOSE,       "server is closing"   },
+	{ SESSIONERROR_SERVER_TIMEOUT,     "timed out"           },
+	{ SESSIONERROR_UNKNOWN,            "unknown"             }
 };
 
 #ifdef ENABLE_IPV4
-Session::Session(TcpServer &server, sockaddr_in addr, int fd)
+Session::Session(TcpServer &server, sockaddr_in addr, evutil_socket_t fd)
 	: server(server), fd(fd), sAddr(addr)
 {
 	char buffer[INET6_ADDRSTRLEN + 1] = { 0 };
@@ -24,7 +26,7 @@ Session::Session(TcpServer &server, sockaddr_in addr, int fd)
 #endif
 
 #ifdef ENABLE_IPV6
-Session::Session(TcpServer &server, sockaddr_in6 addr, int fd)
+Session::Session(TcpServer &server, sockaddr_in6 addr, evutil_socket_t fd)
 	: IsIPv6(true), server(server), fd(fd), sAddr6(addr)
 {
 	char buffer[INET6_ADDRSTRLEN + 1] = { 0 };
@@ -143,7 +145,7 @@ void Session::ReadCallback()
 				}
 				else if (memcmp(headerBuffer, MAGIC_MARK, min(headerLength, sizeof(MAGIC_MARK) - 1)) != 0)
 				{
-					readErrorCode = READERROR_PROTOCOL_MISMATCH;
+					readErrorCode = SESSIONERROR_PROTOCOL_MISMATCH;
 					readState = READSTATE_ERROR;
 					continue;
 				}
@@ -154,9 +156,9 @@ void Session::ReadCallback()
 					log_debug("fd = %u, data length: %d == 0 || too long", static_cast<unsigned int>(fd), header.DataLength);
 					
 					if (header.DataLength == 0)
-						readErrorCode = READERROR_PACKAGE_EMPTY;
+						readErrorCode = SESSIONERROR_PACKAGE_EMPTY;
 					else
-						readErrorCode = READERROR_PACKAGE_TOO_LONG;
+						readErrorCode = SESSIONERROR_PACKAGE_TOO_LONG;
 					
 					readState = READSTATE_ERROR;
 					continue;
@@ -213,7 +215,7 @@ void Session::ReadCallback()
 				if (lineBuffer.length() > HTTP_HEADER_MAXLENGTH)
 				{
 					// header is too long
-					readErrorCode = READERROR_PACKAGE_TOO_LONG;
+					readErrorCode = SESSIONERROR_PACKAGE_TOO_LONG;
 					readState = READSTATE_ERROR;
 					cont = true;
 					break;
@@ -233,9 +235,8 @@ void Session::ReadCallback()
 		}
 		case READSTATE_ERROR:
 		{
-			SendPackage("{\"error\": \"" + ReadErrorMessage[readErrorCode] + "\"}");
-			FlushAndClose();
-			readErrorCode = READERROR_UNKNOWN;
+			SendError(readErrorCode);
+			readErrorCode = SESSIONERROR_UNKNOWN;
 			break;
 		}
 		}
@@ -373,6 +374,12 @@ void Session::SendPackage(string str)
 {
 	Package *pack = MakePackage(str);
 	SendPackage(pack);
+}
+
+void Session::SendError(SessionErrorType errorCode)
+{
+	SendPackage(SessionErrorMessage[errorCode]);
+	FlushAndClose();
 }
 
 void Session::FlushAndClose()
