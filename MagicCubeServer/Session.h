@@ -57,8 +57,9 @@ public:
 	void WriteCallback();
 	void ErrorCallback(short);
 	void DoQueue();
-	void OnHTTPRequest(const string&);
-	void OnPackage(Package*&);
+	virtual void OnLine(const string&);
+	virtual void OnHTTPRequest(const string&);
+	virtual void OnPackage(Package*&);
 	void SendPackage(Package*&);
 	void SendPackage(string);
 
@@ -93,7 +94,7 @@ private:
 
 	bool isFirstCall = true;
 	queue<Package*> pendingPackages;
-	mutex writeLock;
+	mutex writeLock, queueLock;
 	bool closeAfterWritten = false;
 };
 

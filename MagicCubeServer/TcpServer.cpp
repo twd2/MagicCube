@@ -162,7 +162,15 @@ void TcpServer::Stop()
 #endif
 		listener = static_cast<evutil_socket_t>(0);
 	}
+
+	if (listener_event)
+	{
+		event_del(listener_event);
+		event_free(listener_event);
+		listener_event = NULL;
+	}
 #endif
+
 #ifdef ENABLE_IPV6
 	if (listener6)
 	{
@@ -173,6 +181,13 @@ void TcpServer::Stop()
 		close(listener6);
 #endif
 		listener6 = static_cast<evutil_socket_t>(0);
+	}
+
+	if (listener6_event)
+	{
+		event_del(listener6_event);
+		event_free(listener6_event);
+		listener6_event = NULL;
 	}
 #endif
 
@@ -212,7 +227,7 @@ void TcpServer::EnableTimer(long interval)
 
 void TcpServer::TimerCallback(short event)
 {
-	log_normal("%s", "Timer tick.");
+	log_debug("%s", "Timer tick.");
 
 	time_t now = time(NULL);
 
@@ -220,9 +235,9 @@ void TcpServer::TimerCallback(short event)
 	{
 		if (difftime(now, sess->LastAlive) > TIMEOUT_S)
 		{
-			sess->SendPackage("Timed out, good bye~");
+			sess->SendPackage("Timed out, good bye~"); // TODO: change message
 			sess->FlushAndClose();
-			log_normal("Cleaning %p", sess);
+			log_debug("Cleaning %p", sess);
 		}
 	}
 
@@ -233,7 +248,7 @@ void TcpServer::CleanSession(Session *sess)
 {
 	if (!sess) return;
 
-	//normal("Checking %p", sess);
+	log_debug("Checking %p", sess);
 
 	if (!sess->IsAlive)
 	{
@@ -277,22 +292,6 @@ TcpServer::~TcpServer()
 		sess = NULL;
 	}
 	Sessions.clear();
-
-#ifdef ENABLE_IPV4
-	if (listener_event)
-	{
-		event_free(listener_event);
-		listener_event = NULL;
-	}
-#endif
-
-#ifdef ENABLE_IPV6
-	if (listener6_event)
-	{
-		event_free(listener6_event);
-		listener6_event = NULL;
-	}
-#endif
 
 	if (Base)
 	{

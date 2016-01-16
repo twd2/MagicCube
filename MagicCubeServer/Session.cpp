@@ -205,22 +205,28 @@ void Session::ReadCallback()
 		case READSTATE_READING_LINE:
 		{
 			char ch;
-			if (bufferevent_read(buffev, &ch, 1) > 0)
+			bool cont = false;
+
+			while (bufferevent_read(buffev, &ch, sizeof(ch)) > 0)
 			{
 				lineBuffer += ch;
 				if (lineBuffer.length() > HTTP_HEADER_MAXLENGTH)
 				{
-					// http header is too long
+					// header is too long
 					readErrorCode = READERROR_PACKAGE_TOO_LONG;
 					readState = READSTATE_ERROR;
-					continue;
+					cont = true;
+					break;
 				}
-				if (endsWith(lineBuffer, "\r\n\r\n"))
+				if (endsWith(lineBuffer,LINE_ENDDING))
 				{
-					OnHTTPRequest(lineBuffer);
-					readState = READSTATE_NONE;
-					continue;
+					OnLine(lineBuffer);
+					lineBuffer = "";
 				}
+			}
+
+			if (cont)
+			{
 				continue;
 			}
 			break;
@@ -233,6 +239,7 @@ void Session::ReadCallback()
 			break;
 		}
 		}
+
 		break;
 	}
 	log_debug("fd = %u, exitting read", static_cast<unsigned int>(fd));
@@ -260,6 +267,8 @@ void Session::WriteCallback()
 		log_debug("fd = %u, closeAfterWritten is set, closing", static_cast<unsigned int>(fd));
 		Close();
 	}
+
+	KeepAlive();
 }
 
 void Session::ErrorCallback(short event)
@@ -290,7 +299,7 @@ void Session::DoQueue()
 {
 	if (!IsAlive) return;
 
-	unique_lock<mutex> lck(writeLock);
+	unique_lock<mutex> lck(writeLock), lckQueue(queueLock);
 	log_debug("fd = %u, dequeuing", static_cast<unsigned int>(fd));
 
 	while (!pendingPackages.empty())
@@ -311,6 +320,14 @@ void Session::DoQueue()
 	}
 
 	log_debug("fd = %u, dequeued", static_cast<unsigned int>(fd));
+}
+
+void Session::OnLine(const string &line)
+{
+	if (line == LINE_ENDDING)
+	{
+		OnHTTPRequest(line);
+	}
 }
 
 void Session::OnHTTPRequest(const string &req)
@@ -343,7 +360,11 @@ void Session::SendPackage(Package *&pack)
 {
 	if (!pack || pack->Header.DataLength == 0) return;
 	pack->Header.DataLength = htonpacklen(pack->Header.DataLength);
-	pendingPackages.push(pack);
+	
+	{
+		unique_lock<mutex> lckQueue(queueLock);
+		pendingPackages.push(pack);
+	}
 
 	DoQueue();
 }

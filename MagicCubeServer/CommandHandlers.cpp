@@ -46,12 +46,27 @@ void handleCommand(TcpServer &server)
 
 void exitHandler(TcpServer &server, string &args)
 {
+	for (auto &sess : server.Sessions)
+	{
+			sess->SendPackage("Server is closing."); // TODO: change message
+			sess->FlushAndClose();
+	}
+	while (server.Sessions.size() > 0);
 	server.Stop();
+}
+
+void msgHandler(TcpServer &server, string &args)
+{
+	for (auto &sess : server.Sessions)
+	{
+		sess->SendPackage(args);
+	}
 }
 
 void initHandlers()
 {
 #define HAND(x) addHandler(#x, x##Handler)
 	HAND(exit);
+	HAND(msg);
 #undef HAND
 }
