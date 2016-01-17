@@ -4,8 +4,8 @@ SOURCES := $(shell ls *.cpp)
 OBJECTS := $(patsubst %.cpp, build/%.o, $(SOURCES))
 
 # compiler
-INC_DIR = include
-CC_FLAGS = -O2 -Wall -std=c++11 -I $(INC_DIR)
+INC_DIR = ../include/osx
+CC_FLAGS = -O2 -Wall -std=c++11 -I $(INC_DIR) -I ../include
 
 .PHONY: all
 all:
