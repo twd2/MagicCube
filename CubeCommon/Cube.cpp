@@ -79,11 +79,12 @@ Cube::~Cube()
 {
 }
 
-void Cube::Deserialize(string data)
+bool Cube::Deserialize(string data)
 {
 	if (data.length() != FORMAT1_LENGTH)
 	{
 		throw CubeError("Length mismatch");
+		return false;
 	}
 
 	for (int z = 0; z < 3; ++z)
@@ -102,6 +103,8 @@ void Cube::Deserialize(string data)
 			}
 		}
 	}
+
+	return true;
 }
 
 string Cube::Serialize()

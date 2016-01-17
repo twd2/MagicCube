@@ -2,16 +2,16 @@
 #include "CubeSession.h"
 
 #ifdef ENABLE_IPV4
-CubeSession::CubeSession(TcpServer &server, sockaddr_in addr, evutil_socket_t fd)
-	: Session(server, addr, fd)
+CubeSession::CubeSession(CubeServer &server, sockaddr_in addr, evutil_socket_t fd)
+	: Session(server, addr, fd), server(server)
 {
 
 }
 #endif
 
 #ifdef ENABLE_IPV6
-CubeSession::CubeSession(TcpServer &server, sockaddr_in6 addr, evutil_socket_t fd)
-	: Session(server, addr, fd)
+CubeSession::CubeSession(CubeServer &server, sockaddr_in6 addr, evutil_socket_t fd)
+	: Session(server, addr, fd), server(server)
 {
 
 }
@@ -70,4 +70,39 @@ void CubeSession::SendError(SessionErrorType errorCode)
 	SendPackage(buffer.GetString());
 
 	FlushAndClose();
+}
+
+bool CubeSession::EnterRoom(string name)
+{
+	return EnterRoom(server.RoomIds[name]);
+}
+
+bool CubeSession::EnterRoom(size_t i)
+{
+	/* 1. Put CubeSession into RoomInfo::Sessions
+	 * 2. set currentRoom
+	 */
+
+	RoomInfo &room = server.Rooms[i];
+	bool v = room.Enter(this);
+
+	if (v)
+	{
+		currentRoom = i;
+	}
+
+	return v;
+}
+
+void CubeSession::ExitRoom()
+{
+	/* 1. Remove CubeSession from RoomInfo
+	 * 2. Clear currentRoom
+	 */
+
+	if (currentRoom >= 0)
+	{
+		server.Rooms[currentRoom].Exit(this);
+		currentRoom = -1;
+	}
 }

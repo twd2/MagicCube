@@ -1,18 +1,8 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <sstream>
-#include <algorithm>
-
 #include "CubeError.h"
 #include "Cube.h"
 
-vector<string> split(const string&, char);
-char toUpper(char);
-char toLower(char);
-string toUpperString(string);
-string toLowerString(string);
 string stepsToString(CubeSteps&, char);
 void printError(CubeError);
 void randomCube(Cube&);

@@ -26,6 +26,7 @@ void initLibraries()
 	WSADATA data;
 	int err = WSAStartup(0, &data);
 	err = WSAStartup(data.wVersion, &data);
+	assert(err == 0);
 #endif
 
 #ifdef EVTHREAD_USE_WINDOWS_THREADS_IMPLEMENTED
@@ -59,14 +60,14 @@ int main(int argc, char *argv[])
 	Document configDoc = loadConfigObj(configFilename);
 	Value &roomsVal = configDoc["Rooms"];
 	assert(roomsVal.IsArray());
-	vector<RoomInfo> rooms = loadRooms(roomsVal);
+	vector<RoomInfo> rooms(loadRooms(roomsVal));
 
 	initLibraries();
 
 	CubeServer server;
+	configRooms(server, rooms);
 
-
-	server.EnableTimer(CHECK_INTERVAL);
+	server.EnableTimer(CHECK_INTERVAL_uS);
 
 	configServer(server, configDoc["Server"]);
 

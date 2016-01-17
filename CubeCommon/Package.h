@@ -1,6 +1,8 @@
 #pragma once
 
 #include "NetworkConfig.h"
+#include "NetworkTypes.h"
+#include <event2/event.h>
 
 #pragma pack(push, 1)
 struct PackageHeader
@@ -21,3 +23,6 @@ struct Package
 	void operator delete(void*);
 };
 #pragma pack(pop)
+
+package_len_t htonpacklen(package_len_t);
+package_len_t ntohpacklen(package_len_t);

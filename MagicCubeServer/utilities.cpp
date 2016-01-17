@@ -1,18 +1,6 @@
 #include "stdafx.h"
 #include "utilities.h"
 
-bool endsWith(const string &fullString, const string &ending)
-{
-	if (fullString.length() >= ending.length())
-	{
-		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
-	}
-	else
-	{
-		return false;
-	}
-}
-
 void printTime(FILE *fd)
 {
 	time_t now = time(NULL);
@@ -109,10 +97,10 @@ void configServer(TcpServer &server, Value &config)
 
 vector<RoomInfo> loadRooms(Value &rooms)
 {
-	vector<RoomInfo> ris;
 	size_t count = rooms.Size();
+	vector<RoomInfo> ris;
 
-	for (int i = 0; i < count; ++i)
+	for (size_t i = 0; i < count; ++i)
 	{
 		Value &room = rooms[i];
 
@@ -128,5 +116,10 @@ vector<RoomInfo> loadRooms(Value &rooms)
 
 void configRooms(CubeServer &server, vector<RoomInfo> &rooms)
 {
-	server.Rooms = rooms;
+	server.Rooms = move(rooms);
+	server.RoomIds.clear();
+	for (size_t i = 0; i < server.Rooms.size(); ++i)
+	{
+		server.RoomIds[server.Rooms[i].Name] = i;
+	}
 }

@@ -65,9 +65,7 @@ void TcpServer::OnNewSession(sockaddr_in sin, evutil_socket_t fd)
 	Session *sess = new Session(*this, sin, fd);
 	log_normal("accept fd = %u from %s:%d", static_cast<unsigned int>(fd), sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
-	Sessions.push_back(sess);
-	sess->Iter = Sessions.end();
-	--sess->Iter;
+	AddSession(sess);
 }
 #endif
 
@@ -131,9 +129,7 @@ void TcpServer::OnNewSession(sockaddr_in6 sin6, evutil_socket_t fd)
 	Session *sess = new Session(*this, sin6, fd);
 	log_normal("accept6 fd = %u from [%s]:%d", static_cast<unsigned int>(fd), sess->RemoteAddress.c_str(), sess->RemotePort);
 	sess->SetCallbacks();
-	Sessions.push_back(sess);
-	sess->Iter = Sessions.end();
-	--sess->Iter;
+	AddSession(sess);
 }
 #endif
 
@@ -211,7 +207,7 @@ void TcpServer::SetTimer(event *&timer, long interval)
 
 	timeval *timerInterval = new timeval;
 	evutil_timerclear(timerInterval);
-	timerInterval->tv_sec = interval;
+	timerInterval->tv_usec = interval;
 
 	timer = event_new(Base, -1, EV_PERSIST, timerCallbackDispatcher, (void *)this);
 	evtimer_add(timer, timerInterval);
@@ -308,6 +304,13 @@ TcpServer::~TcpServer()
 		event_base_free(Base);
 		Base = NULL;
 	}
+}
+
+void TcpServer::AddSession(Session *sess)
+{
+	Sessions.push_back(sess);
+	sess->Iter = Sessions.end();
+	--sess->Iter;
 }
 
 #ifdef ENABLE_IPV4

@@ -8,6 +8,7 @@ class CubeServer :
 {
 public:
 	vector<RoomInfo> Rooms;
+	map<string, size_t> RoomIds;
 
 	CubeServer();
 	~CubeServer();

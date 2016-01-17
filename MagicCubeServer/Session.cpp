@@ -434,30 +434,6 @@ Package *Session::MakePackage(string &strdata)
 	return pack;
 }
 
-package_len_t htonpacklen(package_len_t len)
-{
-	if (sizeof(package_len_t) == 2)
-	{
-		return static_cast<package_len_t>(htons(len));
-	}
-	else if (sizeof(package_len_t) == 4)
-	{
-		return static_cast<package_len_t>(htonl(len));
-	}
-}
-
-package_len_t ntohpacklen(package_len_t len)
-{
-	if (sizeof(package_len_t) == 2)
-	{
-		return static_cast<package_len_t>(ntohs(len));
-	}
-	else if (sizeof(package_len_t) == 4)
-	{
-		return static_cast<package_len_t>(ntohl(len));
-	}
-}
-
 void readCallbackDispatcher(bufferevent *buffev, void *arg)
 {
 	Session *sess = reinterpret_cast<Session*>(arg);

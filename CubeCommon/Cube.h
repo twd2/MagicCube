@@ -34,7 +34,7 @@ public:
 	z 
 	*/
 
-	void Deserialize(string);
+	bool Deserialize(string);
 	string Serialize();
 	void SaveState();
 	void DoMethod(CubeRotateMethod);

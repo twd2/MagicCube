@@ -88,15 +88,13 @@ protected:
 	queue<Package*> pendingPackages;
 	mutex writeLock, queueLock;
 	bool closeAfterWritten = false;
-
+	
 private:
 
 	// prevent copying
 	DISALLOW_COPY_AND_ASSIGN(Session);
 };
 
-package_len_t htonpacklen(package_len_t);
-package_len_t ntohpacklen(package_len_t);
 void readCallbackDispatcher(bufferevent*, void*);
 void writeCallbackDispatcher(bufferevent*, void*);
 void errorCallbackDispatcher(bufferevent*, short, void*);

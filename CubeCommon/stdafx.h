@@ -14,6 +14,7 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 using std::vector;
 using std::map;

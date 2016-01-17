@@ -56,6 +56,8 @@ protected:
 
 	event *defaultTimer = NULL;
 
+	void AddSession(Session*);
+
 private:
 
 	// prevent copy

@@ -2,6 +2,7 @@
 
 #include "Config.h"
 #include "../CubeCommon/NetworkConfig.h"
+#include "../CubeCommon/NetworkTypes.h"
 
 #if !defined(_DEBUG) && !defined(NDEBUG)
 #define NDEBUG
@@ -12,21 +13,7 @@
 #endif
 
 #ifdef _WIN32
-#ifndef WIN32
-#define WIN32 // for libevent
-#endif
-typedef int socklen_t;
-#define INET6_ADDRSTRLEN 46
-#define SHUT_RD SD_RECEIVE
-#define SHUT_WR SD_SEND
-#define SHUT_RDWR SD_BOTH
-	#ifdef ENABLE_IPV6
-		// undefining ENABLE_IPV6
-		#undef ENABLE_IPV6
-	#endif
 #define __perror(s) fprintf(stderr, "%s: Win32 Error %d(0x%08x)\n", s, GetLastError(), GetLastError())
-#define sleep(t) Sleep((t) * 1000)
-#define usleep(t) Sleep((t) / 1000)
 #ifdef MEM_DEBUG
 	#define _CRTDBG_MAP_ALLOC
 	#include <stdlib.h>
@@ -48,10 +35,6 @@ typedef int socklen_t;
 #define _perror(s) do {__perror(s); /*abort();*/} while (false)
 #else
 #define _perror(s) __perror(s)
-#endif
-
-#if (!defined(ENABLE_IPV4) && !defined(ENABLE_IPV6))
-#error Cannot disable ipv4 and ipv6 at the same time.
 #endif
 
 #define _log(type, format, ...) do {FILE *__fd = logFile; printTime(__fd); fprintf(__fd, "[%s] ", type); fprintf(__fd, format, ##__VA_ARGS__); fprintf(__fd, "\n");} while (false)
@@ -82,6 +65,7 @@ typedef int socklen_t;
 #include <vector>
 #include <map>
 #include <queue>
+#include <list>
 #include <thread>
 #include <sstream>
 #include <mutex>

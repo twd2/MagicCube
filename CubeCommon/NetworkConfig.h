@@ -9,7 +9,8 @@ typedef unsigned int package_len_t;
 #define ENABLE_IPV6
 
 // CHECK_INTERVAL should be less than TIMEOUT_S
-#define CHECK_INTERVAL 1 // 10 
+#define CHECK_INTERVAL (1) // 10 
+#define CHECK_INTERVAL_uS (CHECK_INTERVAL * 1000000)
 #define TIMEOUT_S 30
 
 #define PACKAGE_MAXLENGTH (static_cast<package_len_t>(-1)) //(1024)
