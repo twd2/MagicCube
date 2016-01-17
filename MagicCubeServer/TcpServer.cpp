@@ -121,7 +121,7 @@ void TcpServer::Accept6Callback(short event)
 		return;
 	}
 
-	OnNewSession()
+	OnNewSession(sin6, fd);
 }
 
 void TcpServer::OnNewSession(sockaddr_in6 sin6, evutil_socket_t fd)

@@ -6,8 +6,8 @@ OBJECTS := $(patsubst $(PROJECT)/%.cpp, build/%.o, $(SOURCES))
 ifeq ($(shell uname),Linux)
 	# compiler
 	CC = g++
-	INC_DIR = include
-	CC_FLAGS = -O2 -Wall -std=c++11 -I $(INC_DIR)
+	INC_DIR = include/osx
+	CC_FLAGS = -O2 -Wall -fno-strict-aliasing -std=c++11 -I $(INC_DIR) -I include
 
 	# linker
 	LD = g++
@@ -18,8 +18,8 @@ else
 
 ifeq ($(shell uname),Darwin)
 	# compiler
-	INC_DIR = include
-	CC_FLAGS = -O2 -Wall -std=c++11 -I $(INC_DIR)
+	INC_DIR = include/osx
+	CC_FLAGS = -O2 -Wall -fno-strict-aliasing -std=c++11 -I $(INC_DIR) -I include
 
 	# linker
     LD = cc
