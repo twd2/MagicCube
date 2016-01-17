@@ -31,7 +31,10 @@ void CubeSession::OnPackage(Package *&pack)
 	Document doc;
 	doc.Parse(pack->Data);
 	if (!doc.IsObject())
+	{
+		SendError(SESSIONERROR_PROTOCOL_MISMATCH);
 		return;
+	}
 
 	SendError(_SE(ERROR_AUTH));
 	// TODO: package

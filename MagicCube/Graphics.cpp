@@ -95,6 +95,7 @@ int graphicMode(int argc, char *argv[])
 	glfwTerminate();
 
 	consoleRunning = false;
+
 	return 0;
 }
 

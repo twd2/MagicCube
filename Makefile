@@ -12,7 +12,7 @@ ifeq ($(shell uname),Linux)
 	# linker
 	LD = g++
 	LIB_DIR = lib/linux
-	LIBS = -lCubeCommon -lglfw3 -lstdc++ -lc -lm -ldl -lX11 -lpthread -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor -lGL -lGLU
+	LIBS = -lCubeCommon -levent -lglfw3 -lstdc++ -lc -lm -ldl -lX11 -lpthread -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor -lGL -lGLU
 	LINKER_FLAGS = -L $(LIB_DIR) -L CubeCommon/build
 else
 
@@ -24,7 +24,7 @@ ifeq ($(shell uname),Darwin)
 	# linker
     LD = cc
 	LIB_DIR = lib/osx
-	LIBS = -lCubeCommon -lc++ -lm -lSystem -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
+	LIBS = -lCubeCommon -levent -lc++ -lm -lSystem -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
 	LINKER_FLAGS = -L $(LIB_DIR) -L CubeCommon/build
 else
 	# Unsupported operating system.
@@ -59,7 +59,7 @@ server:
 $(PROJECT): $(OBJECTS)
 	$(LD) $(LINKER_FLAGS) -o build/$(PROJECT) $(OBJECTS) $(LIBS)
 
-build/%.o: $(PROJECT)/%.cpp $(PROJECT)/%.h $(PROJECT)/Config.h $(PROJECT)/utilities.h
+build/%.o: $(PROJECT)/%.cpp $(PROJECT)/%.h $(PROJECT)/Config.h $(PROJECT)/utilities.h CubeCommon/NetworkConfig.h
 	$(CC) -c $(CC_FLAGS) -o $@ $<
 
 .PHONY: release

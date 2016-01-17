@@ -81,6 +81,9 @@
     <ClInclude Include="NoXYZFilter.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="TcpClient.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -132,6 +135,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="NoXYZFilter.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpClient.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

@@ -10,6 +10,10 @@
 #if defined(__APPLE__) && defined(__MACH__)
 #endif
 
+#define DISALLOW_COPY_AND_ASSIGN(T) \
+	T(const T&) = delete;    \
+	T& operator=(const T&) = delete;
+
 #include <vector>
 #include <map>
 #include <string>

@@ -97,6 +97,9 @@ void configServer(TcpServer &server, Value &config)
 
 vector<RoomInfo> loadRooms(Value &rooms)
 {
+
+	log_normal("%s", "Loading rooms...");
+
 	size_t count = rooms.Size();
 	vector<RoomInfo> ris;
 
@@ -109,6 +112,7 @@ vector<RoomInfo> loadRooms(Value &rooms)
 		ri.Key = room["Key"].GetString();
 		ri.Capacity = getSizeT(room["Capacity"]);
 		ris.push_back(move(ri));
+		log_normal("%s...", room["Name"].GetString());
 	}
 
 	return ris;

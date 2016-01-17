@@ -36,6 +36,8 @@ void initLibraries()
 #ifdef EVTHREAD_USE_PTHREADS_IMPLEMENTED
 	evthread_use_pthreads();
 #endif
+
+	srand(static_cast<unsigned int>(time(NULL))); // stdlib :)
 }
 
 int main(int argc, char *argv[])

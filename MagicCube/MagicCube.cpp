@@ -34,37 +34,113 @@ int textMode(int argc, char *argv[])
 	}
 	return 0;
 }
+#else
+
+void libeventError(int errcode)
+{
+	fprintf(stderr, "libevent fatal error occurred, error code: %d\n", errcode);
+	exit(1);
+}
+
+void initLibraries()
+{
+#ifdef _DEBUG
+	event_enable_debug_mode(); // may cause memory leak
+#endif
+
+	event_set_fatal_callback(libeventError);
+
+#ifdef _WIN32
+
+#ifdef MEM_DEBUG
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
+
+	WSADATA data;
+	int err = WSAStartup(0, &data);
+	err = WSAStartup(data.wVersion, &data);
+	assert(err == 0);
+#endif
+
+#ifdef EVTHREAD_USE_WINDOWS_THREADS_IMPLEMENTED
+	evthread_use_windows_threads(); // may cause memory leak
+#endif
+
+#ifdef EVTHREAD_USE_PTHREADS_IMPLEMENTED
+	evthread_use_pthreads();
+#endif
+}
+
 #endif //USE_GL
+
+void test()
+{
+	TcpClient client;
+	if (!client.Connect(string("127.0.0.1"), 2333))
+	{
+		return;
+	}
+	client.Start();
+
+	StringBuffer sb;
+	Writer<StringBuffer> w(sb);
+
+	w.StartObject();
+
+	w.String("command");
+	w.String("hello");
+
+	w.EndObject();
+
+	client.SendPackage(sb.GetString());
+
+	client.Wait();
+	// client.Reader();
+}
 
 int main(int argc, char *argv[])
 {
-	srand(clock());
+	initLibraries();
+
+	test();
+
+	srand(static_cast<unsigned int>(time(NULL)));
+
+	int retcode = 0;
+
 #ifdef USE_GL
 	try
 	{
-		return graphicMode(argc, argv);
+		retcode = graphicMode(argc, argv);
 	}
 	catch (const string &err)
 	{
 		printf("%s\n", err.c_str());
-		return 1;
+		retcode = 1;
 	}
 #else
 	try
 	{
-		return textMode(argc, argv);
+		retcode = textMode(argc, argv);
 	}
 	catch (const SolverError &err)
 	{
 		printError(err);
-		return 1;
+		retcode = 1;
 	}
 	catch (const CubeError &err)
 	{
 		printError(err);
-		return 1;
+		retcode = 1;
 	}
 #endif //USE_GL
-	return 0;
+
+#ifdef MEM_DEBUG
+#ifdef _WIN32
+	_CrtDumpMemoryLeaks();
+#endif 
+#endif
+
+	return retcode;
 }
 

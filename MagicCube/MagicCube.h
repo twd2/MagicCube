@@ -14,6 +14,7 @@
 #include "Vertices.h"
 #include "Graphics.h"
 #include "Rendering.h"
+#include "TcpClient.h"
 #endif
 
 #ifndef USE_GL

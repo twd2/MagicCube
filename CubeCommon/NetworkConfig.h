@@ -16,3 +16,4 @@ typedef unsigned int package_len_t;
 #define PACKAGE_MAXLENGTH (static_cast<package_len_t>(-1)) //(1024)
 #define HTTP_HEADER_MAXLENGTH (static_cast<size_t>(16384))
 #define LINE_MAXLENGTH (static_cast<size_t>(16384))
+#define BUFFER_SIZE (static_cast<size_t>(4096))

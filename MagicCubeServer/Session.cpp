@@ -142,7 +142,7 @@ void Session::ReadCallback()
 				
 				if (header.DataLength == 0 || header.DataLength > PACKAGE_MAXLENGTH)
 				{
-					// package is zero or too long
+					// package is empty or too long
 					log_debug("fd = %u, data length: %d == 0 || too long", static_cast<unsigned int>(fd), header.DataLength);
 					
 					if (header.DataLength == 0)
@@ -296,7 +296,9 @@ void Session::DoQueue()
 	while (!pendingPackages.empty())
 	{
 		Package *&pack = pendingPackages.front();
-		package_len_t packLen = ntohpacklen(pack->Header.DataLength);
+		package_len_t packLen = pack->Header.DataLength;
+		pack->Header.DataLength = htonpacklen(pack->Header.DataLength);
+
 		if (packLen > 0)
 		{
 			size_t toSendLength = sizeof(PackageHeader) + packLen;
@@ -350,7 +352,6 @@ void Session::OnPackage(Package *&pack)
 void Session::SendPackage(Package *&pack)
 {
 	if (!pack || pack->Header.DataLength == 0) return;
-	pack->Header.DataLength = htonpacklen(pack->Header.DataLength);
 	
 	{
 		unique_lock<mutex> lckQueue(queueLock);

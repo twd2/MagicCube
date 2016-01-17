@@ -44,10 +44,6 @@
 #define log_error(format, ...) do {_log("ERROR", format, ##__VA_ARGS__); abort();} while (false)
 #define log_fatal(format, ...) do {_log("FATAL", format, ##__VA_ARGS__); abort();} while (false)
 
-#define DISALLOW_COPY_AND_ASSIGN(T) \
-	T(const T&) = delete;    \
-	T& operator=(const T&) = delete;
-
 #ifdef NDEBUG
 #undef log_debug
 #define log_debug(format, ...) (int)0

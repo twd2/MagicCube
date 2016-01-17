@@ -35,7 +35,7 @@ public:
 #ifdef ENABLE_IPV6
 	Session(TcpServer&, sockaddr_in6, evutil_socket_t);
 #endif
-	~Session();
+	virtual ~Session();
 
 	// invoked again and again when doing complex calculation to avoid being cleaned
 	void KeepAlive();

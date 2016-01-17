@@ -36,7 +36,7 @@ all:
 	-mkdir build
 	make $(PROJECT)
 
-build/%.o: %.cpp %.h Config.h
+build/%.o: %.cpp %.h Config.h ../CubeCommon/NetworkConfig.h
 	$(CC) -c $(CC_FLAGS) -o $@ $<
 
 $(PROJECT): $(OBJECTS)

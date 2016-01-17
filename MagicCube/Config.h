@@ -1,5 +1,7 @@
 #pragma once
 
+#define MEM_DEBUG
+
 #define WIDTH  800
 #define HEIGHT 600
 

@@ -40,7 +40,7 @@ public:
 	virtual void CleanSession(Session*);
 	virtual void CleanSessions();
 
-	~TcpServer();
+	virtual ~TcpServer();
 
 protected:
 
