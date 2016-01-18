@@ -11,8 +11,8 @@ ifeq ($(shell uname),Linux)
 	# linker
 	LD = g++
 	LIB_DIR = ../lib/linux
-	LIBS = -lCubeCommon -levent -lm -ldl -lpthread -lstdc++ -lc
-	LINKER_FLAGS = -L $(LIB_DIR) -L ../CubeCommon/build
+	LIBS = -lCubeCommon -lNetworkCommon -levent -lm -ldl -lpthread -lstdc++ -lc
+	LINKER_FLAGS = -L $(LIB_DIR) -L ../CubeCommon/build -L ../NetworkCommon/build
 else
 
 ifeq ($(shell uname),Darwin)
@@ -22,8 +22,8 @@ ifeq ($(shell uname),Darwin)
 
 	# linker
 	LIB_DIR = ../lib/osx
-	LIBS = -lCubeCommon -lc++ -lm -lSystem -levent
-	LINKER_FLAGS = -L $(LIB_DIR) -L ../CubeCommon/build
+	LIBS = -lCubeCommon -lNetworkCommon -levent -lc++ -lm -lSystem
+	LINKER_FLAGS = -L $(LIB_DIR) -L ../CubeCommon/build -L ../NetworkCommon/build
 else
 	# Unsupported operating system.
 	CC = echo && echo "******** Unsupported operating system! ********" && echo && exit 1 ||
@@ -36,7 +36,7 @@ all:
 	-mkdir build
 	make $(PROJECT)
 
-build/%.o: %.cpp %.h Config.h ../CubeCommon/NetworkConfig.h
+build/%.o: %.cpp %.h Config.h ../NetworkCommon/NetworkConfig.h
 	$(CC) -c $(CC_FLAGS) -o $@ $<
 
 $(PROJECT): $(OBJECTS)

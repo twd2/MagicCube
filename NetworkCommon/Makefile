@@ -5,7 +5,7 @@ OBJECTS := $(patsubst %.cpp, build/%.o, $(SOURCES))
 
 # compiler
 INC_DIR = ../include/osx
-CC_FLAGS = -O2 -Wall -std=c++11 -I $(INC_DIR) -I ../include
+CC_FLAGS = -O2 -Wall -fno-strict-aliasing -std=c++11 -I $(INC_DIR) -I ../include
 
 .PHONY: all
 all:
