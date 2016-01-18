@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef NONET
+
 class TcpClient
 {
 public:
@@ -42,3 +44,4 @@ private:
 	DISALLOW_COPY_AND_ASSIGN(TcpClient);
 };
 
+#endif

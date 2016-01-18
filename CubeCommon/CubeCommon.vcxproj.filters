@@ -36,15 +36,6 @@
     <ClInclude Include="CubeTypes.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkConfig.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Package.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkTypes.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="StringUtilities.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -63,12 +54,6 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="CubeTypes.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Package.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkTypes.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="StringUtilities.cpp">

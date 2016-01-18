@@ -43,6 +43,13 @@
 #include <thread>
 #include <mutex>
 
+using namespace std;
+
+#ifdef USE_GL
+
+#define GLFW_INCLUDE_GLU
+#include <GLFW/glfw3.h>
+
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
@@ -51,17 +58,15 @@
 #include <event2/thread.h>
 #include <event2/bufferevent.h>
 
-using namespace std;
 using rapidjson::Document;
 using rapidjson::Value;
 using rapidjson::Writer;
 using rapidjson::StringBuffer;
 
-#ifdef USE_GL
+#include "../NetworkCommon/NetworkCommon.h"
 
-#define GLFW_INCLUDE_GLU
-#include <GLFW/glfw3.h>
+#else
+#define NONET
 #endif
 
-#include "../CubeCommon/CubeCommon.h"
 #include "utilities.h"

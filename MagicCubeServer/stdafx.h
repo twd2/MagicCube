@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Config.h"
-#include "../CubeCommon/NetworkConfig.h"
-#include "../CubeCommon/NetworkTypes.h"
+#include "../NetworkCommon/NetworkCommon.h"
 
 #if !defined(_DEBUG) && !defined(NDEBUG)
 #define NDEBUG

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "TcpClient.h"
 
+#ifndef NONET
 
 TcpClient::TcpClient()
 {
@@ -313,3 +314,5 @@ bool TcpClient::bufferedSend(char *buffer, size_t size)
 
 	return sentLength == size;
 }
+
+#endif

@@ -71,8 +71,6 @@ void initLibraries()
 #endif
 }
 
-#endif //USE_GL
-
 void test()
 {
 	TcpClient client;
@@ -97,20 +95,19 @@ void test()
 	client.Wait();
 	// client.Reader();
 }
+#endif //USE_GL
 
 int main(int argc, char *argv[])
 {
-	initLibraries();
-
-	test();
-
-	srand(static_cast<unsigned int>(time(NULL)));
-
 	int retcode = 0;
 
 #ifdef USE_GL
 	try
 	{
+		initLibraries();
+
+		test();
+
 		retcode = graphicMode(argc, argv);
 	}
 	catch (const string &err)

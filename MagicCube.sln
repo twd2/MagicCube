@@ -12,6 +12,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CubeCommon", "CubeCommon\Cu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MagicCubeServer", "MagicCubeServer\MagicCubeServer.vcxproj", "{4E6C5C7C-A8B6-4A3D-9478-FA64B58BFB7A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetworkCommon", "NetworkCommon\NetworkCommon.vcxproj", "{E2535545-AF18-41E0-9505-3745E2C40D15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -56,6 +58,16 @@ Global
 		{4E6C5C7C-A8B6-4A3D-9478-FA64B58BFB7A}.Release|Win32.Build.0 = Release|Win32
 		{4E6C5C7C-A8B6-4A3D-9478-FA64B58BFB7A}.Release|x64.ActiveCfg = Release|x64
 		{4E6C5C7C-A8B6-4A3D-9478-FA64B58BFB7A}.Release|x64.Build.0 = Release|x64
+		{E2535545-AF18-41E0-9505-3745E2C40D15}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E2535545-AF18-41E0-9505-3745E2C40D15}.Debug|Win32.Build.0 = Debug|Win32
+		{E2535545-AF18-41E0-9505-3745E2C40D15}.Debug|x64.ActiveCfg = Debug|x64
+		{E2535545-AF18-41E0-9505-3745E2C40D15}.Debug|x64.Build.0 = Debug|x64
+		{E2535545-AF18-41E0-9505-3745E2C40D15}.NOGL_Static_Release|Win32.ActiveCfg = Release|Win32
+		{E2535545-AF18-41E0-9505-3745E2C40D15}.NOGL_Static_Release|x64.ActiveCfg = Release|x64
+		{E2535545-AF18-41E0-9505-3745E2C40D15}.Release|Win32.ActiveCfg = Release|Win32
+		{E2535545-AF18-41E0-9505-3745E2C40D15}.Release|Win32.Build.0 = Release|Win32
+		{E2535545-AF18-41E0-9505-3745E2C40D15}.Release|x64.ActiveCfg = Release|x64
+		{E2535545-AF18-41E0-9505-3745E2C40D15}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

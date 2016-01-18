@@ -187,6 +187,9 @@
     <ProjectReference Include="..\CubeCommon\CubeCommon.vcxproj">
       <Project>{b70d9cc0-5e42-456b-b2ba-9b4344eab791}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\NetworkCommon\NetworkCommon.vcxproj">
+      <Project>{e2535545-af18-41e0-9505-3745e2c40d15}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
