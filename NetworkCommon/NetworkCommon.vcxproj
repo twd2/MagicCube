@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ManualEvent.h" />
     <ClInclude Include="NetworkCommon.h" />
     <ClInclude Include="NetworkConfig.h" />
     <ClInclude Include="NetworkTypes.h" />
@@ -149,6 +150,7 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ManualEvent.cpp" />
     <ClCompile Include="NetworkTypes.cpp" />
     <ClCompile Include="Package.cpp" />
     <ClCompile Include="stdafx.cpp">

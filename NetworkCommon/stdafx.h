@@ -18,6 +18,13 @@
 
 #include <string>
 #include <map>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
 using std::string;
 using std::map;
+using std::unique_lock;
+using std::thread;
+using std::mutex;
+using std::condition_variable;

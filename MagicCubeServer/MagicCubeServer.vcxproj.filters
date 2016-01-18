@@ -24,9 +24,6 @@
     <ClInclude Include="Session.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="ManualEvent.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="TcpServer.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -57,9 +54,6 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="Session.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ManualEvent.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="TcpServer.cpp">

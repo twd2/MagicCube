@@ -159,7 +159,6 @@
     <ClInclude Include="CubeServer.h" />
     <ClInclude Include="CubeSession.h" />
     <ClInclude Include="MagicCubeServer.h" />
-    <ClInclude Include="ManualEvent.h" />
     <ClInclude Include="RoomInfo.h" />
     <ClInclude Include="TcpServer.h" />
     <ClInclude Include="Session.h" />
@@ -171,7 +170,6 @@
     <ClCompile Include="CubeServer.cpp" />
     <ClCompile Include="CubeSession.cpp" />
     <ClCompile Include="MagicCubeServer.cpp" />
-    <ClCompile Include="ManualEvent.cpp" />
     <ClCompile Include="RoomInfo.cpp" />
     <ClCompile Include="TcpServer.cpp" />
     <ClCompile Include="Session.cpp" />

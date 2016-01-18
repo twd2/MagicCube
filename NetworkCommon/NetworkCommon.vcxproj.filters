@@ -30,6 +30,9 @@
     <ClInclude Include="NetworkTypes.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="ManualEvent.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -39,6 +42,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="Package.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ManualEvent.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
