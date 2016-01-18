@@ -92,3 +92,7 @@ see: PROBLEM.md
 1. Input cube data in format2.
 2. Press `Enter`.
 3. See the steps.
+
+# Homework?
+
+Need to compile with NOGL defined.

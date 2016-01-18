@@ -29,6 +29,8 @@ public:
 
 protected:
 
+	ManualEvent doQueueEvent;
+
 	thread *threadReader = NULL, *threadWriter = NULL;
 
 	evutil_socket_t fd = static_cast<evutil_socket_t>(0);

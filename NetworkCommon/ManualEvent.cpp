@@ -44,6 +44,7 @@ void ManualEvent::Set()
 
 void ManualEvent::Reset()
 {
+	unique_lock<mutex> lck(mtx);
 	set = false;
 }
 

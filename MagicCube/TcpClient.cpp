@@ -4,6 +4,7 @@
 #ifndef NONET
 
 TcpClient::TcpClient()
+	: doQueueEvent(false, true)
 {
 }
 
@@ -99,17 +100,6 @@ void TcpClient::Close()
 		fd = static_cast<evutil_socket_t>(0);
 	}
 
-	while (!pendingPackages.empty())
-	{
-		Package *&pack = pendingPackages.front();
-		if (pack)
-		{
-			delete pack;
-			pack = NULL;
-		}
-		pendingPackages.pop();
-	}
-
 	if (threadReader)
 	{
 		if (threadReader->native_handle())
@@ -120,6 +110,8 @@ void TcpClient::Close()
 		threadReader = NULL;
 	}
 
+	doQueueEvent.Set();
+
 	if (threadWriter)
 	{
 		if (threadWriter->native_handle())
@@ -128,6 +120,17 @@ void TcpClient::Close()
 		}
 		delete threadWriter;
 		threadWriter = NULL;
+	}
+
+	while (!pendingPackages.empty())
+	{
+		Package *&pack = pendingPackages.front();
+		if (pack)
+		{
+			delete pack;
+			pack = NULL;
+		}
+		pendingPackages.pop();
 	}
 }
 
@@ -143,6 +146,8 @@ void TcpClient::Start()
 {
 	if (IsAlive) return;
 	IsAlive = true;
+
+	doQueueEvent.Reset();
 
 	threadReader = new thread([this] {this->Reader(); });
 	threadWriter = new thread([this] {this->Writer(); });
@@ -202,6 +207,7 @@ void TcpClient::Reader()
 
 	// error or disconnected.
 	IsAlive = false;
+	doQueueEvent.Set();
 }
 
 void TcpClient::Writer()
@@ -209,7 +215,7 @@ void TcpClient::Writer()
 	while (IsAlive)
 	{
 
-		// TODO: use event
+		doQueueEvent.Wait();
 
 		{
 			unique_lock<mutex> lckQueue(queueLock);
@@ -239,6 +245,7 @@ void TcpClient::Writer()
 
 	// error or disconnected.
 	IsAlive = false;
+	doQueueEvent.Set();
 }
 
 void TcpClient::OnPackage(Package *&pack)
@@ -261,6 +268,8 @@ void TcpClient::SendPackage(Package *&pack)
 		unique_lock<mutex> lckQueue(queueLock);
 		pendingPackages.push(pack);
 	}
+
+	doQueueEvent.Set();
 }
 
 void TcpClient::SendPackage(string str)
