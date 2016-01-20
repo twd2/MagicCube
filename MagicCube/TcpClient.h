@@ -5,7 +5,7 @@
 class TcpClient
 {
 public:
-	bool IsAlive;
+	bool IsAlive = false;
 
 	TcpClient();
 	~TcpClient();

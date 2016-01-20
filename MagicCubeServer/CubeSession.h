@@ -26,6 +26,7 @@ public:
 	void OnPackage(Package*&);
 
 	void SendError(SessionErrorType);
+	void SendError(SessionErrorType, bool close);
 
 	bool EnterRoom(string);
 	bool EnterRoom(size_t);

@@ -39,9 +39,11 @@ int graphicMode(int argc, char *argv[])
 	initCommandHandlers();
 	consoleHandlerThread = new thread(consoleHandler);
 
+
 	//Initialize the library
 	if (!glfwInit())
-		throw "error glfwInit";
+		throw string("error glfwInit");
+
 
 	//MSAA
 	glfwWindowHint(GLFW_SAMPLES, 9);
@@ -51,7 +53,7 @@ int graphicMode(int argc, char *argv[])
 	if (!window)
 	{
 		glfwTerminate();
-		throw "error glfwCreateWindow";
+		throw string("error glfwCreateWindow");
 	}
 
 	//Make the window's context current

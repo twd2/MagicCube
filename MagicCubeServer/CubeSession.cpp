@@ -45,6 +45,11 @@ void CubeSession::OnPackage(Package *&pack)
 
 void CubeSession::SendError(SessionErrorType errorCode)
 {
+	SendError(errorCode, false);
+}
+
+void CubeSession::SendError(SessionErrorType errorCode, bool close)
+{
 	log_debug("sending error (fd = %u): %d", static_cast<unsigned int>(fd), errorCode);
 
 	int code = static_cast<int>(errorCode);
@@ -72,7 +77,10 @@ void CubeSession::SendError(SessionErrorType errorCode)
 
 	SendPackage(buffer.GetString());
 
-	FlushAndClose();
+	if (close || errorCode == SESSIONERROR_PROTOCOL_MISMATCH)
+	{
+		FlushAndClose();
+	}
 }
 
 bool CubeSession::EnterRoom(string name)

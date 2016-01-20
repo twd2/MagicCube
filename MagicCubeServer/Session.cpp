@@ -36,6 +36,8 @@ Session::~Session()
 	readLock.unlock();
 	writeLock.lock();
 	writeLock.unlock();
+	queueLock.lock();
+	queueLock.unlock();
 }
 
 void Session::KeepAlive()
