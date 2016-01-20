@@ -78,4 +78,5 @@ clean:
 	-rm build/*
 	-rm -rf build
 	cd CubeCommon && make clean
+	cd NetworkCommon && make clean
 	cd MagicCubeServer && make clean
