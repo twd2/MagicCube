@@ -250,6 +250,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandHandlers.h" />
+    <ClInclude Include="CubeClient.h" />
     <ClInclude Include="GeneralSolver.h" />
     <ClInclude Include="BruteForceSolver.h" />
     <ClInclude Include="Config.h" />
@@ -275,6 +276,7 @@
   <ItemGroup>
     <ClCompile Include="BruteForceSolver.cpp" />
     <ClCompile Include="CommandHandlers.cpp" />
+    <ClCompile Include="CubeClient.cpp" />
     <ClCompile Include="GeneralSolver.cpp" />
     <ClCompile Include="CubeSolver.cpp" />
     <ClCompile Include="Graphics.cpp" />

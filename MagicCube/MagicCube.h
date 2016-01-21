@@ -15,6 +15,7 @@
 #include "Graphics.h"
 #include "Rendering.h"
 #include "TcpClient.h"
+#include "CubeClient.h"
 #endif
 
 #ifndef USE_GL

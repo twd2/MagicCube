@@ -48,8 +48,7 @@ void CubeSession::OnPackage(Package *&pack)
 			SendError(SESSIONERROR_PROTOCOL_MISMATCH);
 			break;
 		}
-	}
-	while (false);
+	} while (false);
 
 	delete pack;
 	pack = NULL;
@@ -59,8 +58,8 @@ void CubeSession::SendSuccess()
 {
 	log_debug("sending success fd = %u", static_cast<unsigned int>(fd));
 
-	StringBuffer buffer;
-	Writer<StringBuffer> writer(buffer);
+	StringBuffer sb;
+	Writer<StringBuffer> writer(sb);
 
 	writer.StartObject();
 
@@ -69,7 +68,7 @@ void CubeSession::SendSuccess()
 
 	writer.EndObject();
 
-	SendPackage(buffer.GetString());
+	SendPackage(sb.GetString());
 }
 
 void CubeSession::SendError(SessionErrorType errorCode)
@@ -83,8 +82,8 @@ void CubeSession::SendError(SessionErrorType errorCode, bool close)
 
 	int code = static_cast<int>(errorCode);
 
-	StringBuffer buffer;
-	Writer<StringBuffer> writer(buffer);
+	StringBuffer sb;
+	Writer<StringBuffer> writer(sb);
 
 	writer.StartObject();
 
@@ -104,7 +103,7 @@ void CubeSession::SendError(SessionErrorType errorCode, bool close)
 
 	writer.EndObject();
 
-	SendPackage(buffer.GetString());
+	SendPackage(sb.GetString());
 
 	//                                 is SessionError
 	if (close || static_cast<int>(errorCode) <= static_cast<int>(SESSIONERROR_UNKNOWN))
@@ -150,10 +149,11 @@ void CubeSession::ExitRoom()
 
 void CubeSession::initCommandHandlers()
 {
-#define HAND(a) commandHandlers[#a] = &CubeSession::a##Handler;
+#define HAND(a) commandHandlers[#a] = &CubeSession::a##Handler
 	HAND(auth);
 	HAND(list_rooms);
-	HAND(get_room_info)
+	HAND(get_room_info);
+	HAND(heartbeat);
 #undef HAND
 }
 
@@ -211,6 +211,11 @@ void CubeSession::get_room_infoHandler(Value &v)
 {
 	reqArg(v, 1, "id", "int");
 	// TODO
+}
+
+void CubeSession::heartbeatHandler(Value &v)
+{
+	// nop
 }
 
 #undef reqArg

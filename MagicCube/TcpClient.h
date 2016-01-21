@@ -8,10 +8,10 @@ public:
 	bool IsAlive = false;
 
 	TcpClient();
-	~TcpClient();
+	virtual ~TcpClient();
 
 	bool Connect(const string&, short);
-	void Close();
+	virtual void Close();
 
 	void Wait();
 

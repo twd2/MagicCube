@@ -3,9 +3,6 @@
 #include "Session.h"
 
 class CubeServer;
-class CubeSession;
-
-typedef void (CubeSession::*CommandHandlerPtr)(Value&);
 
 class CubeSession :
 	public Session
@@ -14,6 +11,8 @@ class CubeSession :
 public:
 	
 	friend class RoomInfo;
+
+	typedef void (CubeSession::*CommandHandlerPtr)(Value&);
 
 	bool Authed = false;
 
@@ -53,4 +52,5 @@ private:
 	void authHandler(Value&);
 	void list_roomsHandler(Value&);
 	void get_room_infoHandler(Value&);
+	void heartbeatHandler(Value&);
 };

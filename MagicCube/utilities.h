@@ -15,5 +15,6 @@
 #include "SolverError.h"
 
 void printError(SolverError);
+void printTime(FILE*);
 CubeSolver *newSolver(Cube&);
 CubeSteps solveAndPrint(Cube);

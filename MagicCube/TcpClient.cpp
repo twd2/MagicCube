@@ -51,7 +51,7 @@ bool TcpClient::Connect(const string &address, short port)
 #else
 	if (address.find(':') != string::npos) // ipv6
 	{
-		fprintf(stderr, "IPv6 is not supported.\n");
+		log_warn("IPv6 is not supported.");
 		return false;
 	}
 #endif
@@ -163,7 +163,7 @@ void TcpClient::Reader()
 		char headerBuffer[headerLength];
 		if (!bufferedRecv(headerBuffer, headerLength))
 		{
-			fprintf(stderr, "Read error, disconnected.\n");
+			log_debug("Read error, disconnected.");
 			break;
 		}
 
@@ -172,13 +172,13 @@ void TcpClient::Reader()
 
 		if (memcmp(headerBuffer, MAGIC_MARK, min(headerLength, sizeof(MAGIC_MARK) - 1)) != 0)
 		{
-			fprintf(stderr, "Protocol mismatch.\n");
+			log_debug("Protocol mismatch.");
 			break;
 		}
 
 		if (header.DataLength == 0 || header.DataLength > PACKAGE_MAXLENGTH)
 		{
-			fprintf(stderr, "Package is empty or too long.\n");
+			log_debug("Package is empty or too long.");
 			break;
 		}
 
@@ -193,7 +193,7 @@ void TcpClient::Reader()
 
 		if (!bufferedRecv(pack->Data, header.DataLength))
 		{
-			fprintf(stderr, "Read error, disconnected.\n");
+			log_debug("Read error, disconnected.");
 			break;
 		}
 
@@ -229,7 +229,7 @@ void TcpClient::Writer()
 
 				if (!bufferedSend(reinterpret_cast<char*>(pack), sizeof(PackageHeader) + dataLength))
 				{
-					fprintf(stderr, "Send error, disconnected.\n");
+					log_debug("Send error, disconnected.");
 					break;
 				}
 
@@ -252,7 +252,7 @@ void TcpClient::OnPackage(Package *&pack)
 {
 	if (!pack || pack->Header.DataLength == 0) return;
 	pack->Data[pack->Header.DataLength - 1] = '\0';
-	printf("on package (fd = %u): %s\n", static_cast<unsigned int>(fd), pack->Data);
+	log_debug("on package (fd = %u): %s\n", static_cast<unsigned int>(fd), pack->Data);
 
 	// TODO: process received package
 

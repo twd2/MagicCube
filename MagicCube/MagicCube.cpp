@@ -73,25 +73,30 @@ void initLibraries()
 
 void test()
 {
-	TcpClient client;
-	while (true)
+	CubeClient client;
+	// while (true)
 	{
-		if (!client.Connect(string("127.0.0.1"), 2333))
+		bool connected = false;
+		for (int i = 0; i < 3; ++i)
 		{
-			continue;
+			if (client.Connect(string("127.0.0.1"), 2333))
+			{
+				connected = true;
+				break;
+			}
 		}
+		if (!connected)
+		{
+			log_normal("cannot connect");
+			return;
+			// continue;
+		}
+		
 		client.Start();
 
-		/*
-		StringBuffer sb;
-		Writer<StringBuffer> w(sb);
+		bool succ = client.Auth("123456");
+		log_normal("auth: %d", succ);
 
-		w.StartObject();
-
-		w.String("command");
-		w.String("hello");
-
-		w.EndObject();*/
 		string s;
 		while (getline(cin, s))
 		{
@@ -102,9 +107,6 @@ void test()
 				break;
 			}
 		}
-
-		// client.Wait();
-		// client.Reader();
 
 		client.Close();
 	}
@@ -118,15 +120,14 @@ int main(int argc, char *argv[])
 #ifdef USE_GL
 	try
 	{
-		 initLibraries();
-
-		 test();
+		initLibraries();
+		test();
 
 		retcode = graphicMode(argc, argv);
 	}
 	catch (const string &err)
 	{
-		printf("%s\n", err.c_str());
+		log_warn("%s\n", err.c_str());
 		retcode = 1;
 	}
 #else

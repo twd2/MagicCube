@@ -13,6 +13,20 @@ void printError(SolverError err)
 	}
 }
 
+void printTime(FILE *fd)
+{
+	time_t now = time(NULL);
+	char tmpBuf[256];
+	tm t;
+#ifdef _WIN32
+	localtime_s(&t, &now);
+#else
+	t = *localtime(&now);
+#endif
+	strftime(tmpBuf, sizeof(tmpBuf), "%Y-%m-%d %H:%M:%S", &t);
+	fprintf(fd, "[%s]", tmpBuf);
+}
+
 CubeSolver *newSolver(Cube &cube)
 {
 	if (currentSolver == "general")
