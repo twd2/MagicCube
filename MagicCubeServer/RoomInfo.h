@@ -5,6 +5,7 @@
 class RoomInfo
 {
 public:
+	bool NeedAuth = false;
 	string Name, Key;
 	size_t Capacity;
 	list<CubeSession*> Sessions;

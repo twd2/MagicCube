@@ -2,7 +2,7 @@
 #include "RoomInfo.h"
 
 RoomInfo::RoomInfo(const RoomInfo &&ri)
-	: Name(move(ri.Name)), Key(move(ri.Key)), Capacity(ri.Capacity),
+	: Name(move(ri.Name)), NeedAuth(ri.NeedAuth), Key(move(ri.Key)), Capacity(ri.Capacity),
 	  Sessions(move(ri.Sessions)), ptrMutex(move(ri.ptrMutex))
 {
 

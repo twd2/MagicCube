@@ -3,7 +3,7 @@
 
 #ifdef ENABLE_IPV4
 Session::Session(TcpServer &server, sockaddr_in addr, evutil_socket_t fd)
-	: server(server), fd(fd), sAddr(addr)
+	: Server(server), fd(fd), sAddr(addr)
 {
 	char buffer[INET6_ADDRSTRLEN + 1] = { 0 };
 	evutil_inet_ntop(addr.sin_family, &(addr.sin_addr), buffer, sizeof(buffer));
@@ -442,7 +442,7 @@ void readCallbackDispatcher(bufferevent *buffev, void *arg)
 	Session *sess = reinterpret_cast<Session*>(arg);
 
 	sess->ReadCallback();
-	sess->server.CleanSession((Session*)arg);
+	sess->Server.CleanSession((Session*)arg);
 }
 
 void writeCallbackDispatcher(bufferevent *buffev, void *arg)
@@ -450,7 +450,7 @@ void writeCallbackDispatcher(bufferevent *buffev, void *arg)
 	Session *sess = reinterpret_cast<Session*>(arg);
 
 	sess->WriteCallback();
-	sess->server.CleanSession(sess);
+	sess->Server.CleanSession(sess);
 }
 
 void errorCallbackDispatcher(bufferevent *buffev, short event, void *arg)
@@ -458,5 +458,5 @@ void errorCallbackDispatcher(bufferevent *buffev, short event, void *arg)
 	Session *sess = reinterpret_cast<Session*>(arg);
 
 	sess->ErrorCallback(event);
-	sess->server.CleanSession(sess);
+	sess->Server.CleanSession(sess);
 }

@@ -7,6 +7,9 @@ class CubeServer :
 	public TcpServer
 {
 public:
+	bool NeedAuth = false;
+	string ServerKey;
+
 	vector<RoomInfo> Rooms;
 	map<string, size_t> RoomIds;
 

@@ -8,7 +8,7 @@ void printTime(FILE*);
 void setLogFile(string);
 Document loadConfigObj(string);
 size_t getSizeT(Value&);
-void configServer(TcpServer&, Value&);
+void configServer(CubeServer&, Value&);
 vector<RoomInfo> loadRooms(Value&);
 void configRooms(CubeServer&, vector<RoomInfo>&);
 
@@ -32,3 +32,6 @@ bool contains(const map <K, V> &m, const K &key)
 	typename map<K, V>::const_iterator it = m.find(key);
 	return it != m.end();
 }
+
+// check document's props and type. string: str, int: int, uint: uint, int64: int64, uint64: uint64, float: float, bool: bool, null: null, array: array, object, obj
+bool checkObj(Value&, size_t, ...);

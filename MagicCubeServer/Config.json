@@ -1,6 +1,8 @@
 {
     "Server": 
     {
+        "Auth": true,
+        "ServerKey": "123456",
         "IPv4": 
         {
             "Enable": true,
@@ -21,6 +23,7 @@
     [
         {
             "Name": "test",
+            "Auth": true,
             "Key": "123456",
             "Capacity": 2
         }

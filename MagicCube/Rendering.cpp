@@ -72,6 +72,7 @@ void renderAxis()
 
 	glDisableVertexAttribArray(0);
 #else
+
 	//x
 	glColor4f(1.0f, 0.0f, 0.0f, 0.5f);
 	glBegin(GL_LINES);

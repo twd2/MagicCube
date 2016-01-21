@@ -74,26 +74,40 @@ void initLibraries()
 void test()
 {
 	TcpClient client;
-	if (!client.Connect(string("127.0.0.1"), 2333))
+	while (true)
 	{
-		return;
+		if (!client.Connect(string("127.0.0.1"), 2333))
+		{
+			continue;
+		}
+		client.Start();
+
+		/*
+		StringBuffer sb;
+		Writer<StringBuffer> w(sb);
+
+		w.StartObject();
+
+		w.String("command");
+		w.String("hello");
+
+		w.EndObject();*/
+		string s;
+		while (getline(cin, s))
+		{
+			client.SendPackage(s);
+
+			if (!client.IsAlive)
+			{
+				break;
+			}
+		}
+
+		// client.Wait();
+		// client.Reader();
+
+		client.Close();
 	}
-	client.Start();
-
-	StringBuffer sb;
-	Writer<StringBuffer> w(sb);
-
-	w.StartObject();
-
-	w.String("command");
-	w.String("hello");
-
-	w.EndObject();
-
-	client.SendPackage(sb.GetString());
-
-	client.Wait();
-	// client.Reader();
 }
 #endif //USE_GL
 
@@ -104,9 +118,9 @@ int main(int argc, char *argv[])
 #ifdef USE_GL
 	try
 	{
-		initLibraries();
+		 initLibraries();
 
-		test();
+		 test();
 
 		retcode = graphicMode(argc, argv);
 	}

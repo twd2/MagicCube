@@ -3,9 +3,9 @@
 
 #ifdef ENABLE_IPV4
 CubeSession::CubeSession(CubeServer &server, sockaddr_in addr, evutil_socket_t fd)
-	: Session(server, addr, fd), server(server)
+	: Session(server, addr, fd), Server(server)
 {
-
+	initCommandHandlers();
 }
 #endif
 
@@ -13,7 +13,7 @@ CubeSession::CubeSession(CubeServer &server, sockaddr_in addr, evutil_socket_t f
 CubeSession::CubeSession(CubeServer &server, sockaddr_in6 addr, evutil_socket_t fd)
 	: Session(server, addr, fd), server(server)
 {
-
+	initCommandHandlers();
 }
 #endif
 
@@ -30,17 +30,46 @@ void CubeSession::OnPackage(Package *&pack)
 
 	Document doc;
 	doc.Parse(pack->Data);
-	if (!doc.IsObject())
+	//  {"command": "cmd...", arg1: argv1, arg2: argv2, ...}
+	do
 	{
-		SendError(SESSIONERROR_PROTOCOL_MISMATCH);
-		return;
-	}
+		if (!doc.IsObject())
+		{
+			SendError(SESSIONERROR_PROTOCOL_MISMATCH);
+			break;
+		}
 
-	SendError(_SE(ERROR_AUTH));
-	// TODO: package
+		if (checkObj(doc, 1, "command", "str"))
+		{
+			handleCommand(doc);
+		}
+		else
+		{
+			SendError(SESSIONERROR_PROTOCOL_MISMATCH);
+			break;
+		}
+	}
+	while (false);
 
 	delete pack;
 	pack = NULL;
+}
+
+void CubeSession::SendSuccess()
+{
+	log_debug("sending success fd = %u", static_cast<unsigned int>(fd));
+
+	StringBuffer buffer;
+	Writer<StringBuffer> writer(buffer);
+
+	writer.StartObject();
+
+	writer.String("success");
+	writer.Int(0);
+
+	writer.EndObject();
+
+	SendPackage(buffer.GetString());
 }
 
 void CubeSession::SendError(SessionErrorType errorCode)
@@ -77,7 +106,8 @@ void CubeSession::SendError(SessionErrorType errorCode, bool close)
 
 	SendPackage(buffer.GetString());
 
-	if (close || errorCode == SESSIONERROR_PROTOCOL_MISMATCH)
+	//                                 is SessionError
+	if (close || static_cast<int>(errorCode) <= static_cast<int>(SESSIONERROR_UNKNOWN))
 	{
 		FlushAndClose();
 	}
@@ -85,7 +115,7 @@ void CubeSession::SendError(SessionErrorType errorCode, bool close)
 
 bool CubeSession::EnterRoom(string name)
 {
-	return EnterRoom(server.RoomIds[name]);
+	return EnterRoom(Server.RoomIds[name]);
 }
 
 bool CubeSession::EnterRoom(size_t i)
@@ -94,7 +124,7 @@ bool CubeSession::EnterRoom(size_t i)
 	 * 2. set currentRoom
 	 */
 
-	RoomInfo &room = server.Rooms[i];
+	RoomInfo &room = Server.Rooms[i];
 	bool v = room.Enter(this);
 
 	if (v)
@@ -113,7 +143,74 @@ void CubeSession::ExitRoom()
 
 	if (currentRoom >= 0)
 	{
-		server.Rooms[currentRoom].Exit(this);
+		Server.Rooms[currentRoom].Exit(this);
 		currentRoom = -1;
 	}
 }
+
+void CubeSession::initCommandHandlers()
+{
+#define HAND(a) commandHandlers[#a] = &CubeSession::a##Handler;
+	HAND(auth);
+	HAND(list_rooms);
+	HAND(get_room_info)
+#undef HAND
+}
+
+void CubeSession::handleCommand(Document &doc)
+{
+	string cmd = doc["command"].GetString();
+
+	if (cmd != "auth" && !Authed)
+	{
+		SendError(_SE(ERROR_AUTH));
+		return;
+	}
+
+	CommandHandlerPtr hand = NULL;
+	if ((hand = commandHandlers[cmd]) != NULL)
+	{
+		(this->*hand)(doc);
+	}
+	else
+	{
+		SendError(SESSIONERROR_PROTOCOL_MISMATCH);
+		return;
+	}
+}
+
+// require argument(s)
+#define reqArg(v, argc, ...) \
+	if (!checkObj((v), (argc), ##__VA_ARGS__)) \
+	{ \
+		SendError(_SE(ERROR_BAD_ARGUMENT)); \
+		return; \
+	} \
+
+void CubeSession::authHandler(Value &v)
+{
+	reqArg(v, 1, "key", "str");
+
+	if (v["key"].GetString() == Server.ServerKey || !Server.NeedAuth)
+	{
+		Authed = true;
+		SendSuccess();
+	}
+	else
+	{
+		SendError(_SE(ERROR_AUTH_FAILED));
+	}
+}
+
+void CubeSession::list_roomsHandler(Value &v)
+{
+	// TODO
+}
+
+void CubeSession::get_room_infoHandler(Value &v)
+{
+	reqArg(v, 1, "id", "int");
+	// TODO
+}
+
+#undef reqArg

@@ -27,7 +27,7 @@ public:
 	string RemoteAddress;
 	unsigned short RemotePort;
 
-	TcpServer &server;
+	TcpServer &Server;
 
 #ifdef ENABLE_IPV4
 	Session(TcpServer&, sockaddr_in, evutil_socket_t);

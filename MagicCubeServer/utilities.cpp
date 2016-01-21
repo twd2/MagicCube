@@ -68,7 +68,7 @@ size_t getSizeT(Value &v)
 	}
 }
 
-void configServer(TcpServer &server, Value &config)
+void configServer(CubeServer &server, Value &config)
 {
 	server.MaxConnections = getSizeT(config["MaxConnections"]);
 
@@ -93,11 +93,13 @@ void configServer(TcpServer &server, Value &config)
 		}
 	}
 #endif
+
+	server.NeedAuth = config["Auth"].GetBool();
+	server.ServerKey = config["ServerKey"].GetString();
 }
 
 vector<RoomInfo> loadRooms(Value &rooms)
 {
-
 	log_normal("%s", "Loading rooms...");
 
 	size_t count = rooms.Size();
@@ -109,6 +111,7 @@ vector<RoomInfo> loadRooms(Value &rooms)
 
 		RoomInfo ri;
 		ri.Name = room["Name"].GetString();
+		ri.NeedAuth = room["Auth"].GetBool();
 		ri.Key = room["Key"].GetString();
 		ri.Capacity = getSizeT(room["Capacity"]);
 		ris.push_back(move(ri));
@@ -126,4 +129,109 @@ void configRooms(CubeServer &server, vector<RoomInfo> &rooms)
 	{
 		server.RoomIds[server.Rooms[i].Name] = i;
 	}
+}
+
+bool checkObj(Value &doc, size_t argc, ...)
+{
+	va_list ap = NULL;
+	va_start(ap, argc);
+
+	bool succeeded = true;
+
+	for (size_t i = 0; i < argc; ++i)
+	{
+		const char *name = va_arg(ap, const char*);
+		const char *type = va_arg(ap, const char*);
+
+		if (!doc.HasMember(name))
+		{
+			succeeded = false;
+			break;
+		}
+
+		if (type == string("str"))
+		{
+			if (!doc[name].IsString())
+			{
+				succeeded = false;
+				break;
+			}
+		}
+		else if (type == string("int"))
+		{
+			if (!doc[name].IsInt())
+			{
+				succeeded = false;
+				break;
+			}
+		}
+		else if (type == string("uint"))
+		{
+			if (!doc[name].IsUint())
+			{
+				succeeded = false;
+				break;
+			}
+		}
+		else if (type == string("int64"))
+		{
+			if (!doc[name].IsInt64())
+			{
+				succeeded = false;
+				break;
+			}
+		}
+		else if (type == string("uint64"))
+		{
+			if (!doc[name].IsUint64())
+			{
+				succeeded = false;
+				break;
+			}
+		}
+		else if (type == string("float"))
+		{
+			if (!doc[name].IsDouble())
+			{
+				succeeded = false;
+				break;
+			}
+		}
+		else if (type == string("bool"))
+		{
+			if (!doc[name].IsBool())
+			{
+				succeeded = false;
+				break;
+			}
+		}
+		else if (type == string("null"))
+		{
+			if (!doc[name].IsNull())
+			{
+				succeeded = false;
+				break;
+			}
+		}
+		else if (type == string("array"))
+		{
+			if (!doc[name].IsArray())
+			{
+				succeeded = false;
+				break;
+			}
+		}
+		else if (type == string("obj"))
+		{
+			if (!doc[name].IsObject())
+			{
+				succeeded = false;
+				break;
+			}
+		}
+	}
+
+	va_end(ap);
+
+	return succeeded;
 }

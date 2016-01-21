@@ -241,8 +241,7 @@ void TcpServer::TimerCallback(short event)
 	{
 		if (difftime(now, sess->LastAlive) > TIMEOUT_S)
 		{
-			sess->SendPackage("Timed out, good bye~"); // TODO: change message
-			sess->FlushAndClose();
+			sess->SendError(SESSIONERROR_TIMEOUT);
 			log_debug("Cleaning %p", sess);
 		}
 	}
